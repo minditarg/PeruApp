@@ -9,7 +9,7 @@ export class AddTrabajo extends Component {
       <Grid>
         <Row size={5}>
           <Col>
-            <Text>Todavia no hicieron ningun trabajo</Text>
+            <Text>Te cambie este texto</Text>
           </Col>
         </Row>
         <Row size={1}>
