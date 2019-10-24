@@ -78,7 +78,18 @@ const TrabajosNav = createStackNavigator(
     AddTrabajo: AddTrabajo
   },
   {
-    title: "Trabajos"
+    defaultNavigationOptions: {
+      title: "Trabajos",
+      headerStyle: {
+        backgroundColor: "#044fb3",
+        borderBottomColor: "red",
+        borderBottomWidth: 4
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold"
+      }
+    }
   }
 );
 
@@ -87,7 +98,18 @@ const EmpresaNav = createStackNavigator(
     Empresa: Empresa
   },
   {
-    title: "Empresa"
+    defaultNavigationOptions: {
+      title: "Empresa",
+      headerStyle: {
+        backgroundColor: "#044fb3",
+        borderBottomColor: "red",
+        borderBottomWidth: 4
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold"
+      }
+    }
   }
 );
 const ServiciosNav = createStackNavigator(
@@ -118,39 +140,26 @@ const TabNavigator = createBottomTabNavigator(
     Empresa: EmpresaNav
   },
   {
-    title: "gato",
     initialRouteName: "Servicios",
+    tabBarOptions: {
+      showLabel: false,
+      activeTintColor: "#444",
+      inactiveTintColor: "#fff",
+      inactiveBackgroundColor: "#044fb3",
+      activeBackgroundColor: "#fff"
+    },
+    tabBarStyle: {
+      backgroundColor: "#044fb3",
+      shadow: "none",
+      border: "none",
+      fontWeight: "bold"
+    },
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
-        console.log(navigation.state);
-        let IconComponent = Ionicons;
-        let iconName;
-        /*  if (routeName === 'Home') {
-        iconName = `ios-information-circle${focused ? '' : '-outline'}`;
-        // Sometimes we want to add badges to some icons.
-        // You can check the implementation below.
-        IconComponent = HomeIconWithBadge;
-      } else if (routeName === 'Settings') {
-        iconName = `ios-options`;
-      }*/
-
-        // You can return any component that you like here!
-
-        return <Text color={tintColor}>{routeName} </Text>;
+        return <Text style={{ color: tintColor }}>{routeName} </Text>;
       }
     })
-  },
-  {
-    tabBarOptions: {
-      activeTintColor: "tomato",
-      inactiveTintColor: "gray",
-      activeBackgroundColor: "red",
-      tabBarStyle: {
-        backgroundColor: "#044fb3",
-        borderBottomColor: "red"
-      }
-    }
   }
 );
 
