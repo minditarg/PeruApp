@@ -9,6 +9,9 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createStackNavigator } from "react-navigation-stack";
 import { Col, Row, Grid } from "react-native-easy-grid";
 
+import store from "./src/Store";
+import { Provider } from "react-redux";
+
 import {
   Select,
   Video,
@@ -39,7 +42,7 @@ class App extends React.Component {
     this.setState({ isReady: true });
     setTimeout(() => {
       // this.setState({ cargo: true });
-      this.props.navigation.navigate("Index");
+      this.props.navigation.navigate("Login");
     }, 1);
   }
 
@@ -47,7 +50,6 @@ class App extends React.Component {
     if (!this.state.isReady) {
       return <AppLoading />;
     }
-
     return (
       <Container style={stl.container}>
         <Grid>
@@ -188,4 +190,14 @@ const RootStack = createStackNavigator(
   }
 );
 
-export default createAppContainer(RootStack);
+let Navigation = createAppContainer(RootStack);
+
+export default class Aplication extends React.Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <Navigation></Navigation>
+      </Provider>
+    );
+  }
+}

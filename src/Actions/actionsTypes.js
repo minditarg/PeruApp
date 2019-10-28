@@ -1,0 +1,13 @@
+export const LOGIN = "LOGIN";
+export const CREATE_USER = "CREATE_USER";
+export const UPDATE_USER = "UPDATE_SERVICIO";
+
+export const GET_SERVICIOS = "GET_SERVICIOS";
+export const UPDATE_SERVICIO = "UPDATE_SERVICIO";
+export const DELETE_SERVICIO = "DELETE_SERVICIO";
+export const CREATE_SERVICIO = "CREATE_SERVICIO";
+
+export const GET_TRABAJOS = "GET_TRABAJOS";
+export const UPDATE_TRABAJO = "UPDATE_TRABAJO";
+export const DELETE_TRABAJO = "DELETE_TRABAJO";
+export const CREATE_TRABAJO = "CREATE_TRABAJO";

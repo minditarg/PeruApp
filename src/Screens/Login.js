@@ -12,7 +12,17 @@ import {
   Label
 } from "native-base";
 
-export class Login extends Component {
+import { connect } from "react-redux";
+
+class Login extends React.Component {
+  constructor() {
+    super();
+  }
+
+  alertame() {
+    this.props.dispatch({ type: "LOGIN", playload: "usuario" });
+  }
+
   render() {
     return (
       <Container style={stl.container}>
@@ -60,7 +70,7 @@ export class Login extends Component {
                       <Button
                         block
                         style={stl.btn}
-                        onPress={() => this.props.navigation.navigate("Index")}
+                        onPress={() => this.alertame()}
                       >
                         <Text style={stl.btnText}>Iniciar Sesion</Text>
                       </Button>
@@ -109,6 +119,8 @@ export class Login extends Component {
     );
   }
 }
+
+export default connect()(Login);
 
 const stl = StyleSheet.create({
   container: { backgroundColor: "#044fb3" },
