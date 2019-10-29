@@ -13,14 +13,27 @@ import {
 } from "native-base";
 
 import { connect } from "react-redux";
-
-class Login extends React.Component {
+import { GET_SERVICIOS } from "../Actions/actionsTypes";
+class Login extends Component {
   constructor() {
     super();
   }
 
   alertame() {
-    this.props.dispatch({ type: "LOGIN", playload: "usuario" });
+    console.log("me cago");
+    console.log(store.getState());
+    this.props.dispatch({
+      type: GET_SERVICIOS,
+      playload: {
+        id: "2",
+        tipo: "Me Cago en la leche",
+        descripcion: "descripcion 2lorem ipsum",
+        usuarioId: "1",
+        imgUrl:
+          "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
+        activo: "1"
+      }
+    });
   }
 
   render() {
@@ -42,7 +55,7 @@ class Login extends React.Component {
                   <Form style={stl.form}>
                     <Item style={stl.itm} floatingLabel>
                       <Label style={stl.lbl}>Mail</Label>
-                      <Input style={stl.input} />
+                      <Input style={stl.input} keyboardType="email-address" />
                     </Item>
                     <Item style={stl.itm} floatingLabel>
                       <Label style={stl.lbl}>Contraseña</Label>

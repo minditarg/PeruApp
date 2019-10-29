@@ -1,5 +1,5 @@
-import { Select } from "./Select";
-import { Video } from "./Video";
+import Select from "./Select";
+import Video from "./Video";
 import Login from "./Login";
 
 import { Olvide } from "./Olvide";

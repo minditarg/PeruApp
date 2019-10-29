@@ -1,0 +1,59 @@
+[{
+        "id": "1",
+        "tipo": "Construccin",
+        "descripcion": "descripcion 1 lorem ipsum",
+        "usuarioId": "1",
+        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
+        "activo": "1"
+    },
+    {
+        "id": "2",
+        "tipo": "Carpinteria",
+        "descripcion": "descripcion 2lorem ipsum",
+        "usuarioId": "1",
+        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
+        "activo": "1"
+    }, {
+        "id": "3",
+        "tipo": "Pintura",
+        "descripcion": "descripcion 3 lorem ipsum",
+        "usuarioId": "1",
+        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
+        "activo": "1"
+    }, {
+        "id": "4",
+        "tipo": "Pintura",
+        "descripcion": "descripcion 1 lorem ipsum",
+        "usuarioId": "2",
+        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
+        "activo": "1"
+    }, {
+        "id": "5",
+        "tipo": "Carpinteria",
+        "descripcion": "descripcion 1 lorem ipsum",
+        "usuarioId": "2",
+        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
+        "activo": "1"
+    }, {
+        "id": "6",
+        "tipo": "Construccin",
+        "descripcion": "descripcion 1 lorem ipsum",
+        "usuarioId": "2",
+        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
+        "activo": "0"
+    }, {
+        "id": "7",
+        "tipo": "Pintura",
+        "descripcion": "descripcion 1 lorem ipsum",
+        "usuarioId": "3",
+        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
+        "activo": "1"
+    }, {
+        "id": "8",
+        "tipo": "Carpinteria",
+        "descripcion": "descripcion 1 lorem ipsum",
+        "usuarioId": "3",
+        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
+        "activo": "1"
+    }
+]

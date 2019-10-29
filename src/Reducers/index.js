@@ -1,9 +1,13 @@
 import { combineReducers } from "redux";
 
-import Login from "./Login";
+import User from "./User";
 import Servicios from "./Servicios";
+import Trabajos from "./Trabajos";
 
+import AppChose from "./AppChose";
 export default combineReducers({
-  Login,
-  Servicios
+  User,
+  Servicios,
+  Trabajos,
+  AppChose
 });

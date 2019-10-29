@@ -9,8 +9,14 @@ import {
   GET_TRABAJOS,
   UPDATE_TRABAJO,
   DELETE_TRABAJO,
-  CREATE_TRABAJO
+  CREATE_TRABAJO,
+  APP_CHOOSE_TYPE
 } from "./actionsTypes";
+
+export const AppType = tipo => ({
+  type: APP_CHOOSE_TYPE,
+  payload: tipo
+});
 
 export const Login = User => ({
   type: LOGIN,
