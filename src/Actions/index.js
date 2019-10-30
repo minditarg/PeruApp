@@ -10,7 +10,10 @@ import {
   UPDATE_TRABAJO,
   DELETE_TRABAJO,
   CREATE_TRABAJO,
-  APP_CHOOSE_TYPE
+  APP_CHOOSE_TYPE,
+  FETCH_PRODUCTS_PENDING,
+  FETCH_PRODUCTS_SUCCESS,
+  FETCH_PRODUCTS_ERROR
 } from "./actionsTypes";
 
 export const AppType = tipo => ({
@@ -69,4 +72,16 @@ export const DeleteTrabajo = TrabajoId => ({
 export const CreateTrabajo = Trabajo => ({
   type: CREATE_TRABAJO,
   payload: Trabajo
+});
+
+export const fetchPendiente = () => ({
+  type: FETCH_PRODUCTS_PENDING
+});
+export const fetchSucces = data => ({
+  type: FETCH_PRODUCTS_SUCCESS,
+  payload: data
+});
+export const fetchError = err => ({
+  type: FETCH_PRODUCTS_ERROR,
+  payload: err
 });

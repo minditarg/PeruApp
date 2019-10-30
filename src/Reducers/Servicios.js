@@ -6,12 +6,24 @@ import {
 } from "../Actions/actionsTypes";
 import Services from "../../Datos/Services";
 
+async function getMoviesFromApi() {
+  try {
+    let response = await fetch("https://pokeapi.co/api/v2/pokemon/1/");
+    let responseJson = await response.json();
+    return responseJson.movies;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 const Servicios = (state = [], action) => {
   switch (action.type) {
     case GET_SERVICIOS:
-      console.log("aca");
+      let Services = getMoviesFromApi();
+
+      console.log(Services);
       state = Services;
-      console.log(action);
+
       return state;
     case DELETE_SERVICIO:
       return state.map(serv =>

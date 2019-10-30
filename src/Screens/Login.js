@@ -1,41 +1,106 @@
 import React, { Component } from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, ToastAndroid } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import {
   Container,
+  Content,
   Button,
   Text,
   Form,
   Item,
   Input,
   Icon,
-  Label
+  Label,
+  Toast
 } from "native-base";
 
+import Alerta from "../Componentes/Alertas";
+//import RNFetchBlob from "react-native-fetch-blob";
+
 import { connect } from "react-redux";
-import { GET_SERVICIOS } from "../Actions/actionsTypes";
+import {
+  FETCH_PRODUCTS_PENDING,
+  FETCH_PRODUCTS_SUCCESS,
+  FETCH_PRODUCTS_ERROR
+} from "../Actions/actionsTypes";
 class Login extends Component {
   constructor() {
     super();
+    this.state = {
+      username: "",
+      password: "",
+      submitted: false,
+      showToast: false
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleChange(e) {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
   }
 
-  alertame() {
-    console.log("me cago");
-    console.log(store.getState());
-    this.props.dispatch({
-      type: GET_SERVICIOS,
-      playload: {
-        id: "2",
-        tipo: "Me Cago en la leche",
-        descripcion: "descripcion 2lorem ipsum",
-        usuarioId: "1",
-        imgUrl:
-          "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
-        activo: "1"
+  handleSubmit(e) {
+    const { username, password } = this.state;
+    if (!username) {
+      ToastAndroid.show("A pikachu appeared nearby !", ToastAndroid.SHORT);
+    }
+    this.setState({ submitted: true });
+    /*  const { username, password } = this.state;
+    if (username && password) {
+      this.props.login(username, password);
+    }*/
+  }
+
+  HandleRegistroBtn() {
+    this.props.navigation.navigate("Registrarse");
+  }
+
+  HandleInicioBtn() {
+    console.log("handleInicio");
+
+    //Hay que validar mail y contraseña
+    // hay que conectarse
+    // hay que manejar errores
+    // hay que redirigir si todo lo anterior se aprueba.
+    this.props.dispatch({ type: FETCH_PRODUCTS_PENDING });
+    fetch("https://10.30.30.125:3000/api/proveedores", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
       }
-    });
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.error) {
+          throw res.error;
+        }
+        this.props.dispatch({
+          type: FETCH_PRODUCTS_SUCCESS,
+          payload: res
+        });
+        return;
+      })
+      .catch(error => {
+        console.log("el error es" + error);
+        this.props.dispatch({
+          type: FETCH_PRODUCTS_ERROR,
+          payload: error
+        });
+      });
   }
 
+  HandleOlvidePassBtn() {
+    this.props.navigation.navigate("Olvide");
+  }
+  HandleFacebookLoginBtn() {
+    this.props.navigation.navigate("Olvide");
+  }
+  HandleGoogleLoginBtn() {
+    this.props.navigation.navigate("Olvide");
+  }
   render() {
     return (
       <Container style={stl.container}>
@@ -53,13 +118,41 @@ class Login extends Component {
               <Row size={3}>
                 <Col>
                   <Form style={stl.form}>
-                    <Item style={stl.itm} floatingLabel>
+                    <Item
+                      style={stl.itm}
+                      floatingLabel
+                      error={this.state.submitted && !this.state.username}
+                    >
                       <Label style={stl.lbl}>Mail</Label>
-                      <Input style={stl.input} keyboardType="email-address" />
+                      <Input
+                        style={stl.input}
+                        keyboardType="email-address"
+                        name="username"
+                        value={this.state.username}
+                        onChangeText={username => {
+                          this.setState({ username });
+                        }}
+                      />
                     </Item>
-                    <Item style={stl.itm} floatingLabel>
+                    <Item
+                      style={stl.itm}
+                      floatingLabel
+                      error={this.state.submitted && !this.state.password}
+                    >
                       <Label style={stl.lbl}>Contraseña</Label>
-                      <Input secureTextEntry={true} style={stl.input} />
+                      <Input
+                        secureTextEntry={true}
+                        style={stl.input}
+                        name="password"
+                        value={this.state.password}
+                        onChangeText={password => {
+                          this.setState({ password });
+                          console.log(this.state.password);
+                        }}
+                      />
+                      {this.state.submitted && !this.state.password && (
+                        <Text> Username is required</Text>
+                      )}
                     </Item>
                   </Form>
                 </Col>
@@ -73,7 +166,10 @@ class Login extends Component {
                         bordered
                         light
                         onPress={() =>
-                          this.props.navigation.navigate("Registrarse")
+                          Toast.show({
+                            text: "Wrong password!",
+                            buttonText: "Okay"
+                          })
                         }
                       >
                         <Text style={stl.btnText}>Registarse</Text>
@@ -83,7 +179,7 @@ class Login extends Component {
                       <Button
                         block
                         style={stl.btn}
-                        onPress={() => this.alertame()}
+                        onPress={() => this.handleSubmit()}
                       >
                         <Text style={stl.btnText}>Iniciar Sesion</Text>
                       </Button>
@@ -91,11 +187,7 @@ class Login extends Component {
                   </Row>
                   <Row size={1}>
                     <Col style={stl.alignRight}>
-                      <Button
-                        transparent
-                        small
-                        onPress={() => this.props.navigation.navigate("Olvide")}
-                      >
+                      <Button transparent small>
                         <Text style={stl.btnAyuda}>
                           Ayuda! Olvide mi contraseña
                         </Text>
@@ -112,7 +204,7 @@ class Login extends Component {
                 block
                 light
                 style={stl.btn}
-                onPress={() => this.props.navigation.navigate("Index")}
+                onPress={() => this.HandleGoogleLoginBtn()}
               >
                 <Icon name="home" />
                 <Text style={stl.btnText}>Iniciar con Google</Text>
@@ -120,7 +212,7 @@ class Login extends Component {
               <Button
                 block
                 style={stl.btn}
-                onPress={() => this.props.navigation.navigate("Index")}
+                onPress={() => this.HandleFacebookLoginBtn()}
               >
                 <Icon name="home" />
                 <Text style={stl.btnText}>Iniciar con Facebook</Text>
@@ -128,12 +220,17 @@ class Login extends Component {
             </Col>
           </Row>
         </Grid>
+
+        <Alerta text="recat"></Alerta>
       </Container>
     );
   }
 }
-
-export default connect()(Login);
+mapStateToProps = state => {
+  console.log(state);
+  return { seleccion: state };
+};
+export default connect(mapStateToProps)(Login);
 
 const stl = StyleSheet.create({
   container: { backgroundColor: "#044fb3" },
@@ -156,7 +253,6 @@ const stl = StyleSheet.create({
     marginLeft: 20,
     marginRight: 30
   },
-  itm: { borderBottomColor: "whitesmoke" },
   lbl: {
     color: "whitesmoke"
   },
