@@ -7,6 +7,7 @@ const AppChose = (state = [], action) => {
       return state;
     case LOAD_TOKEN_USER:
       state["userToken"] = action.payload;
+      console.log("app chose loadToken");
       console.log(state);
       return state;
     default:

@@ -5,7 +5,9 @@ import Navigation from "./src/Navigation";
 
 export default class Aplication extends React.Component {
   render() {
+    console.log("----initial state -----");
     console.log(store.getState());
+    console.log("---------------------");
     return (
       <Provider store={store}>
         <Navigation></Navigation>

@@ -24,20 +24,22 @@ import {
   LOAD_TOKEN_USER
 } from "../Actions/actionsTypes";
 
+//import fetchApi from "../Funciones/funciones";
+
+import fetchival from "fetchival";
+import _ from "lodash";
+
 class Login extends Component {
   constructor() {
     super();
     this.state = {
-      username: "",
+      email: "",
       password: "",
       submitted: false,
       showToast: false,
       authResult: {},
       isPostBack: false
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   Redirigir() {
@@ -57,16 +59,15 @@ class Login extends Component {
 
       //   console.log();
       if (params.nuevo === "true") {
-        console.log("nuevi");
+        console.log("redirigir login nuevi");
       } else if (params.nuevo === "false") {
-        console.log("vieji");
+        console.log("redirigir login vieji");
       }
     }
   }
 
   // LOGIN De FACEBBOK
   loginFacebook = async () => {
-    //  console.log("ERRORestoy en esta!");
     let redirectUrl = await Linking.getInitialURL();
     let authUrl = "https://10.30.30.125:3000/api/auth/facebook";
     try {
@@ -76,14 +77,9 @@ class Login extends Component {
       );
       await this.setState({ authResult: authResult, isPostBack: true });
     } catch (err) {
-      console.log("ERROR:", err);
+      console.log("ERROR loginfacebook:", err);
     }
   };
-
-  handleChange(e) {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  }
 
   handleSubmit(e) {
     const { username, password } = this.state;
@@ -102,6 +98,28 @@ class Login extends Component {
   }
 
   HandleInicioBtn() {
+    let payload = {
+      email: this.state.email,
+      password: this.state.password
+    };
+    fetch("http://10.30.30.125:3001/api/login", {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(responseData => {
+        console.log(responseData);
+        return responseData;
+      });
+  }
+
+  caca() {
     //  console.log("handleInicio");
 
     //Hay que validar mail y contraseña
@@ -175,10 +193,10 @@ class Login extends Component {
                       <Input
                         style={stl.input}
                         keyboardType="email-address"
-                        name="username"
-                        value={this.state.username}
-                        onChangeText={username => {
-                          this.setState({ username });
+                        name="email"
+                        value={this.state.email}
+                        onChangeText={email => {
+                          this.setState({ email });
                         }}
                       />
                     </Item>
@@ -213,12 +231,9 @@ class Login extends Component {
                         style={stl.btn}
                         bordered
                         light
-                        onPress={() =>
-                          Toast.show({
-                            text: "Wrong password!",
-                            buttonText: "Okay"
-                          })
-                        }
+                        onPress={() => {
+                          return;
+                        }}
                       >
                         <Text style={stl.btnText}>Registarse</Text>
                       </Button>

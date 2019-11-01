@@ -7,19 +7,19 @@ import {
 const Trabajos = (state = [], action) => {
   switch (action.type) {
     case GET_TRABAJOS:
-      console.log("login");
+      console.log("get trabajo");
       return state;
     case UPDATE_TRABAJO:
-      console.log("login");
+      console.log("update trabajo");
       return state;
     case DELETE_TRABAJO:
-      console.log("login");
+      console.log("delete trabajo");
       return state;
     case CREATE_TRABAJO:
-      console.log("login");
+      console.log("create trabajo");
       return state;
     default:
-      console.log("default");
+      console.log("default trabajo");
       return state;
   }
 };

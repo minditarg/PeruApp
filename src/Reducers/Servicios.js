@@ -12,6 +12,7 @@ async function getMoviesFromApi() {
     let responseJson = await response.json();
     return responseJson.movies;
   } catch (error) {
+    console.log("get movies error servisios.js");
     console.error(error);
   }
 }
@@ -20,7 +21,7 @@ const Servicios = (state = [], action) => {
   switch (action.type) {
     case GET_SERVICIOS:
       let Services = getMoviesFromApi();
-
+      console.log("get servicis error servisios.js");
       console.log(Services);
       state = Services;
 

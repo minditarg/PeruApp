@@ -1,12 +1,14 @@
 import React from "react";
-
 import { Image, StyleSheet } from "react-native";
 import { AppLoading } from "expo";
 import { Container, Text } from "native-base";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-
 import { Col, Row, Grid } from "react-native-easy-grid";
+
+/*en esta pantalla tengo que refrescar USER_TOKEN si existe
+  cargar las fuentes del template
+  iniciar timeout de refresh USER_TOKEN */
 
 export default class AppLoad extends React.Component {
   constructor(props) {
@@ -26,7 +28,7 @@ export default class AppLoad extends React.Component {
     setTimeout(() => {
       // this.setState({ cargo: true });
       this.props.navigation.navigate("Select");
-    }, 1);
+    }, 300);
   }
 
   render() {
