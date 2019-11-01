@@ -39,7 +39,7 @@ class Video extends Component {
   }
 }
 mapStateToProps = state => {
-  console.log(state);
+  //console.log(state);
   return { seleccion: state.AppChose[0] };
 };
 

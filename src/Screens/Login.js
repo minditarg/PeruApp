@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { View, Image, StyleSheet, ToastAndroid } from "react-native";
+import { View, Image, StyleSheet, ToastAndroid, Linking } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
+import * as WebBrowser from "expo-web-browser";
+import queryString from "query-string";
 import {
   Container,
   Content,
@@ -13,16 +15,15 @@ import {
   Label,
   Toast
 } from "native-base";
-
 import Alerta from "../Componentes/Alertas";
-//import RNFetchBlob from "react-native-fetch-blob";
-
 import { connect } from "react-redux";
 import {
   FETCH_PRODUCTS_PENDING,
   FETCH_PRODUCTS_SUCCESS,
-  FETCH_PRODUCTS_ERROR
+  FETCH_PRODUCTS_ERROR,
+  LOAD_TOKEN_USER
 } from "../Actions/actionsTypes";
+
 class Login extends Component {
   constructor() {
     super();
@@ -30,12 +31,55 @@ class Login extends Component {
       username: "",
       password: "",
       submitted: false,
-      showToast: false
+      showToast: false,
+      authResult: {},
+      isPostBack: false
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  Redirigir() {
+    if (
+      this.state.authResult.type &&
+      this.state.authResult.type === "success"
+    ) {
+      const query = new URLSearchParams(this.state.authResult.url);
+      var regex = /[?&]([^=#]+)=([^&#]*)/g,
+        params = {},
+        match;
+      while ((match = regex.exec(this.state.authResult.url))) {
+        params[match[1]] = match[2];
+      }
+      this.props.dispatch({ type: LOAD_TOKEN_USER, payload: params.token });
+      this.setState({ isPostBack: false });
+
+      //   console.log();
+      if (params.nuevo === "true") {
+        console.log("nuevi");
+      } else if (params.nuevo === "false") {
+        console.log("vieji");
+      }
+    }
+  }
+
+  // LOGIN De FACEBBOK
+  loginFacebook = async () => {
+    //  console.log("ERRORestoy en esta!");
+    let redirectUrl = await Linking.getInitialURL();
+    let authUrl = "https://10.30.30.125:3000/api/auth/facebook";
+    try {
+      let authResult = await WebBrowser.openAuthSessionAsync(
+        "https://10.30.30.125:3000/api/auth/facebook",
+        redirectUrl
+      );
+      await this.setState({ authResult: authResult, isPostBack: true });
+    } catch (err) {
+      console.log("ERROR:", err);
+    }
+  };
+
   handleChange(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value });
@@ -58,7 +102,7 @@ class Login extends Component {
   }
 
   HandleInicioBtn() {
-    console.log("handleInicio");
+    //  console.log("handleInicio");
 
     //Hay que validar mail y contraseña
     // hay que conectarse
@@ -84,7 +128,7 @@ class Login extends Component {
         return;
       })
       .catch(error => {
-        console.log("el error es" + error);
+        //  console.log("el error es" + error);
         this.props.dispatch({
           type: FETCH_PRODUCTS_ERROR,
           payload: error
@@ -102,6 +146,10 @@ class Login extends Component {
     this.props.navigation.navigate("Olvide");
   }
   render() {
+    if (this.state.isPostBack) {
+      this.Redirigir();
+    }
+    //console.log(this.state.authResult);
     return (
       <Container style={stl.container}>
         <Grid>
@@ -147,7 +195,7 @@ class Login extends Component {
                         value={this.state.password}
                         onChangeText={password => {
                           this.setState({ password });
-                          console.log(this.state.password);
+                          //  console.log(this.state.password);
                         }}
                       />
                       {this.state.submitted && !this.state.password && (
@@ -179,7 +227,7 @@ class Login extends Component {
                       <Button
                         block
                         style={stl.btn}
-                        onPress={() => this.handleSubmit()}
+                        onPress={() => this.HandleInicioBtn()}
                       >
                         <Text style={stl.btnText}>Iniciar Sesion</Text>
                       </Button>
@@ -209,11 +257,7 @@ class Login extends Component {
                 <Icon name="home" />
                 <Text style={stl.btnText}>Iniciar con Google</Text>
               </Button>
-              <Button
-                block
-                style={stl.btn}
-                onPress={() => this.HandleFacebookLoginBtn()}
-              >
+              <Button block style={stl.btn} onPress={this.loginFacebook}>
                 <Icon name="home" />
                 <Text style={stl.btnText}>Iniciar con Facebook</Text>
               </Button>
@@ -227,7 +271,7 @@ class Login extends Component {
   }
 }
 mapStateToProps = state => {
-  console.log(state);
+  // console.log(state);
   return { seleccion: state };
 };
 export default connect(mapStateToProps)(Login);

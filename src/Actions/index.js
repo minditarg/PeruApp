@@ -13,7 +13,8 @@ import {
   APP_CHOOSE_TYPE,
   FETCH_PRODUCTS_PENDING,
   FETCH_PRODUCTS_SUCCESS,
-  FETCH_PRODUCTS_ERROR
+  FETCH_PRODUCTS_ERROR,
+  LOAD_TOKEN_USER
 } from "./actionsTypes";
 
 export const AppType = tipo => ({
@@ -84,4 +85,8 @@ export const fetchSucces = data => ({
 export const fetchError = err => ({
   type: FETCH_PRODUCTS_ERROR,
   payload: err
+});
+export const loadTokenUser = token => ({
+  type: LOAD_TOKEN_USER,
+  payload: token
 });
