@@ -1,19 +1,155 @@
 import React, { Component } from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, ToastAndroid, Linking } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
+import * as WebBrowser from "expo-web-browser";
+import queryString from "query-string";
 import {
   Container,
+  Content,
   Button,
   Text,
   Form,
   Item,
   Input,
   Icon,
-  Label
+  Label,
+  Toast
 } from "native-base";
+import Alerta from "../Componentes/Alertas";
+import { connect } from "react-redux";
+import {
+  FETCH_PRODUCTS_PENDING,
+  FETCH_PRODUCTS_SUCCESS,
+  FETCH_PRODUCTS_ERROR,
+  LOAD_TOKEN_USER
+} from "../Actions/actionsTypes";
 
-export class Login extends Component {
+class Login extends Component {
+  constructor() {
+    super();
+    this.state = {
+      username: "",
+      password: "",
+      submitted: false,
+      showToast: false,
+      authResult: {},
+      isPostBack: false
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  Redirigir() {
+    if (
+      this.state.authResult.type &&
+      this.state.authResult.type === "success"
+    ) {
+      const query = new URLSearchParams(this.state.authResult.url);
+      var regex = /[?&]([^=#]+)=([^&#]*)/g,
+        params = {},
+        match;
+      while ((match = regex.exec(this.state.authResult.url))) {
+        params[match[1]] = match[2];
+      }
+      this.props.dispatch({ type: LOAD_TOKEN_USER, payload: params.token });
+      this.setState({ isPostBack: false });
+
+      //   console.log();
+      if (params.nuevo === "true") {
+        console.log("nuevi");
+      } else if (params.nuevo === "false") {
+        console.log("vieji");
+      }
+    }
+  }
+
+  // LOGIN De FACEBBOK
+  loginFacebook = async () => {
+    //  console.log("ERRORestoy en esta!");
+    let redirectUrl = await Linking.getInitialURL();
+    let authUrl = "https://10.30.30.125:3000/api/auth/facebook";
+    try {
+      let authResult = await WebBrowser.openAuthSessionAsync(
+        "https://10.30.30.125:3000/api/auth/facebook",
+        redirectUrl
+      );
+      await this.setState({ authResult: authResult, isPostBack: true });
+    } catch (err) {
+      console.log("ERROR:", err);
+    }
+  };
+
+  handleChange(e) {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
+  }
+
+  handleSubmit(e) {
+    const { username, password } = this.state;
+    if (!username) {
+      ToastAndroid.show("A pikachu appeared nearby !", ToastAndroid.SHORT);
+    }
+    this.setState({ submitted: true });
+    /*  const { username, password } = this.state;
+    if (username && password) {
+      this.props.login(username, password);
+    }*/
+  }
+
+  HandleRegistroBtn() {
+    this.props.navigation.navigate("Registrarse");
+  }
+
+  HandleInicioBtn() {
+    //  console.log("handleInicio");
+
+    //Hay que validar mail y contraseña
+    // hay que conectarse
+    // hay que manejar errores
+    // hay que redirigir si todo lo anterior se aprueba.
+    this.props.dispatch({ type: FETCH_PRODUCTS_PENDING });
+    fetch("https://10.30.30.125:3000/api/proveedores", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.error) {
+          throw res.error;
+        }
+        this.props.dispatch({
+          type: FETCH_PRODUCTS_SUCCESS,
+          payload: res
+        });
+        return;
+      })
+      .catch(error => {
+        //  console.log("el error es" + error);
+        this.props.dispatch({
+          type: FETCH_PRODUCTS_ERROR,
+          payload: error
+        });
+      });
+  }
+
+  HandleOlvidePassBtn() {
+    this.props.navigation.navigate("Olvide");
+  }
+  HandleFacebookLoginBtn() {
+    this.props.navigation.navigate("Olvide");
+  }
+  HandleGoogleLoginBtn() {
+    this.props.navigation.navigate("Olvide");
+  }
   render() {
+    if (this.state.isPostBack) {
+      this.Redirigir();
+    }
+    //console.log(this.state.authResult);
     return (
       <Container style={stl.container}>
         <Grid>
@@ -30,13 +166,41 @@ export class Login extends Component {
               <Row size={3}>
                 <Col>
                   <Form style={stl.form}>
-                    <Item style={stl.itm} floatingLabel>
+                    <Item
+                      style={stl.itm}
+                      floatingLabel
+                      error={this.state.submitted && !this.state.username}
+                    >
                       <Label style={stl.lbl}>Mail</Label>
-                      <Input style={stl.input} />
+                      <Input
+                        style={stl.input}
+                        keyboardType="email-address"
+                        name="username"
+                        value={this.state.username}
+                        onChangeText={username => {
+                          this.setState({ username });
+                        }}
+                      />
                     </Item>
-                    <Item style={stl.itm} floatingLabel>
+                    <Item
+                      style={stl.itm}
+                      floatingLabel
+                      error={this.state.submitted && !this.state.password}
+                    >
                       <Label style={stl.lbl}>Contraseña</Label>
-                      <Input secureTextEntry={true} style={stl.input} />
+                      <Input
+                        secureTextEntry={true}
+                        style={stl.input}
+                        name="password"
+                        value={this.state.password}
+                        onChangeText={password => {
+                          this.setState({ password });
+                          //  console.log(this.state.password);
+                        }}
+                      />
+                      {this.state.submitted && !this.state.password && (
+                        <Text> Username is required</Text>
+                      )}
                     </Item>
                   </Form>
                 </Col>
@@ -50,7 +214,10 @@ export class Login extends Component {
                         bordered
                         light
                         onPress={() =>
-                          this.props.navigation.navigate("Registrarse")
+                          Toast.show({
+                            text: "Wrong password!",
+                            buttonText: "Okay"
+                          })
                         }
                       >
                         <Text style={stl.btnText}>Registarse</Text>
@@ -60,7 +227,7 @@ export class Login extends Component {
                       <Button
                         block
                         style={stl.btn}
-                        onPress={() => this.props.navigation.navigate("Index")}
+                        onPress={() => this.HandleInicioBtn()}
                       >
                         <Text style={stl.btnText}>Iniciar Sesion</Text>
                       </Button>
@@ -68,11 +235,7 @@ export class Login extends Component {
                   </Row>
                   <Row size={1}>
                     <Col style={stl.alignRight}>
-                      <Button
-                        transparent
-                        small
-                        onPress={() => this.props.navigation.navigate("Olvide")}
-                      >
+                      <Button transparent small>
                         <Text style={stl.btnAyuda}>
                           Ayuda! Olvide mi contraseña
                         </Text>
@@ -89,26 +252,29 @@ export class Login extends Component {
                 block
                 light
                 style={stl.btn}
-                onPress={() => this.props.navigation.navigate("Index")}
+                onPress={() => this.HandleGoogleLoginBtn()}
               >
                 <Icon name="home" />
                 <Text style={stl.btnText}>Iniciar con Google</Text>
               </Button>
-              <Button
-                block
-                style={stl.btn}
-                onPress={() => this.props.navigation.navigate("Index")}
-              >
+              <Button block style={stl.btn} onPress={this.loginFacebook}>
                 <Icon name="home" />
                 <Text style={stl.btnText}>Iniciar con Facebook</Text>
               </Button>
             </Col>
           </Row>
         </Grid>
+
+        <Alerta text="recat"></Alerta>
       </Container>
     );
   }
 }
+mapStateToProps = state => {
+  // console.log(state);
+  return { seleccion: state };
+};
+export default connect(mapStateToProps)(Login);
 
 const stl = StyleSheet.create({
   container: { backgroundColor: "#044fb3" },
@@ -131,7 +297,6 @@ const stl = StyleSheet.create({
     marginLeft: 20,
     marginRight: 30
   },
-  itm: { borderBottomColor: "whitesmoke" },
   lbl: {
     color: "whitesmoke"
   },
