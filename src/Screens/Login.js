@@ -1,33 +1,14 @@
 import React, { Component } from "react";
-import { View, Image, StyleSheet, ToastAndroid, Linking } from "react-native";
+import {Image, StyleSheet, Linking, Keyboard, TouchableWithoutFeedback} from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import * as WebBrowser from "expo-web-browser";
 import queryString from "query-string";
-import {
-  Container,
-  Content,
-  Button,
-  Text,
-  Form,
-  Item,
-  Input,
-  Icon,
-  Label,
-  Toast
-} from "native-base";
+import {Container, Button, Text, Form, Item, Input, Icon, Label} from "native-base";
 import Alerta from "../Componentes/Alertas";
 import { connect } from "react-redux";
-import {
-  FETCH_PRODUCTS_PENDING,
-  FETCH_PRODUCTS_SUCCESS,
-  FETCH_PRODUCTS_ERROR,
-  LOAD_TOKEN_USER
-} from "../Actions/actionsTypes";
+import {FETCH_PRODUCTS_PENDING,FETCH_PRODUCTS_SUCCESS,FETCH_PRODUCTS_ERROR,LOAD_TOKEN_USER} from "../Actions/actionsTypes";
+import * as Fx from "../Funciones/funciones";
 
-//import fetchApi from "../Funciones/funciones";
-
-import fetchival from "fetchival";
-import _ from "lodash";
 
 class Login extends Component {
   constructor() {
@@ -81,95 +62,31 @@ class Login extends Component {
     }
   };
 
-  handleSubmit(e) {
-    const { username, password } = this.state;
-    if (!username) {
-      ToastAndroid.show("A pikachu appeared nearby !", ToastAndroid.SHORT);
-    }
-    this.setState({ submitted: true });
-    /*  const { username, password } = this.state;
-    if (username && password) {
-      this.props.login(username, password);
-    }*/
-  }
-
   HandleRegistroBtn() {
     this.props.navigation.navigate("Registrarse");
   }
+  HandleOlvidePass(){
+    this.props.navigation.navigate("Olvide");
+
+  }
 
   HandleInicioBtn() {
-    let payload = {
-      email: this.state.email,
-      password: this.state.password
-    };
-    fetch("http://10.30.30.125:3001/api/login", {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    })
-      .then(response => {
-        return response.json();
-      })
-      .then(responseData => {
-        console.log(responseData);
-        return responseData;
-      });
+    Fx.Fetchiar2('ditto/',{ email: this.state.email,
+                            password: this.state.password
+                          })
+    .then((response)=>console.log(response))
+    .catch(error => console.log (error));
   }
 
-  caca() {
-    //  console.log("handleInicio");
 
-    //Hay que validar mail y contraseña
-    // hay que conectarse
-    // hay que manejar errores
-    // hay que redirigir si todo lo anterior se aprueba.
-    this.props.dispatch({ type: FETCH_PRODUCTS_PENDING });
-    fetch("https://10.30.30.125:3000/api/proveedores", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .then(res => {
-        if (res.error) {
-          throw res.error;
-        }
-        this.props.dispatch({
-          type: FETCH_PRODUCTS_SUCCESS,
-          payload: res
-        });
-        return;
-      })
-      .catch(error => {
-        //  console.log("el error es" + error);
-        this.props.dispatch({
-          type: FETCH_PRODUCTS_ERROR,
-          payload: error
-        });
-      });
-  }
 
-  HandleOlvidePassBtn() {
-    this.props.navigation.navigate("Olvide");
-  }
-  HandleFacebookLoginBtn() {
-    this.props.navigation.navigate("Olvide");
-  }
-  HandleGoogleLoginBtn() {
-    this.props.navigation.navigate("Olvide");
-  }
   render() {
     if (this.state.isPostBack) {
       this.Redirigir();
     }
-    //console.log(this.state.authResult);
     return (
       <Container style={stl.container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Grid>
           <Row size={5}>
             <Col>
@@ -232,7 +149,7 @@ class Login extends Component {
                         bordered
                         light
                         onPress={() => {
-                          return;
+                          this.HandleRegistroBtn();
                         }}
                       >
                         <Text style={stl.btnText}>Registarse</Text>
@@ -250,7 +167,9 @@ class Login extends Component {
                   </Row>
                   <Row size={1}>
                     <Col style={stl.alignRight}>
-                      <Button transparent small>
+                      <Button transparent small   onPress={() => {
+                          this.HandleOlvidePass();
+                        }}>
                         <Text style={stl.btnAyuda}>
                           Ayuda! Olvide mi contraseña
                         </Text>
@@ -279,14 +198,12 @@ class Login extends Component {
             </Col>
           </Row>
         </Grid>
-
-        <Alerta text="recat"></Alerta>
+        </TouchableWithoutFeedback>
       </Container>
     );
   }
 }
 mapStateToProps = state => {
-  // console.log(state);
   return { seleccion: state };
 };
 export default connect(mapStateToProps)(Login);

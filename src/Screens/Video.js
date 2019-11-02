@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet ,WebView } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { Container, Button, Text } from "native-base";
 import { connect } from "react-redux";
@@ -9,22 +9,21 @@ class Video extends Component {
     super();
   }
 
+
+
   render() {
     return (
       <Container style={stl.container}>
         <Grid>
           <Row size={1}>
-            <Col style={stl.center}>
-              <Image
-                style={stl.logo}
-                source={require("../../assets/icono1.jpg")}
-              />
-              <Text style={stl.text1}>CONSTRUCCIONES</Text>
-              <Text style={stl.text2}>SOLUCIONES</Text>
-              <Text style={stl.text3}>
-                Video para {this.props.seleccion.appPara}
-              </Text>
-            </Col>
+           
+              <WebView
+        javaScriptEnabled={true}
+        source={{
+          ...(this.props.seleccion.appPara==='Cliente'  ? {   uri:'https://www.youtube.com/embed/GDAcE3hN0iQ'} : { uri:'https://www.youtube.com/embed/qFPKcgaGCrI'})
+        }}
+/>
+            
           </Row>
         </Grid>
         <Button
