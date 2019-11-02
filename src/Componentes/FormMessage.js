@@ -26,12 +26,12 @@ const FormMessage = props => {
     );
   }
 };
-
+/*
 FormMessage.propTypes = {
   message: PropTypes.string,
   type: PropTypes.string
 };
-
+*/
 FormMessage.defaultProps = {
   type: "error"
 };

@@ -5,7 +5,7 @@ import { Container, Button, Text } from "native-base";
 import { connect } from "react-redux";
 
 import { APP_CHOOSE_TYPE } from "../Actions/actionsTypes";
-
+import FormMessage from '../Componentes/FormMessage';
 class Select extends Component {
   constructor() {
     super();
@@ -27,7 +27,11 @@ class Select extends Component {
       <Container style={stl.container}>
         <Grid>
           <Row size={1}>
+
+
             <Col style={stl.center}>
+            <FormMessage message = {"regatomanolo"} type= {'warning'}></FormMessage>
+
               <Image
                 style={stl.logo}
                 source={require("../../assets/icono1.jpg")}

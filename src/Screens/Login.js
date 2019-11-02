@@ -198,7 +198,7 @@ class Login extends Component {
             </Col>
           </Row>
         </Grid>
-        </TouchableWithoutFeedback>
+         </TouchableWithoutFeedback>
       </Container>
     );
   }
