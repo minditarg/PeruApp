@@ -1,4 +1,3 @@
 export default {
-	clientId: '8puWuJWZYls1Ylawxm6CMiYREhsGGSyw',
-	url: 'http://localhost:1337',
+	url: 'http://10.30.30.125:3001/api',
 };

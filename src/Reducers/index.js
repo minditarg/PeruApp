@@ -7,8 +7,11 @@ import Trabajos from "./Trabajos";
 import AppChose from "./AppChose";
 import LoadingData from "./LoadingData";
 
+import { reducer as sessionReducer } from '../Services/session/reducer';
+
 export default combineReducers({
   User,
+  session: sessionReducer,
   Servicios,
   Trabajos,
   AppChose,

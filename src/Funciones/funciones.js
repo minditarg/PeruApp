@@ -1,9 +1,9 @@
 
-
-export async function Fetchiar2(endpoint, payload = {}, metodo = 'get') {
+const urlApi= "http://10.30.30.125:3001/api/";
+export async function Fetchiar(endpoint, payload = {}, metodo = 'get') {
   try {
     let response = await fetch(
-      "https://facebook.github.io/react-native/movies.json",
+      urlApi + endpoint,
       {
         method: metodo,
         headers: {
@@ -11,7 +11,6 @@ export async function Fetchiar2(endpoint, payload = {}, metodo = 'get') {
           "Content-Type": "application/json"
         },
         ...(metodo==='post' ? { body: JSON.stringify(payload)} : {}),
-
       }
     );
     let responseJson = await response.json();

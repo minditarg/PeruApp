@@ -1,5 +1,4 @@
-import store from 'MobileApp/src/store';
-
+import store from '../../Store';
 import * as api from './api';
 import * as selectors from './selectors';
 import * as actionCreators from './actions';
@@ -23,12 +22,14 @@ const clearSession = () => {
 };
 
 const onRequestSuccess = (response) => {
-	const tokens = response.tokens.reduce((prev, item) => ({
-		...prev,
-		[item.type]: item,
-	}), {});
-	store.dispatch(actionCreators.update({ tokens, user: response.user }));
-	setSessionTimeout(tokens.access.expiresIn);
+	// const tokens = response.tokens.reduce((prev, item) => ({
+	// 	...prev,
+	// 	[item.type]: item,
+	// }), {}); 
+	console.log("onRequestSuccess", response.tokens);
+	store.dispatch(actionCreators.update({ tokens:response.tokens, user: response.user }));
+	//setSessionTimeout(tokens.access.expiresIn);
+	return response;
 };
 
 const onRequestFailed = (exception) => {
@@ -48,10 +49,10 @@ export const refreshToken = () => {
 	.catch(onRequestFailed);
 };
 
-export const authenticate = (email, password) =>
+export const authenticate = (email, password) => 
 	api.authenticate(email, password)
 	.then(onRequestSuccess)
-	.catch(onRequestFailed);
+	.catch(onRequestFailed); 
 
 export const revoke = () => {
 	const session = selectors.get();

@@ -15,6 +15,7 @@ import {
   Button
 } from "native-base";
 import { Services } from "../../Datos/Services";
+import Store from "../Store";
 
 const extractKey = ({ Id }) => Id;
 function Item({ obj }) {
@@ -39,13 +40,13 @@ function Item({ obj }) {
   );
 }
 
-export class Servicios extends Component {
+class Servicios extends Component {
   render() {
     return (
       <Container>
         <Content>
           <FlatList
-            data={Services}
+            data={this.props.servicios}
             renderItem={({ item }) => <Item obj={item}></Item>}
             keyExtractor={extractKey}
           />
@@ -61,6 +62,14 @@ export class Servicios extends Component {
     );
   }
 }
+
+mapStateToProps = state => {
+  return { servicios: state.Servicios };
+};
+
+export  default connect(mapsStateToProps)(Servicios);
+
+
 const stl = StyleSheet.create({
   btnRounded: {
     position: "absolute",
