@@ -5,8 +5,7 @@ import {
   Linking,
   Keyboard,
   TouchableWithoutFeedback,
-  ImageBackground,
-  TouchableOpacity
+  ImageBackground
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import * as WebBrowser from "expo-web-browser";
@@ -154,108 +153,103 @@ class Login extends Component {
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <Grid style={{ padding: 10 }}>
-              <Row size={5}>
+              <Row size={2}></Row>
+
+              <Row size={1}>
                 <Col>
-                  <Row size={2}>
-                    {/*   <Col style={stl.center}>
-                      <Image
-                        style={stl.logo}
-                        source={require("../../assets/icono1.jpg")}
+                  <Form style={stl.form}>
+                    <Item
+                      style={stl.itm}
+                      floatingLabel
+                      error={this.state.submitted && !this.state.email}
+                    >
+                      <Label style={stl.lbl}>Mail</Label>
+                      <Input
+                        style={stl.input}
+                        keyboardType="email-address"
+                        name="email"
+                        value={this.state.email}
+                        onChangeText={email => {
+                          this.setState({ email });
+                        }}
                       />
-                    </Col>*/}
-                  </Row>
-                  <Row size={3}>
+                    </Item>
+                    {this.state.submitted && !this.state.email && (
+                      <Text style={stl.text1}> El email es requerido</Text>
+                    )}
+                    <Item
+                      style={stl.itm}
+                      floatingLabel
+                      error={this.state.submitted && !this.state.password}
+                    >
+                      <Label style={stl.lbl}>Contraseña</Label>
+                      <Input
+                        secureTextEntry={true}
+                        style={stl.input}
+                        name="password"
+                        value={this.state.password}
+                        onChangeText={password => {
+                          this.setState({ password });
+                        }}
+                      />
+                    </Item>
+                    {this.state.submitted && !this.state.password && (
+                      <Text style={stl.text1}> La contraseña es requerida</Text>
+                    )}
+                    <Text style={stl.text1}> {this.state.error}</Text>
+                  </Form>
+                </Col>
+              </Row>
+
+              <Row size={1}>
+                <Col>
+                  <Row
+                    size={1}
+                    style={{ paddingHorizontal: 35, paddingTop: 20 }}
+                  >
                     <Col>
-                      <Form style={stl.form}>
-                        <Item
-                          style={stl.itm}
-                          floatingLabel
-                          error={this.state.submitted && !this.state.email}
-                        >
-                          <Label style={stl.lbl}>Mail</Label>
-                          <Input
-                            style={stl.input}
-                            keyboardType="email-address"
-                            name="email"
-                            value={this.state.email}
-                            onChangeText={email => {
-                              this.setState({ email });
-                            }}
-                          />
-                        </Item>
-                        {this.state.submitted && !this.state.email && (
-                          <Text style={stl.text1}> El email es requerido</Text>
-                        )}
-                        <Item
-                          style={stl.itm}
-                          floatingLabel
-                          error={this.state.submitted && !this.state.password}
-                        >
-                          <Label style={stl.lbl}>Contraseña</Label>
-                          <Input
-                            secureTextEntry={true}
-                            style={stl.input}
-                            name="password"
-                            value={this.state.password}
-                            onChangeText={password => {
-                              this.setState({ password });
-                            }}
-                          />
-                        </Item>
-                        {this.state.submitted && !this.state.password && (
-                          <Text style={stl.text1}>
-                            {" "}
-                            La contraseña es requerida
-                          </Text>
-                        )}
-                        <Text style={stl.text1}> {this.state.error}</Text>
-                      </Form>
+                      <Button
+                        style={stl.btn}
+                        bordered
+                        light
+                        onPress={() => {
+                          this.HandleRegistroBtn();
+                        }}
+                      >
+                        <Text style={stl.btnText}>Registarse</Text>
+                      </Button>
+                    </Col>
+                    <Col>
+                      <Button
+                        block
+                        style={[stl.btn, stl.primary]}
+                        onPress={() => this.HandleInicioBtn()}
+                      >
+                        <Text style={stl.btnText}>Iniciar Sesion</Text>
+                      </Button>
                     </Col>
                   </Row>
-                  <Row size={2}>
-                    <Col>
-                      <Row size={1}>
-                        <Col>
-                          <Button
-                            style={stl.btn}
-                            bordered
-                            light
-                            onPress={() => {
-                              this.HandleRegistroBtn();
-                            }}
-                          >
-                            <Text style={stl.btnText}>Registarse</Text>
-                          </Button>
-                        </Col>
-                        <Col>
-                          <Button
-                            block
-                            style={stl.btn}
-                            onPress={() => this.HandleInicioBtn()}
-                          >
-                            <Text style={stl.btnText}>Iniciar Sesion</Text>
-                          </Button>
-                        </Col>
-                      </Row>
-                      <Row size={1}>
-                        <Col style={stl.alignRight}>
-                          <Button
-                            transparent
-                            small
-                            onPress={() => {
-                              this.HandleOlvidePass();
-                            }}
-                          >
-                            <Text style={stl.btnAyuda}>
-                              Ayuda! Olvide mi contraseña
-                            </Text>
-                          </Button>
-                        </Col>
-                      </Row>
+                  <Row
+                    size={1}
+                    style={{ paddingHorizontal: 20, paddingVertical: 20 }}
+                  >
+                    <Col style={stl.alignRight}>
+                      <Button
+                        transparent
+                        small
+                        onPress={() => {
+                          this.HandleOlvidePass();
+                        }}
+                      >
+                        <Text style={stl.btnAyuda}>
+                          Ayuda! Olvide mi contraseña
+                        </Text>
+                      </Button>
                     </Col>
                   </Row>
                 </Col>
               </Row>
+
               <Row size={1}>
                 <Col>
                   <Button
@@ -301,6 +295,9 @@ mapStateToProps = state => {
 export default connect(mapStateToProps)(Login);
 
 const stl = StyleSheet.create({
+  primary: {
+    backgroundColor: "#2392e5"
+  },
   container: { backgroundColor: "#044fb3" },
   center: { justifyContent: "flex-end", alignItems: "center" },
   logo: { width: 40, height: 40, borderRadius: 100 },
@@ -352,7 +349,7 @@ const stl = StyleSheet.create({
     color: "whitesmoke"
   },
   btnAyuda: {
-    color: "silver"
+    color: "white"
   },
   alignRight: {
     alignItems: "flex-end"
