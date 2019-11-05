@@ -95,6 +95,7 @@ class Login extends Component {
   HandleInicioBtn() {
     this.setState({
       isLoading: true,
+      submitted:true,
       error: '',
     });
     dismissKeyboard();
@@ -145,7 +146,7 @@ class Login extends Component {
                       <Item
                         style={stl.itm}
                         floatingLabel
-                        error={this.state.submitted && !this.state.username}
+                        error={this.state.submitted && !this.state.email}
                       >
                         <Label style={stl.lbl}>Mail</Label>
                         <Input
@@ -157,7 +158,11 @@ class Login extends Component {
                             this.setState({ email });
                           }}
                         />
+                        
                       </Item>
+                      {this.state.submitted && !this.state.email && (
+                          <Text style={stl.text1}> El email es requerido</Text>
+                        )}
                       <Item
                         style={stl.itm}
                         floatingLabel
@@ -171,16 +176,12 @@ class Login extends Component {
                           value={this.state.password}
                           onChangeText={password => {
                             this.setState({ password });
-                            //  console.log(this.state.password);
                           }}
                         />
-                        {this.state.submitted && !this.state.password && (
-                          <Text> Username is required</Text>
-                        )}
-                        
-                         
-                      
                       </Item>
+                      {this.state.submitted && !this.state.password && (
+                          <Text style={stl.text1}> La contraseña es requerida</Text>
+                        )}
                       <Text style={stl.text1}> { this.state.error}</Text>
                     </Form>
                   </Col>

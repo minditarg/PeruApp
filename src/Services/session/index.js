@@ -25,9 +25,8 @@ const onRequestSuccess = (response) => {
 	// const tokens = response.tokens.reduce((prev, item) => ({
 	// 	...prev,
 	// 	[item.type]: item,
-	// }), {}); 
-	console.log("onRequestSuccess", response.tokens);
-	store.dispatch(actionCreators.update({ tokens:response.tokens, user: response.user }));
+	// // }), {}); 
+	if(response.statusType== "success") store.dispatch(actionCreators.update({ tokens:response.data.tokens, user: response.data.user }));
 	//setSessionTimeout(tokens.access.expiresIn);
 	return response;
 };
@@ -63,3 +62,13 @@ export const revoke = () => {
 	.then(clearSession())
 	.catch(() => {});
 };
+
+//TODO traer desde el servidor los datos de expireIn y demas del token.
+export const estaLogueado= () => {
+	const session = selectors.get();
+	return session.user != null && session.user.id > 0;
+}
+export const usuarioLogueado= () => {
+	const session = selectors.get();
+	return session.user != null && session.user.id > 0 ? session.user : null;
+}
