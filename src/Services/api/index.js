@@ -18,8 +18,6 @@ export const exceptionExtractError = (exception) => {
 
 export async function fetchApi(endpoint, payload = {}, metodo = 'get') {
 	try {
-		//console.log(JSON.stringify(sessionSelectors.get()));
-		///console.log(sessionSelectors.get());
 		const accessToken = sessionSelectors.get().tokens;
 		let response = await fetch(
 			apiConfig.url + endpoint,
@@ -39,30 +37,6 @@ export async function fetchApi(endpoint, payload = {}, metodo = 'get') {
 		console.log(error);
 	}
 };
-
-// export const fetchApi = (endPoint, payload = {}, method = 'get', headers = {}) => {
-// 	const accessToken = sessionSelectors.get().tokens.access.value;
-// 	return fetchival(`${apiConfig.url}${endPoint}`, {
-// 		headers: _.pickBy({
-// 			...(accessToken ? {
-// 				Authorization: `Bearer ${accessToken}`,
-// 			} : {
-// 				'Client-ID': apiConfig.clientId,
-// 			}),
-// 			...headers,
-// 		}, item => !_.isEmpty(item)),
-// 	})[method.toLowerCase()](payload)
-// 	.catch((e) => {
-// 		if (e.response && e.response.json) {
-// 			e.response.json().then((json) => {
-// 				if (json) throw json;
-// 				throw e;
-// 			});
-// 		} else {
-// 			throw e;
-// 		}
-// 	});
-// };
 
 
 

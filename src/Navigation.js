@@ -10,6 +10,7 @@ import {
   Login,
   Olvide,
   Registrarse,
+  RegistrarProveedor,
   AddServicio,
   AddTrabajo,
   Empresa,
@@ -115,7 +116,8 @@ const AppNavigator = createStackNavigator(
     Video: Video,
     Login: Login,
     Olvide: Olvide,
-    Registrarse: Registrarse
+    Registrarse: Registrarse,
+    RegistrarProveedor: RegistrarProveedor
   },
   {
     headerMode: "none"

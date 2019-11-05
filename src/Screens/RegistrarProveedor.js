@@ -4,17 +4,20 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import { Container, Button, Text, Form, Item, Textarea, Input, Label, Icon, Content } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 import { stringify } from "query-string";
-import * as usuario from '../Services/usuario';
-import * as session from '../Services/session';
+import * as proveedor from '../Services/proveedor';
 import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
 
-export class Registrarse extends Component {
+export class RegistrarProveedor extends Component {
 
   constructor() {
     super();
     this.state = {
-      email: "",
-      password: "",
+      nombre: String,
+      email: String,
+      descripcion: String,
+      direccion: String,
+      telefono: String,
+      foto: String,
       submitted: false,
       isLoading: false,
       error: null
@@ -23,31 +26,17 @@ export class Registrarse extends Component {
   HandleRegistroBtn() {
     this.setState({
       isLoading: true,
-      submitted: true,
+      submitted:true,
       error: '',
     });
     dismissKeyboard();
-    usuario.crear(this.state.email, this.state.email)
+    proveedor.crear(this.state.nombre,this.state.email,this.state.descripcion,this.state.direccion,this.state.telefono,this.state.foto)
       .then((response) => {
         if (response.statusType == "success") {
-          session.authenticate(this.state.email, this.state.email)
-            .then((response) => {
-              this.setState(this.initialState);
-              this.props.navigation.navigate("RegistrarProveedor");
-            })
-            .catch((exception) => {
-              const error = api.exceptionExtractError(exception);
-              this.setState({
-                isLoading: false,
-                ...(error ? { error } : {}),
-              });
-
-              if (!error) {
-                throw exception;
-              }
-            });
+          this.setState(this.initialState);
+          this.props.navigate("Servicios");
         } else {
-          this.setState({ error: response.message });
+         this.setState({error: response.message});
         }
       })
       .catch((exception) => {
@@ -72,14 +61,11 @@ export class Registrarse extends Component {
               <Image style={stl.logo} source={require('../../assets/icono1.jpg')} />
             </View>
             <Form style={stl.form}>
-              <Item
-                style={stl.itm}
-                floatingLabel
-                error={this.state.submitted && !this.state.email}
-              >
-                <Label style={stl.lbl}>Mail</Label>
+              <Item style={stl.itm} floatingLabel error={this.state.submitted && !this.state.email} >
+                <Label style={stl.lbl}>Mail público</Label>
                 <Input
                   style={stl.input}
+                  autoCompleteType="email"
                   keyboardType="email-address"
                   name="email"
                   value={this.state.email}
@@ -87,31 +73,70 @@ export class Registrarse extends Component {
                     this.setState({ email });
                   }}
                 />
-
               </Item>
-              {this.state.submitted && !this.state.email && (
-                <Text style={stl.text1}> El email es requerido</Text>
-              )}
-              <Item
-                style={stl.itm}
-                floatingLabel
-                error={this.state.submitted && !this.state.password}
-              >
-                <Label style={stl.lbl}>Contraseña</Label>
+              {this.state.submitted && !this.state.email && ( <Text style={stl.text1}> El email es requerido</Text>)}
+
+              <Item style={stl.itm} floatingLabel error={this.state.submitted && !this.state.nombre} >
+                <Label style={stl.lbl}>Nombre completo</Label>
                 <Input
-                  secureTextEntry={true}
                   style={stl.input}
-                  name="password"
-                  value={this.state.password}
-                  onChangeText={password => {
-                    this.setState({ password });
+                  name="nombre"
+                  autoCompleteType="name"
+                  value={this.state.nombre}
+                  onChangeText={nombre => {
+                    this.setState({ nombre });
                   }}
                 />
               </Item>
-              {this.state.submitted && !this.state.password && (
-                <Text style={stl.text1}> La contraseña es requerida</Text>
-              )}
-              <Text style={stl.text1}> {this.state.error}</Text>
+              {this.state.submitted && !this.state.nombre && ( <Text style={stl.text1}> El nombre es requerido</Text>)}
+
+                  
+              <Item style={stl.itm} floatingLabel >
+                <Label style={stl.lbl}>Teléfono</Label>
+                <Input
+                  style={stl.input}
+                  name="telefono"
+                  autoCompleteType="tel"
+                  value={this.state.telefono}
+                  onChangeText={telefono => {
+                    this.setState({ telefono });
+                  }}
+                />
+              </Item>
+                     
+              <Item style={stl.itm} floatingLabel >
+                <Label style={stl.lbl}>Dirección</Label>
+                <Input
+                  style={stl.input}
+                  name="direccion"
+                  autoCompleteType="street-address"
+                  value={this.state.direccion}
+                  onChangeText={direccion => {
+                    this.setState({ direccion });
+                  }}
+                />
+              </Item>
+              <View style={{ paddingTop: 10 }}  >
+                <Label style={stl.lbl}>Descripción</Label>
+                <Textarea
+                  style={stl.txtArea}
+                  ligth rowSpan={5}
+                  name="descripcion"
+                  bordered placeholderTextColor="whitesmoke" placeholder="Descripcion"
+                  value={this.state.descripcion}
+                  onChangeText={descripcion => {
+                    this.setState({ descripcion });
+                  }}
+                />
+              </View>
+              <Text style={stl.text1}> { this.state.error}</Text>
+              <Button
+                style={stl.btnFoto}
+                block light
+                onPress={() => this.props.navigation.navigate("Login")}
+              >
+                <Icon name='home' />
+              </Button>
             </Form>
             <Row>
               <Col>
@@ -124,8 +149,8 @@ export class Registrarse extends Component {
                 </Button>
               </Col>
               <Col>
-
-                <Button block style={stl.btn} onPress={() => this.HandleRegistroBtn()}>
+              
+                <Button block style={stl.btn}  onPress={() => this.HandleRegistroBtn()}>
                   <Text style={stl.btnText} >Crear cuenta</Text>
                 </Button>
               </Col></Row>

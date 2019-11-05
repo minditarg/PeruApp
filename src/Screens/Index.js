@@ -4,6 +4,7 @@ import Login from "./Login";
 
 import { Olvide } from "./Olvide";
 import { Registrarse } from "./Registrarse";
+import { RegistrarProveedor } from "./RegistrarProveedor";
 import { AddServicio } from "./AddServicio";
 
 import { AddTrabajo } from "./AddTrabajo";
@@ -17,6 +18,7 @@ export {
   Login,
   Olvide,
   Registrarse,
+  RegistrarProveedor,
   AddServicio,
   AddTrabajo,
   Empresa,
