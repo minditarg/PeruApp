@@ -5,7 +5,7 @@ import { Container, Text } from "native-base";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { Col, Row, Grid } from "react-native-easy-grid";
-
+import * as session from './Services/session';
 /*en esta pantalla tengo que refrescar USER_TOKEN si existe
   cargar las fuentes del template
   iniciar timeout de refresh USER_TOKEN */
@@ -27,6 +27,15 @@ export default class AppLoad extends React.Component {
     this.setState({ isReady: true });
     setTimeout(() => {
       // this.setState({ cargo: true });
+      if(session.estaLogueado()){
+        let usuarioLogueado= session.usuarioLogueado();
+        if(usuarioLogueado.Proveedor != null){
+          this.props.navigation.navigate("Servicios");
+        }
+        if(usuarioLogueado.Cliente != null){
+          this.props.navigation.navigate("Trabajos");
+        }
+      }
       this.props.navigation.navigate("Select");
     }, 300);
   }

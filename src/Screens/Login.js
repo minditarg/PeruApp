@@ -1,14 +1,17 @@
 import React, { Component } from "react";
-import {Image, StyleSheet, Linking, Keyboard, TouchableWithoutFeedback} from "react-native";
+import { Image, StyleSheet, Linking, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import * as WebBrowser from "expo-web-browser";
 import queryString from "query-string";
-import {Container, Button, Text, Form, Item, Input, Icon, Label} from "native-base";
+import { Container, Button, Text, Form, Item, Input, Icon, Label } from "native-base";
 import Alerta from "../Componentes/Alertas";
 import { connect } from "react-redux";
-import {FETCH_PRODUCTS_PENDING,FETCH_PRODUCTS_SUCCESS,FETCH_PRODUCTS_ERROR,LOAD_TOKEN_USER} from "../Actions/actionsTypes";
+import { FETCH_PRODUCTS_PENDING, FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_ERROR, LOAD_TOKEN_USER } from "../Actions/actionsTypes";
 import * as Fx from "../Funciones/funciones";
-
+import * as session from '../Services/session';
+import * as api from '../Services/api';
+import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
+import { ThemeColors } from "react-navigation";
 
 class Login extends Component {
   constructor() {
@@ -19,7 +22,10 @@ class Login extends Component {
       submitted: false,
       showToast: false,
       authResult: {},
-      isPostBack: false
+      isPostBack: false,
+      isLoading: false,
+      error: null
+
     };
   }
 
@@ -65,19 +71,55 @@ class Login extends Component {
   HandleRegistroBtn() {
     this.props.navigation.navigate("Registrarse");
   }
-  HandleOlvidePass(){
+  HandleOlvidePass() {
     this.props.navigation.navigate("Olvide");
 
   }
 
-  HandleInicioBtn() {
-    Fx.Fetchiar2('ditto/',{ email: this.state.email,
-                            password: this.state.password
-                          })
-    .then((response)=>console.log(response))
-    .catch(error => console.log (error));
-  }
+  // HandleInicioBtn() {
+  //   Fx.Fetchiar('login/',{ email: this.state.email,
+  //                           password: this.state.password
+  //                         }, 'post')
+  //   .then(response => {
+  //     if(response.statusType=="success"){
+  //       console.log (response.data);
+  //       this.props.dispatch({ type: LOAD_TOKEN_USER, payload: response.data.token });
+  //       this.props.navigation.navigate("Servicios");
+  //     }else{
+  //       console.log (response.data);
+  //     }
+  //   })
+  //   .catch(error => console.log (error));
+  // }
 
+  HandleInicioBtn() {
+    this.setState({
+      isLoading: true,
+      submitted:true,
+      error: '',
+    });
+    dismissKeyboard();
+    session.authenticate(this.state.email, this.state.password)
+      .then((response) => {
+        if (response.statusType == "success") {
+          this.setState(this.initialState);
+          this.props.navigation.navigate("Trabajos");
+        } else {
+         this.setState({error: response.message});
+        }
+      })
+      .catch((exception) => {
+        const error = api.exceptionExtractError(exception);
+        this.setState({
+          isLoading: false,
+          ...(error ? { error } : {}),
+        });
+
+        if (!error) {
+          throw exception;
+        }
+      });
+  }
 
 
   render() {
@@ -87,118 +129,122 @@ class Login extends Component {
     return (
       <Container style={stl.container}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <Grid>
-          <Row size={5}>
-            <Col>
-              <Row size={2}>
-                <Col style={stl.center}>
-                  <Image
-                    style={stl.logo}
-                    source={require("../../assets/icono1.jpg")}
-                  />
-                </Col>
-              </Row>
-              <Row size={3}>
-                <Col>
-                  <Form style={stl.form}>
-                    <Item
-                      style={stl.itm}
-                      floatingLabel
-                      error={this.state.submitted && !this.state.username}
-                    >
-                      <Label style={stl.lbl}>Mail</Label>
-                      <Input
-                        style={stl.input}
-                        keyboardType="email-address"
-                        name="email"
-                        value={this.state.email}
-                        onChangeText={email => {
-                          this.setState({ email });
-                        }}
-                      />
-                    </Item>
-                    <Item
-                      style={stl.itm}
-                      floatingLabel
-                      error={this.state.submitted && !this.state.password}
-                    >
-                      <Label style={stl.lbl}>Contraseña</Label>
-                      <Input
-                        secureTextEntry={true}
-                        style={stl.input}
-                        name="password"
-                        value={this.state.password}
-                        onChangeText={password => {
-                          this.setState({ password });
-                          //  console.log(this.state.password);
-                        }}
-                      />
+          <Grid>
+            <Row size={5}>
+              <Col>
+                <Row size={2}>
+                  <Col style={stl.center}>
+                    <Image
+                      style={stl.logo}
+                      source={require("../../assets/icono1.jpg")}
+                    />
+                  </Col>
+                </Row>
+                <Row size={3}>
+                  <Col>
+                    <Form style={stl.form}>
+                      <Item
+                        style={stl.itm}
+                        floatingLabel
+                        error={this.state.submitted && !this.state.email}
+                      >
+                        <Label style={stl.lbl}>Mail</Label>
+                        <Input
+                          style={stl.input}
+                          keyboardType="email-address"
+                          name="email"
+                          value={this.state.email}
+                          onChangeText={email => {
+                            this.setState({ email });
+                          }}
+                        />
+                        
+                      </Item>
+                      {this.state.submitted && !this.state.email && (
+                          <Text style={stl.text1}> El email es requerido</Text>
+                        )}
+                      <Item
+                        style={stl.itm}
+                        floatingLabel
+                        error={this.state.submitted && !this.state.password}
+                      >
+                        <Label style={stl.lbl}>Contraseña</Label>
+                        <Input
+                          secureTextEntry={true}
+                          style={stl.input}
+                          name="password"
+                          value={this.state.password}
+                          onChangeText={password => {
+                            this.setState({ password });
+                          }}
+                        />
+                      </Item>
                       {this.state.submitted && !this.state.password && (
-                        <Text> Username is required</Text>
-                      )}
-                    </Item>
-                  </Form>
-                </Col>
-              </Row>
-              <Row size={2}>
-                <Col>
-                  <Row size={1}>
-                    <Col>
-                      <Button
-                        style={stl.btn}
-                        bordered
-                        light
-                        onPress={() => {
-                          this.HandleRegistroBtn();
-                        }}
-                      >
-                        <Text style={stl.btnText}>Registarse</Text>
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button
-                        block
-                        style={stl.btn}
-                        onPress={() => this.HandleInicioBtn()}
-                      >
-                        <Text style={stl.btnText}>Iniciar Sesion</Text>
-                      </Button>
-                    </Col>
-                  </Row>
-                  <Row size={1}>
-                    <Col style={stl.alignRight}>
-                      <Button transparent small   onPress={() => {
+                          <Text style={stl.text1}> La contraseña es requerida</Text>
+                        )}
+                      <Text style={stl.text1}> { this.state.error}</Text>
+                    </Form>
+                  </Col>
+                </Row>
+                <Row size={2}>
+                  <Col>
+                    <Row size={1}>
+                      <Col>
+                        <Button
+                          style={stl.btn}
+                          bordered
+                          light
+                          onPress={() => {
+                            this.HandleRegistroBtn();
+                          }}
+                        >
+                          <Text style={stl.btnText}>Registarse</Text>
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button
+                          block
+                          style={stl.btn}
+                          onPress={() => this.HandleInicioBtn()}
+                        >
+                          <Text style={stl.btnText}>Iniciar Sesion</Text>
+                        </Button>
+                      </Col>
+                    </Row>
+                    <Row size={1}>
+                      <Col style={stl.alignRight}>
+                        <Button transparent small onPress={() => {
                           this.HandleOlvidePass();
                         }}>
-                        <Text style={stl.btnAyuda}>
-                          Ayuda! Olvide mi contraseña
+                          <Text style={stl.btnAyuda}>
+                            Ayuda! Olvide mi contraseña
                         </Text>
-                      </Button>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          <Row size={2}>
-            <Col>
-              <Button
-                block
-                light
-                style={stl.btn}
-                onPress={() => this.HandleGoogleLoginBtn()}
-              >
-                <Icon name="home" />
-                <Text style={stl.btnText}>Iniciar con Google</Text>
-              </Button>
-              <Button block style={stl.btn} onPress={this.loginFacebook}>
-                <Icon name="home" />
-                <Text style={stl.btnText}>Iniciar con Facebook</Text>
-              </Button>
-            </Col>
-          </Row>
-        </Grid>
-         </TouchableWithoutFeedback>
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row size={2}>
+              <Col>
+                <Button
+                  block
+                  light
+                  style={stl.btn}
+                  onPress={() => this.HandleGoogleLoginBtn()}
+                >
+                  <Icon name="home" />
+                  <Text style={stl.btnText}>Iniciar con Google</Text>
+                </Button>
+                <Button block style={stl.btn} onPress={this.loginFacebook}>
+                  <Icon name="home" />
+                  <Text style={stl.btnText}>Iniciar con Facebook</Text>
+                </Button>
+              </Col>
+            </Row>
+          </Grid>
+        </TouchableWithoutFeedback>
       </Container>
     );
   }
