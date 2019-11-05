@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, ImageBackground } from "react-native";
 import { AppLoading } from "expo";
 import { Container, Text } from "native-base";
 import * as Font from "expo-font";
@@ -45,19 +45,24 @@ export default class AppLoad extends React.Component {
       return <AppLoading />;
     }
     return (
-      <Container style={stl.container}>
-        <Grid>
-          <Row size={1}>
-            <Col style={stl.center}>
-              <Image
-                style={stl.logo}
-                source={require("../assets/icono1.jpg")}
-              />
-              <Text style={stl.text1}>CONSTRUCCIONES</Text>
-              <Text style={stl.text2}>SOLUCIONES</Text>
-            </Col>
-          </Row>
-        </Grid>
+      <Container>
+        <ImageBackground
+          source={require("../assets/bkblues.jpg")}
+          style={{ width: "100%", height: "100%" }}
+        >
+          <Grid>
+            <Row size={1}>
+              <Col style={stl.center}>
+                <Image
+                  style={stl.logo}
+                  source={require("../assets/icono1.jpg")}
+                />
+                <Text style={stl.text1}>CONSTRUCCIONES</Text>
+                <Text style={stl.text2}>SOLUCIONES</Text>
+              </Col>
+            </Row>
+          </Grid>
+        </ImageBackground>
       </Container>
     );
   }
