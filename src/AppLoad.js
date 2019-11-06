@@ -36,7 +36,7 @@ export default class AppLoad extends React.Component {
           this.props.navigation.navigate("Trabajos");
         }
       }
-      this.props.navigation.navigate("Olvide");
+      this.props.navigation.navigate("Login");
     }, 300);
   }
 
@@ -54,7 +54,7 @@ export default class AppLoad extends React.Component {
     );
   }
 }
-
+/*
 const stl = StyleSheet.create({
   container: { backgroundColor: "#044fb3" },
   center: { justifyContent: "center", alignItems: "center" },
@@ -62,3 +62,4 @@ const stl = StyleSheet.create({
   text1: { color: "red", fontWeight: "bold", fontSize: 15 },
   text2: { color: "white", fontWeight: "bold", fontSize: 20 }
 });
+*/

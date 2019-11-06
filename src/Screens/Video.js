@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { View, Image, StyleSheet, WebView } from "react-native";
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { WebView } from "react-native";
+import { Row, Grid } from "react-native-easy-grid";
 import { Container, Button, Text } from "native-base";
 import { connect } from "react-redux";
+import { stl } from "./styles/styles";
 
 class Video extends Component {
   constructor() {
@@ -41,17 +42,3 @@ mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps)(Video);
-const stl = StyleSheet.create({
-  container: { backgroundColor: "#044fb3" },
-  center: { justifyContent: "center", alignItems: "center" },
-  logo: { width: 100, height: 100, borderRadius: 100 },
-  text1: { color: "red", fontWeight: "bold", fontSize: 15 },
-  text2: { color: "white", fontWeight: "bold", fontSize: 20 },
-  text3: { color: "white" },
-  btnSaltar: {
-    position: "absolute",
-    right: 0,
-    bottom: 50,
-    backgroundColor: "rgba(0,0,0,.5)"
-  }
-});
