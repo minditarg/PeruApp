@@ -75,7 +75,7 @@ class Login extends Component {
   };
 
   HandleRegistroBtn() {
-    this.props.navigation.navigate("Registrarse");
+    this.props.navigation.navigate("RegistrarProveedor");
   }
   HandleOlvidePass() {
     this.props.navigation.navigate("Olvide");
