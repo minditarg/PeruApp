@@ -8,6 +8,12 @@ const colorError = "#ff2727";
 
 export const stl = StyleSheet.create({
   imgBkground: { width: "100%", height: "100%" },
+  imgLogoGrande: {
+    flex: 1,
+    width: "100%",
+    aspectRatio: 1.48,
+    resizeMode: "contain"
+  },
   center: { justifyContent: "center", alignItems: "center" },
   btnSelect: {
     margin: 5,
@@ -17,14 +23,15 @@ export const stl = StyleSheet.create({
     paddingRight: 10,
     paddingBottom: 20,
     height: 80
-  }, vista: {
+  },
+  vista: {
     paddingTop: 30,
     paddingBottom: 30
   },
   btn: {
-    //flexDirection: "row",
-    //alignContent: "center",
-   // justifyContent: "center",
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "center",
     margin: 15,
     padding: 0,
     textAlign: "center",
@@ -37,15 +44,15 @@ export const stl = StyleSheet.create({
     backgroundColor: darkBlue
   },
   Face: {
-    margin:0,
+    margin: 0,
     backgroundColor: faceColor
   },
   Google: {
-    margin:0,
+    margin: 0,
     backgroundColor: googleColor
   },
-  btnText: { padding:0},
-  btnTextRs: { textTransform:'capitalize'},
+  btnText: { padding: 0, textAlign: "center" },
+  btnTextRs: { textTransform: "capitalize" },
 
   btnSaltar: {
     position: "absolute",
@@ -68,12 +75,19 @@ export const stl = StyleSheet.create({
     fontSize: 15,
     paddingLeft: 15
   },
-  btnsRow: { flexDirection: "row",marginHorizontal:-10, justifyContent: "space-between" },
+  btnsRow: {
+    flexDirection: "row",
+    marginHorizontal: -10,
+    justifyContent: "space-around"
+  },
   mTop20: { marginTop: 20 },
   iconoImg: {
     height: 30,
     width: 30,
     margin: 0,
     padding: 0
+  },
+  paddingTop30: {
+    paddingTop: "30%"
   }
 });

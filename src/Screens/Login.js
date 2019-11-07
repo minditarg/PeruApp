@@ -5,7 +5,9 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   ImageBackground,
-  View
+  View,
+  ScrollView,
+  SafeAreaView
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import * as WebBrowser from "expo-web-browser";
@@ -114,126 +116,133 @@ class Login extends Component {
       this.Redirigir();
     }
     return (
-      <Container style={stl.container}>
+      <SafeAreaView style={stl.container}>
         <ImageBackground
-          source={require("../../assets/splash.png")}
+          source={require("../../assets/bkblues.png")}
           style={stl.imgBkground}
         >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <Grid style={stl.padding10}>
-              <Row size={2}></Row>
-              <Row size={3}>
-                <Col>
-                  <Form style={stl.form}>
-                    <Item
-                      floatingLabel
-                      error={this.state.submitted && !this.state.email}
-                    >
-                      <Label style={stl.textwhite}>Mail</Label>
-                      <Input
-                        style={stl.textwhite}
-                        keyboardType="email-address"
-                        name="email"
-                        value={this.state.email}
-                        onChangeText={email => {
-                          this.setState({ email });
-                        }}
-                      />
-                    </Item>
-                    {this.state.submitted && !this.state.email && (
-                      <Text style={stl.txtError}> El email es requerido</Text>
-                    )}
-                    <Item
-                      floatingLabel
-                      error={this.state.submitted && !this.state.password}
-                    >
-                      <Label style={stl.textwhite}>Contraseña</Label>
-                      <Input
-                        secureTextEntry={true}
-                        style={stl.textwhite}
-                        name="password"
-                        value={this.state.password}
-                        onChangeText={password => {
-                          this.setState({ password });
-                        }}
-                      />
-                    </Item>
-                    {this.state.submitted && !this.state.password && (
-                      <Text style={stl.txtError}>
-                        La contraseña es requerida
-                      </Text>
-                    )}
-                    <Text style={stl.txtError}> {this.state.error}</Text>
-                    <View style={stl.btnsRow}>
-                      <Button
-                        style={stl.btn}
-                        bordered
-                        light
-                        onPress={() => {
-                          this.HandleRegistroBtn();
-                        }}
+          <ScrollView>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <Grid>
+                <Row size={2}>
+                  <Image
+                    style={stl.imgLogoGrande}
+                    source={require("../../assets/img-header-18.png")}
+                  />
+                </Row>
+                <Row size={3}>
+                  <Col>
+                    <Form style={stl.form}>
+                      <Item
+                        floatingLabel
+                        error={this.state.submitted && !this.state.email}
                       >
-                        <Text style={stl.btnText}>Registarse</Text>
-                      </Button>
-
-                      <Button
-                        block
-                        style={[stl.btn, stl.primary]}
-                        onPress={() => this.HandleInicioBtn()}
+                        <Label style={stl.textwhite}>Mail</Label>
+                        <Input
+                          style={stl.textwhite}
+                          keyboardType="email-address"
+                          name="email"
+                          value={this.state.email}
+                          onChangeText={email => {
+                            this.setState({ email });
+                          }}
+                        />
+                      </Item>
+                      {this.state.submitted && !this.state.email && (
+                        <Text style={stl.txtError}> El email es requerido</Text>
+                      )}
+                      <Item
+                        floatingLabel
+                        error={this.state.submitted && !this.state.password}
                       >
-                        <Text style={stl.btnText}>Iniciar Sesion</Text>
-                      </Button>
-                    </View>
-                    <View style={stl.btnsRow}>
-                      <Button
-                        transparent
-                        small
-                        onPress={() => {
-                          this.HandleOlvidePass();
-                        }}
-                      >
-                        <Text style={stl.textwhite}>
-                          Ayuda! Olvide mi contraseña
+                        <Label style={stl.textwhite}>Contraseña</Label>
+                        <Input
+                          secureTextEntry={true}
+                          style={stl.textwhite}
+                          name="password"
+                          value={this.state.password}
+                          onChangeText={password => {
+                            this.setState({ password });
+                          }}
+                        />
+                      </Item>
+                      {this.state.submitted && !this.state.password && (
+                        <Text style={stl.txtError}>
+                          La contraseña es requerida
                         </Text>
-                      </Button>
-                    </View>
-                    <View style={[stl.btnsRow, stl.mTop20]}>
-                      <Button
-                      iconLeft
-                        block
-                        light
-                        style={[stl.btn, stl.Google]}
-                        onPress={() => this.HandleGoogleLoginBtn()}
-                      >
-                        <Image
-                          source={require("../../assets/google.png")}
-                          style={stl.iconoImg}
-                          name="google"
-                        />
-                        <Text style={stl.btnTextRs}>Usar Google</Text>
-                      </Button>
+                      )}
+                      <Text style={stl.txtError}> {this.state.error}</Text>
+                      <View style={stl.btnsRow}>
+                        <Button
+                          style={stl.btn}
+                          bordered
+                          light
+                          onPress={() => {
+                            this.HandleRegistroBtn();
+                          }}
+                        >
+                          <Text style={stl.btnText}>Registarse</Text>
+                        </Button>
 
-                      <Button
-                      iconLeft
-                        style={[stl.btn, stl.Face]}
-                        onPress={this.loginFacebook}
-                      >
-                        <Image
-                          source={require("../../assets/facebook.png")}
-                          style={stl.iconoImg}
-                          name="facebook"
-                        />
+                        <Button
+                          block
+                          style={[stl.btn, stl.primary]}
+                          onPress={() => this.HandleInicioBtn()}
+                        >
+                          <Text style={stl.btnText}>Iniciar Sesion</Text>
+                        </Button>
+                      </View>
+                      <View style={stl.btnsRow}>
+                        <Button
+                          transparent
+                          small
+                          onPress={() => {
+                            this.HandleOlvidePass();
+                          }}
+                        >
+                          <Text style={stl.textwhite}>
+                            Ayuda! Olvide mi contraseña
+                          </Text>
+                        </Button>
+                      </View>
+                      <View style={[stl.btnsRow, stl.mTop20]}>
+                        <Button
+                          iconLeft
+                          block
+                          light
+                          style={[stl.btn, stl.Google]}
+                          onPress={() => this.HandleGoogleLoginBtn()}
+                        >
+                          <Image
+                            source={require("../../assets/google.png")}
+                            style={stl.iconoImg}
+                            name="google"
+                          />
+                          <Text style={stl.btnTextRs}>Usar Google</Text>
+                        </Button>
 
-                        <Text style={stl.btnTextRs}>Usar Facebook</Text>
-                      </Button>
-                    </View>
-                  </Form>
-                </Col>
-              </Row>
-            </Grid>
-          </TouchableWithoutFeedback>
+                        <Button
+                          iconLeft
+                          style={[stl.btn, stl.Face]}
+                          onPress={this.loginFacebook}
+                        >
+                          <Image
+                            source={require("../../assets/facebook.png")}
+                            style={stl.iconoImg}
+                            name="facebook"
+                          />
+
+                          <Text style={stl.btnTextRs}>Usar Facebook</Text>
+                        </Button>
+                      </View>
+                    </Form>
+                  </Col>
+                </Row>
+              </Grid>
+            </TouchableWithoutFeedback>
+          </ScrollView>
         </ImageBackground>
-      </Container>
+      </SafeAreaView>
     );
   }
 }
