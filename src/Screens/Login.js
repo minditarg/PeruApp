@@ -14,6 +14,7 @@ import { connect } from "react-redux";
 import { LOAD_TOKEN_USER } from "../Actions/actionsTypes";
 import * as session from "../Services/session";
 import * as api from "../Services/api";
+
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import { stl } from "./styles/styles";
 
@@ -198,6 +199,7 @@ class Login extends Component {
                     </View>
                     <View style={[stl.btnsRow, stl.mTop20]}>
                       <Button
+                      iconLeft
                         block
                         light
                         style={[stl.btn, stl.Google]}
@@ -208,11 +210,11 @@ class Login extends Component {
                           style={stl.iconoImg}
                           name="google"
                         />
-                        <Text style={stl.btnText}>Usar Google</Text>
+                        <Text style={stl.btnTextRs}>Usar Google</Text>
                       </Button>
 
                       <Button
-                        block
+                      iconLeft
                         style={[stl.btn, stl.Face]}
                         onPress={this.loginFacebook}
                       >
@@ -222,7 +224,7 @@ class Login extends Component {
                           name="facebook"
                         />
 
-                        <Text style={stl.btnText}>Usar Facebook</Text>
+                        <Text style={stl.btnTextRs}>Usar Facebook</Text>
                       </Button>
                     </View>
                   </Form>
