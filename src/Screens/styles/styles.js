@@ -53,7 +53,10 @@ export const stl = StyleSheet.create({
   },
   btnText: { padding: 0, textAlign: "center" },
   btnTextRs: { textTransform: "capitalize" },
-
+  txtArea: {
+    // marginLeft: 15,
+    marginVertical: 20
+  },
   btnSaltar: {
     position: "absolute",
     right: 0,
@@ -89,5 +92,29 @@ export const stl = StyleSheet.create({
   },
   paddingTop30: {
     paddingTop: "30%"
+  },
+  vista: {
+    paddingTop: 30,
+    paddingBottom: 30,
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center"
+  },
+  areaText: {
+    marginTop: 20,
+    marginLeft: 15
+  },
+  btnImg: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: "#ddd",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  iconCam: {
+    color: "#444",
+    fontSize: 40
   }
 });

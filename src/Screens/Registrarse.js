@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import {
   View,
-  StyleSheet,
+  Image,
   ImageBackground,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  ScrollView,
+  SafeAreaView
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { Container, Button, Text, Form, Item, Input, Label } from "native-base";
+import { Button, Text, Form, Item, Input, Label } from "native-base";
 import * as usuario from "../Services/usuario";
 import * as session from "../Services/session";
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
@@ -71,84 +73,90 @@ export class Registrarse extends Component {
 
   render() {
     return (
-      <Container style={stl.container}>
+      <SafeAreaView style={stl.container}>
         <ImageBackground
-          source={require("../../assets/splash.png")}
+          source={require("../../assets/bkblues.png")}
           style={stl.imgBkground}
         >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <Grid style={stl.padding10}>
-              <Row size={2}></Row>
+          <ScrollView>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <Grid>
+                <Row size={2}>
+                  <Image
+                    style={stl.imgLogoGrande}
+                    source={require("../../assets/img-header-18.png")}
+                  />
+                </Row>
 
-              <Row size={3}>
-                <Col>
-                  <Form style={stl.form}>
-                    <Item
-                      floatingLabel
-                      error={this.state.submitted && !this.state.email}
-                    >
-                      <Label style={stl.textwhite}>Mail</Label>
-                      <Input
-                        style={stl.textwhite}
-                        keyboardType="email-address"
-                        name="email"
-                        value={this.state.email}
-                        onChangeText={email => {
-                          this.setState({ email });
-                        }}
-                      />
-                    </Item>
-                    {this.state.submitted && !this.state.email && (
-                      <Text style={stl.txtError}> El email es requerido</Text>
-                    )}
-                    <Item
-                      floatingLabel
-                      error={this.state.submitted && !this.state.password}
-                    >
-                      <Label style={stl.textwhite}>Contraseña</Label>
-                      <Input
-                        secureTextEntry={true}
-                        style={stl.textwhite}
-                        name="password"
-                        value={this.state.password}
-                        onChangeText={password => {
-                          this.setState({ password });
-                        }}
-                      />
-                    </Item>
-                    {this.state.submitted && !this.state.password && (
-                      <Text style={stl.txtError}>
-                        {" "}
-                        La contraseña es requerida
-                      </Text>
-                    )}
-                    <Text style={stl.txtError}> {this.state.error}</Text>
-                    <View
-                      style={{ flexDirection: "row", justifyContent: "center" }}
-                    >
-                      <Button
-                        style={stl.btn}
-                        bordered
-                        light
-                        onPress={() => this.props.navigation.navigate("Login")}
+                <Row size={3}>
+                  <Col>
+                    <Form style={stl.form}>
+                      <Item
+                        floatingLabel
+                        error={this.state.submitted && !this.state.email}
                       >
-                        <Text style={stl.btnText}> Cancelar</Text>
-                      </Button>
-                      <Button
-                        block
-                        style={[stl.btn, stl.primary]}
-                        onPress={() => this.HandleRegistroBtn()}
+                        <Label style={stl.textwhite}>Mail</Label>
+                        <Input
+                          style={stl.textwhite}
+                          keyboardType="email-address"
+                          name="email"
+                          value={this.state.email}
+                          onChangeText={email => {
+                            this.setState({ email });
+                          }}
+                        />
+                      </Item>
+                      {this.state.submitted && !this.state.email && (
+                        <Text style={stl.txtError}> El email es requerido</Text>
+                      )}
+                      <Item
+                        floatingLabel
+                        error={this.state.submitted && !this.state.password}
                       >
-                        <Text style={stl.btnText}>Crear cuenta</Text>
-                      </Button>
-                    </View>
-                  </Form>
-                </Col>
-              </Row>
-            </Grid>
-          </TouchableWithoutFeedback>
+                        <Label style={stl.textwhite}>Contraseña</Label>
+                        <Input
+                          secureTextEntry={true}
+                          style={stl.textwhite}
+                          name="password"
+                          value={this.state.password}
+                          onChangeText={password => {
+                            this.setState({ password });
+                          }}
+                        />
+                      </Item>
+                      {this.state.submitted && !this.state.password && (
+                        <Text style={stl.txtError}>
+                          La contraseña es requerida
+                        </Text>
+                      )}
+                      <Text style={stl.txtError}> {this.state.error}</Text>
+                      <View style={stl.btnsRow}>
+                        <Button
+                          style={stl.btn}
+                          bordered
+                          light
+                          onPress={() =>
+                            this.props.navigation.navigate("Login")
+                          }
+                        >
+                          <Text style={stl.btnText}> Cancelar</Text>
+                        </Button>
+                        <Button
+                          block
+                          style={[stl.btn, stl.primary]}
+                          onPress={() => this.HandleRegistroBtn()}
+                        >
+                          <Text style={stl.btnText}>Crear cuenta</Text>
+                        </Button>
+                      </View>
+                    </Form>
+                  </Col>
+                </Row>
+              </Grid>
+            </TouchableWithoutFeedback>
+          </ScrollView>
         </ImageBackground>
-      </Container>
+      </SafeAreaView>
     );
   }
 }

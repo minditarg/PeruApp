@@ -54,12 +54,3 @@ export default class AppLoad extends React.Component {
     );
   }
 }
-/*
-const stl = StyleSheet.create({
-  container: { backgroundColor: "#044fb3" },
-  center: { justifyContent: "center", alignItems: "center" },
-  logo: { width: 100, height: 100, borderRadius: 100 },
-  text1: { color: "red", fontWeight: "bold", fontSize: 15 },
-  text2: { color: "white", fontWeight: "bold", fontSize: 20 }
-});
-*/

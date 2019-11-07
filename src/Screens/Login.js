@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import * as WebBrowser from "expo-web-browser";
-import { Container, Button, Text, Form, Item, Input, Label } from "native-base";
+import { Button, Text, Form, Item, Input, Label } from "native-base";
 import { connect } from "react-redux";
 import { LOAD_TOKEN_USER } from "../Actions/actionsTypes";
 import * as session from "../Services/session";
