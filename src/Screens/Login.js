@@ -1,17 +1,22 @@
 import React, { Component } from "react";
-import { Image, StyleSheet, Linking, Keyboard, TouchableWithoutFeedback } from "react-native";
+import {
+  Image,
+  Linking,
+  Keyboard,
+  TouchableWithoutFeedback,
+  ImageBackground,
+  View
+} from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import * as WebBrowser from "expo-web-browser";
-import queryString from "query-string";
-import { Container, Button, Text, Form, Item, Input, Icon, Label } from "native-base";
-import Alerta from "../Componentes/Alertas";
+import { Container, Button, Text, Form, Item, Input, Label } from "native-base";
 import { connect } from "react-redux";
-import { FETCH_PRODUCTS_PENDING, FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_ERROR, LOAD_TOKEN_USER } from "../Actions/actionsTypes";
-import * as Fx from "../Funciones/funciones";
-import * as session from '../Services/session';
-import * as api from '../Services/api';
-import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
-import { ThemeColors } from "react-navigation";
+import { LOAD_TOKEN_USER } from "../Actions/actionsTypes";
+import * as session from "../Services/session";
+import * as api from "../Services/api";
+
+import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
+import { stl } from "./styles/styles";
 
 class Login extends Component {
   constructor() {
@@ -25,7 +30,6 @@ class Login extends Component {
       isPostBack: false,
       isLoading: false,
       error: null
-
     };
   }
 
@@ -73,46 +77,30 @@ class Login extends Component {
   }
   HandleOlvidePass() {
     this.props.navigation.navigate("Olvide");
-
   }
-
-  // HandleInicioBtn() {
-  //   Fx.Fetchiar('login/',{ email: this.state.email,
-  //                           password: this.state.password
-  //                         }, 'post')
-  //   .then(response => {
-  //     if(response.statusType=="success"){
-  //       console.log (response.data);
-  //       this.props.dispatch({ type: LOAD_TOKEN_USER, payload: response.data.token });
-  //       this.props.navigation.navigate("Servicios");
-  //     }else{
-  //       console.log (response.data);
-  //     }
-  //   })
-  //   .catch(error => console.log (error));
-  // }
 
   HandleInicioBtn() {
     this.setState({
       isLoading: true,
-      submitted:true,
-      error: '',
+      submitted: true,
+      error: ""
     });
     dismissKeyboard();
-    session.authenticate(this.state.email, this.state.password)
-      .then((response) => {
+    session
+      .authenticate(this.state.email, this.state.password)
+      .then(response => {
         if (response.statusType == "success") {
           this.setState(this.initialState);
           this.props.navigation.navigate("Trabajos");
         } else {
-         this.setState({error: response.message});
+          this.setState({ error: response.message });
         }
       })
-      .catch((exception) => {
+      .catch(exception => {
         const error = api.exceptionExtractError(exception);
         this.setState({
           isLoading: false,
-          ...(error ? { error } : {}),
+          ...(error ? { error } : {})
         });
 
         if (!error) {
@@ -121,130 +109,130 @@ class Login extends Component {
       });
   }
 
-
   render() {
     if (this.state.isPostBack) {
       this.Redirigir();
     }
     return (
       <Container style={stl.container}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <Grid>
-            <Row size={5}>
-              <Col>
-                <Row size={2}>
-                  <Col style={stl.center}>
-                    <Image
-                      style={stl.logo}
-                      source={require("../../assets/icono1.jpg")}
-                    />
-                  </Col>
-                </Row>
-                <Row size={3}>
-                  <Col>
-                    <Form style={stl.form}>
-                      <Item
-                        style={stl.itm}
-                        floatingLabel
-                        error={this.state.submitted && !this.state.email}
+        <ImageBackground
+          source={require("../../assets/splash.png")}
+          style={stl.imgBkground}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <Grid style={stl.padding10}>
+              <Row size={2}></Row>
+              <Row size={3}>
+                <Col>
+                  <Form style={stl.form}>
+                    <Item
+                      floatingLabel
+                      error={this.state.submitted && !this.state.email}
+                    >
+                      <Label style={stl.textwhite}>Mail</Label>
+                      <Input
+                        style={stl.textwhite}
+                        keyboardType="email-address"
+                        name="email"
+                        value={this.state.email}
+                        onChangeText={email => {
+                          this.setState({ email });
+                        }}
+                      />
+                    </Item>
+                    {this.state.submitted && !this.state.email && (
+                      <Text style={stl.txtError}> El email es requerido</Text>
+                    )}
+                    <Item
+                      floatingLabel
+                      error={this.state.submitted && !this.state.password}
+                    >
+                      <Label style={stl.textwhite}>Contraseña</Label>
+                      <Input
+                        secureTextEntry={true}
+                        style={stl.textwhite}
+                        name="password"
+                        value={this.state.password}
+                        onChangeText={password => {
+                          this.setState({ password });
+                        }}
+                      />
+                    </Item>
+                    {this.state.submitted && !this.state.password && (
+                      <Text style={stl.txtError}>
+                        La contraseña es requerida
+                      </Text>
+                    )}
+                    <Text style={stl.txtError}> {this.state.error}</Text>
+                    <View style={stl.btnsRow}>
+                      <Button
+                        style={stl.btn}
+                        bordered
+                        light
+                        onPress={() => {
+                          this.HandleRegistroBtn();
+                        }}
                       >
-                        <Label style={stl.lbl}>Mail</Label>
-                        <Input
-                          style={stl.input}
-                          keyboardType="email-address"
-                          name="email"
-                          value={this.state.email}
-                          onChangeText={email => {
-                            this.setState({ email });
-                          }}
-                        />
-                        
-                      </Item>
-                      {this.state.submitted && !this.state.email && (
-                          <Text style={stl.text1}> El email es requerido</Text>
-                        )}
-                      <Item
-                        style={stl.itm}
-                        floatingLabel
-                        error={this.state.submitted && !this.state.password}
+                        <Text style={stl.btnText}>Registarse</Text>
+                      </Button>
+
+                      <Button
+                        block
+                        style={[stl.btn, stl.primary]}
+                        onPress={() => this.HandleInicioBtn()}
                       >
-                        <Label style={stl.lbl}>Contraseña</Label>
-                        <Input
-                          secureTextEntry={true}
-                          style={stl.input}
-                          name="password"
-                          value={this.state.password}
-                          onChangeText={password => {
-                            this.setState({ password });
-                          }}
-                        />
-                      </Item>
-                      {this.state.submitted && !this.state.password && (
-                          <Text style={stl.text1}> La contraseña es requerida</Text>
-                        )}
-                      <Text style={stl.text1}> { this.state.error}</Text>
-                    </Form>
-                  </Col>
-                </Row>
-                <Row size={2}>
-                  <Col>
-                    <Row size={1}>
-                      <Col>
-                        <Button
-                          style={stl.btn}
-                          bordered
-                          light
-                          onPress={() => {
-                            this.HandleRegistroBtn();
-                          }}
-                        >
-                          <Text style={stl.btnText}>Registarse</Text>
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button
-                          block
-                          style={stl.btn}
-                          onPress={() => this.HandleInicioBtn()}
-                        >
-                          <Text style={stl.btnText}>Iniciar Sesion</Text>
-                        </Button>
-                      </Col>
-                    </Row>
-                    <Row size={1}>
-                      <Col style={stl.alignRight}>
-                        <Button transparent small onPress={() => {
+                        <Text style={stl.btnText}>Iniciar Sesion</Text>
+                      </Button>
+                    </View>
+                    <View style={stl.btnsRow}>
+                      <Button
+                        transparent
+                        small
+                        onPress={() => {
                           this.HandleOlvidePass();
-                        }}>
-                          <Text style={stl.btnAyuda}>
-                            Ayuda! Olvide mi contraseña
+                        }}
+                      >
+                        <Text style={stl.textwhite}>
+                          Ayuda! Olvide mi contraseña
                         </Text>
-                        </Button>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <Row size={2}>
-              <Col>
-                <Button
-                  block
-                  light
-                  style={stl.btn}
-                  onPress={() => this.HandleGoogleLoginBtn()}
-                >
-                  <Icon name="home" />
-                  <Text style={stl.btnText}>Iniciar con Google</Text>
-                </Button>
-                <Button block style={stl.btn} onPress={this.loginFacebook}>
-                  <Icon name="home" />
-                  <Text style={stl.btnText}>Iniciar con Facebook</Text>
-                </Button>
-              </Col>
-            </Row>
-          </Grid>
-        </TouchableWithoutFeedback>
+                      </Button>
+                    </View>
+                    <View style={[stl.btnsRow, stl.mTop20]}>
+                      <Button
+                      iconLeft
+                        block
+                        light
+                        style={[stl.btn, stl.Google]}
+                        onPress={() => this.HandleGoogleLoginBtn()}
+                      >
+                        <Image
+                          source={require("../../assets/google.png")}
+                          style={stl.iconoImg}
+                          name="google"
+                        />
+                        <Text style={stl.btnTextRs}>Usar Google</Text>
+                      </Button>
+
+                      <Button
+                      iconLeft
+                        style={[stl.btn, stl.Face]}
+                        onPress={this.loginFacebook}
+                      >
+                        <Image
+                          source={require("../../assets/facebook.png")}
+                          style={stl.iconoImg}
+                          name="facebook"
+                        />
+
+                        <Text style={stl.btnTextRs}>Usar Facebook</Text>
+                      </Button>
+                    </View>
+                  </Form>
+                </Col>
+              </Row>
+            </Grid>
+          </TouchableWithoutFeedback>
+        </ImageBackground>
       </Container>
     );
   }
@@ -253,38 +241,3 @@ mapStateToProps = state => {
   return { seleccion: state };
 };
 export default connect(mapStateToProps)(Login);
-
-const stl = StyleSheet.create({
-  container: { backgroundColor: "#044fb3" },
-  center: { justifyContent: "flex-end", alignItems: "center" },
-  logo: { width: 40, height: 40, borderRadius: 100 },
-  text1: { color: "red", fontWeight: "bold", fontSize: 15 },
-  text2: { color: "white", fontWeight: "bold", fontSize: 20 },
-  btn: {
-    margin: 5,
-    marginLeft: 10,
-    marginRight: 10,
-    paddingTop: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 20,
-    textAlign: "center"
-  },
-  btnText: { textAlign: "center" },
-  form: {
-    marginLeft: 20,
-    marginRight: 30
-  },
-  lbl: {
-    color: "whitesmoke"
-  },
-  input: {
-    color: "whitesmoke"
-  },
-  btnAyuda: {
-    color: "silver"
-  },
-  alignRight: {
-    alignItems: "flex-end"
-  }
-});

@@ -5,7 +5,7 @@ import { Container, Text } from "native-base";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import * as session from './Services/session';
+import * as session from "./Services/session";
 /*en esta pantalla tengo que refrescar USER_TOKEN si existe
   cargar las fuentes del template
   iniciar timeout de refresh USER_TOKEN */
@@ -27,16 +27,16 @@ export default class AppLoad extends React.Component {
     this.setState({ isReady: true });
     setTimeout(() => {
       // this.setState({ cargo: true });
-      if(session.estaLogueado()){
-        let usuarioLogueado= session.usuarioLogueado();
-        if(usuarioLogueado.Proveedor != null){
+      if (session.estaLogueado()) {
+        let usuarioLogueado = session.usuarioLogueado();
+        if (usuarioLogueado.Proveedor != null) {
           this.props.navigation.navigate("Servicios");
         }
-        if(usuarioLogueado.Cliente != null){
+        if (usuarioLogueado.Cliente != null) {
           this.props.navigation.navigate("Trabajos");
         }
       }
-      this.props.navigation.navigate("Select");
+      this.props.navigation.navigate("Login");
     }, 300);
   }
 
@@ -47,27 +47,14 @@ export default class AppLoad extends React.Component {
     return (
       <Container>
         <ImageBackground
-          source={require("../assets/bkblues.jpg")}
+          source={require("../assets/splash.png")}
           style={{ width: "100%", height: "100%" }}
-        >
-          <Grid>
-            <Row size={1}>
-              <Col style={stl.center}>
-                <Image
-                  style={stl.logo}
-                  source={require("../assets/icono1.jpg")}
-                />
-                <Text style={stl.text1}>CONSTRUCCIONES</Text>
-                <Text style={stl.text2}>SOLUCIONES</Text>
-              </Col>
-            </Row>
-          </Grid>
-        </ImageBackground>
+        ></ImageBackground>
       </Container>
     );
   }
 }
-
+/*
 const stl = StyleSheet.create({
   container: { backgroundColor: "#044fb3" },
   center: { justifyContent: "center", alignItems: "center" },
@@ -75,3 +62,4 @@ const stl = StyleSheet.create({
   text1: { color: "red", fontWeight: "bold", fontSize: 15 },
   text2: { color: "white", fontWeight: "bold", fontSize: 20 }
 });
+*/

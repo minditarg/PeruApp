@@ -1,15 +1,19 @@
 import React, { Component } from "react";
-import { View, Image, StyleSheet, SafeAreaView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  TouchableWithoutFeedback,
+  Keyboard
+} from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { Container, Button, Text, Form, Item, Textarea, Input, Label, Icon, Content } from "native-base";
-import { ScrollView } from "react-native-gesture-handler";
-import { stringify } from "query-string";
-import * as usuario from '../Services/usuario';
-import * as session from '../Services/session';
-import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
+import { Container, Button, Text, Form, Item, Input, Label } from "native-base";
+import * as usuario from "../Services/usuario";
+import * as session from "../Services/session";
+import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
+import { stl } from "./styles/styles";
 
 export class Registrarse extends Component {
-
   constructor() {
     super();
     this.state = {
@@ -24,22 +28,24 @@ export class Registrarse extends Component {
     this.setState({
       isLoading: true,
       submitted: true,
-      error: '',
+      error: ""
     });
     dismissKeyboard();
-    usuario.crear(this.state.email, this.state.email)
-      .then((response) => {
+    usuario
+      .crear(this.state.email, this.state.email)
+      .then(response => {
         if (response.statusType == "success") {
-          session.authenticate(this.state.email, this.state.email)
-            .then((response) => {
+          session
+            .authenticate(this.state.email, this.state.email)
+            .then(response => {
               this.setState(this.initialState);
               this.props.navigation.navigate("RegistrarProveedor");
             })
-            .catch((exception) => {
+            .catch(exception => {
               const error = api.exceptionExtractError(exception);
               this.setState({
                 isLoading: false,
-                ...(error ? { error } : {}),
+                ...(error ? { error } : {})
               });
 
               if (!error) {
@@ -50,11 +56,11 @@ export class Registrarse extends Component {
           this.setState({ error: response.message });
         }
       })
-      .catch((exception) => {
+      .catch(exception => {
         const error = api.exceptionExtractError(exception);
         this.setState({
           isLoading: false,
-          ...(error ? { error } : {}),
+          ...(error ? { error } : {})
         });
 
         if (!error) {
@@ -65,134 +71,153 @@ export class Registrarse extends Component {
 
   render() {
     return (
-      <SafeAreaView style={stl.container}>
-        <ScrollView style={stl.scrollView}>
-          <View style={stl.vista}>
-            <View style={stl.center}>
-              <Image style={stl.logo} source={require('../../assets/icono1.jpg')} />
-            </View>
-            <Form style={stl.form}>
-              <Item
-                style={stl.itm}
-                floatingLabel
-                error={this.state.submitted && !this.state.email}
-              >
-                <Label style={stl.lbl}>Mail</Label>
-                <Input
-                  style={stl.input}
-                  keyboardType="email-address"
-                  name="email"
-                  value={this.state.email}
-                  onChangeText={email => {
-                    this.setState({ email });
-                  }}
-                />
+      <Container style={stl.container}>
+        <ImageBackground
+          source={require("../../assets/splash.png")}
+          style={stl.imgBkground}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <Grid style={stl.padding10}>
+              <Row size={2}></Row>
 
-              </Item>
-              {this.state.submitted && !this.state.email && (
-                <Text style={stl.text1}> El email es requerido</Text>
-              )}
-              <Item
-                style={stl.itm}
-                floatingLabel
-                error={this.state.submitted && !this.state.password}
-              >
-                <Label style={stl.lbl}>Contraseña</Label>
-                <Input
-                  secureTextEntry={true}
-                  style={stl.input}
-                  name="password"
-                  value={this.state.password}
-                  onChangeText={password => {
-                    this.setState({ password });
-                  }}
-                />
-              </Item>
-              {this.state.submitted && !this.state.password && (
-                <Text style={stl.text1}> La contraseña es requerida</Text>
-              )}
-              <Text style={stl.text1}> {this.state.error}</Text>
-            </Form>
-            <Row>
-              <Col>
-                <Button
-                  style={stl.btn}
-                  bordered light
-                  onPress={() => this.props.navigation.navigate("Login")}
-                >
-                  <Text style={stl.btnText}> Cancelar</Text>
-                </Button>
-              </Col>
-              <Col>
-
-                <Button block style={stl.btn} onPress={() => this.HandleRegistroBtn()}>
-                  <Text style={stl.btnText} >Crear cuenta</Text>
-                </Button>
-              </Col></Row>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+              <Row size={3}>
+                <Col>
+                  <Form style={stl.form}>
+                    <Item
+                      floatingLabel
+                      error={this.state.submitted && !this.state.email}
+                    >
+                      <Label style={stl.textwhite}>Mail</Label>
+                      <Input
+                        style={stl.textwhite}
+                        keyboardType="email-address"
+                        name="email"
+                        value={this.state.email}
+                        onChangeText={email => {
+                          this.setState({ email });
+                        }}
+                      />
+                    </Item>
+                    {this.state.submitted && !this.state.email && (
+                      <Text style={stl.txtError}> El email es requerido</Text>
+                    )}
+                    <Item
+                      floatingLabel
+                      error={this.state.submitted && !this.state.password}
+                    >
+                      <Label style={stl.textwhite}>Contraseña</Label>
+                      <Input
+                        secureTextEntry={true}
+                        style={stl.textwhite}
+                        name="password"
+                        value={this.state.password}
+                        onChangeText={password => {
+                          this.setState({ password });
+                        }}
+                      />
+                    </Item>
+                    {this.state.submitted && !this.state.password && (
+                      <Text style={stl.txtError}>
+                        {" "}
+                        La contraseña es requerida
+                      </Text>
+                    )}
+                    <Text style={stl.txtError}> {this.state.error}</Text>
+                    <View
+                      style={{ flexDirection: "row", justifyContent: "center" }}
+                    >
+                      <Button
+                        style={stl.btn}
+                        bordered
+                        light
+                        onPress={() => this.props.navigation.navigate("Login")}
+                      >
+                        <Text style={stl.btnText}> Cancelar</Text>
+                      </Button>
+                      <Button
+                        block
+                        style={[stl.btn, stl.primary]}
+                        onPress={() => this.HandleRegistroBtn()}
+                      >
+                        <Text style={stl.btnText}>Crear cuenta</Text>
+                      </Button>
+                    </View>
+                  </Form>
+                </Col>
+              </Row>
+            </Grid>
+          </TouchableWithoutFeedback>
+        </ImageBackground>
+      </Container>
     );
   }
 }
-
+/*
 const stl = StyleSheet.create({
-  vista: {
-    paddingTop: 30,
-    paddingBottom: 30
+  primary: {
+    backgroundColor: "#2392e5"
   },
-  scrollView: {
-
-  },
-  content: {
-    paddingTop: 50,
-    paddingBottom: 20
-  },
-  container: {
-    backgroundColor: '#044fb3',
-    flex: 1
-  },
-  center: { justifyContent: 'flex-end', alignItems: 'center', },
+  container: { backgroundColor: "#044fb3" },
+  center: { justifyContent: "flex-end", alignItems: "center" },
   logo: { width: 40, height: 40, borderRadius: 100 },
-  text1: { color: 'red', fontWeight: 'bold', fontSize: 15 },
-  text2: { color: 'white', fontWeight: 'bold', fontSize: 20 },
+  text1: {
+    color: "#ff2727",
+    fontWeight: "bold",
+    fontSize: 15,
+    paddingLeft: 15
+  },
+  text2: { color: "white", fontWeight: "bold", fontSize: 20, paddingLeft: 15 },
   btn: {
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "center",
     margin: 5,
+    padding: 0,
+    textAlign: "center",
+    borderRadius: 5
+  },
+  btnFace: {
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "center",
+    margin: 5,
+    padding: 0,
+    textAlign: "center",
+    borderRadius: 5,
+    backgroundColor: "#4a6ea8"
+  },
+  iconoImg: {
+    height: 40,
+    width: 40,
+    margin: 0,
+    padding: 0
+  },
+  btnOpacity: {
+    flexDirection: "row",
     marginLeft: 10,
     marginRight: 10,
-    paddingTop: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 20, textAlign: 'center'
+    height: 40,
+    margin: 0,
+    padding: 0,
+    textAlign: "center"
   },
-  btnText: { textAlign: 'center' },
+  btnText: { margin: 0, padding: 0, textAlign: "center" },
   form: {
     marginLeft: 20,
-    marginRight: 30
+    marginRight: 30,
+    marginBottom: 20
   },
-  itm: { borderBottomColor: 'whitesmoke' },
   lbl: {
-    color: 'whitesmoke'
-
+    color: "whitesmoke"
   },
   input: {
-    color: 'whitesmoke'
-  },
-  txtArea: {
-    marginLeft: 15,
-
-    marginVertical: 20,
-    color: 'whitesmoke'
+    color: "whitesmoke"
   },
   btnAyuda: {
-    color: 'silver'
+    color: "white"
   },
   alignRight: {
-    alignItems: 'flex-end',
-  }, btnFoto: {
-    borderRadius: 100,
-    marginLeft: 15,
-    width: 90,
-    height: 90
+    alignItems: "flex-end"
   }
-})
+});
+*/
