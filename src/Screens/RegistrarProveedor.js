@@ -1,42 +1,73 @@
 import React, { Component } from "react";
 import { View, Image, StyleSheet, SafeAreaView } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { Container, Button, Text, Form, Item, Textarea, Input, Label, Icon, Content } from "native-base";
+import { Container, Button, Text, Form, Item, Textarea, Input, Label, Icon, Content, TextInput } from "native-base";
 import { ScrollView } from "react-native-gesture-handler";
 import { stringify } from "query-string";
 import * as proveedor from '../Services/proveedor';
 import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
-
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
 export class RegistrarProveedor extends Component {
 
   constructor() {
     super();
+
     this.state = {
       nombre: String,
       email: String,
       descripcion: String,
       direccion: String,
       telefono: String,
-      foto: String,
+      image: null,
       submitted: false,
       isLoading: false,
-      error: null
+      error: null,
     };
   }
+
+  componentDidMount() {
+    this.getPermissionAsync();
+  }
+
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    }
+  }
+
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+
   HandleRegistroBtn() {
     this.setState({
       isLoading: true,
-      submitted:true,
+      submitted: true,
       error: '',
     });
     dismissKeyboard();
-    proveedor.crear(this.state.nombre,this.state.email,this.state.descripcion,this.state.direccion,this.state.telefono,this.state.foto)
+    proveedor.crear(this.state.nombre, this.state.email, this.state.descripcion, this.state.direccion, this.state.telefono, this.state.foto)
       .then((response) => {
         if (response.statusType == "success") {
           this.setState(this.initialState);
           this.props.navigate("Servicios");
         } else {
-         this.setState({error: response.message});
+          this.setState({ error: response.message });
         }
       })
       .catch((exception) => {
@@ -53,6 +84,8 @@ export class RegistrarProveedor extends Component {
   }
 
   render() {
+
+    let { image } = this.state;
     return (
       <SafeAreaView style={stl.container}>
         <ScrollView style={stl.scrollView}>
@@ -60,7 +93,9 @@ export class RegistrarProveedor extends Component {
             <View style={stl.center}>
               <Image style={stl.logo} source={require('../../assets/icono1.jpg')} />
             </View>
+
             <Form style={stl.form}>
+
               <Item style={stl.itm} floatingLabel error={this.state.submitted && !this.state.email} >
                 <Label style={stl.lbl}>Mail público</Label>
                 <Input
@@ -74,7 +109,7 @@ export class RegistrarProveedor extends Component {
                   }}
                 />
               </Item>
-              {this.state.submitted && !this.state.email && ( <Text style={stl.text1}> El email es requerido</Text>)}
+              {this.state.submitted && !this.state.email && (<Text style={stl.text1}> El email es requerido</Text>)}
 
               <Item style={stl.itm} floatingLabel error={this.state.submitted && !this.state.nombre} >
                 <Label style={stl.lbl}>Nombre completo</Label>
@@ -88,9 +123,9 @@ export class RegistrarProveedor extends Component {
                   }}
                 />
               </Item>
-              {this.state.submitted && !this.state.nombre && ( <Text style={stl.text1}> El nombre es requerido</Text>)}
+              {this.state.submitted && !this.state.nombre && (<Text style={stl.text1}> El nombre es requerido</Text>)}
 
-                  
+
               <Item style={stl.itm} floatingLabel >
                 <Label style={stl.lbl}>Teléfono</Label>
                 <Input
@@ -103,7 +138,7 @@ export class RegistrarProveedor extends Component {
                   }}
                 />
               </Item>
-                     
+
               <Item style={stl.itm} floatingLabel >
                 <Label style={stl.lbl}>Dirección</Label>
                 <Input
@@ -129,14 +164,14 @@ export class RegistrarProveedor extends Component {
                   }}
                 />
               </View>
-              <Text style={stl.text1}> { this.state.error}</Text>
-              <Button
-                style={stl.btnFoto}
-                block light
-                onPress={() => this.props.navigation.navigate("Login")}
-              >
-                <Icon name='home' />
+              <View style={stl.vista}>
+                <Button block onPress={this._pickImage}>
+                  {!image && <Text style={stl.btnText}> Subir imagen</Text>}
+                  {image && <Text style={stl.btnText}> Cambiar imagen</Text>} 
               </Button>
+                {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+              </View>
+              <Text style={stl.text1}> {this.state.error}</Text>
             </Form>
             <Row>
               <Col>
@@ -149,8 +184,8 @@ export class RegistrarProveedor extends Component {
                 </Button>
               </Col>
               <Col>
-              
-                <Button block style={stl.btn}  onPress={() => this.HandleRegistroBtn()}>
+
+                <Button block style={stl.btn} onPress={() => this.HandleRegistroBtn()}>
                   <Text style={stl.btnText} >Crear cuenta</Text>
                 </Button>
               </Col></Row>
