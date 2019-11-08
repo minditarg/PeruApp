@@ -39,7 +39,7 @@ export class RegistrarProveedor extends Component {
       descripcion: "",
       direccion: "",
       telefono: "",
-      image: null,
+      foto: null,
       submitted: false,
       isLoading: false,
       error: null
@@ -61,7 +61,7 @@ export class RegistrarProveedor extends Component {
 
   _pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3]
     });
@@ -69,7 +69,7 @@ export class RegistrarProveedor extends Component {
     console.log(result);
 
     if (!result.cancelled) {
-      this.setState({ image: result.uri });
+      this.setState({ foto: result });
     }
   };
 
@@ -90,15 +90,17 @@ export class RegistrarProveedor extends Component {
         this.state.foto
       )
       .then(response => {
-        if (response.statusType == "success") {
-          this.setState(this.initialState);
-          this.props.navigate("Servicios");
-        } else {
-          this.setState({ error: response.message });
-        }
+        console.log(response);
+        // if (response.statusType == "success") {
+        //   this.setState(this.initialState);
+        //   this.props.navigate("Servicios");
+        // } else {
+        //     console.log("responseee" + response);
+        //   //this.setState({ error: response.message });
+        // }
       })
       .catch(exception => {
-        const error = api.exceptionExtractError(exception);
+        const error = (exception);
         this.setState({
           isLoading: false,
           ...(error ? { error } : {})
@@ -111,7 +113,6 @@ export class RegistrarProveedor extends Component {
   }
 
   render() {
-    let { image } = this.state;
     return (
       <SafeAreaView style={stl.container}>
         <ImageBackground
@@ -212,7 +213,7 @@ export class RegistrarProveedor extends Component {
                       </View>
                       <View style={stl.vista}>
                         <TouchableOpacity onPress={this._pickImage}>
-                          {!image && (
+                          {!this.state.foto && (
                             <View style={stl.btnImg}>
                               <Icon
                                 style={stl.iconCam}
@@ -221,8 +222,8 @@ export class RegistrarProveedor extends Component {
                               />
                             </View>
                           )}
-                          {image && (
-                            <Image source={{ uri: image }} style={stl.btnImg} />
+                          {this.state.foto && (
+                            <Image source={{ uri: this.state.foto.uri }} style={stl.btnImg} />
                           )}
                         </TouchableOpacity>
                       </View>

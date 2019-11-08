@@ -16,17 +16,19 @@ export const exceptionExtractError = (exception) => {
 };
 
 
-export async function fetchApi(endpoint, payload = {}, metodo = 'get') {
+export async function fetchApi(endpoint, payload = {}, metodo = 'get', multipart = false) {
 	try {
 		const accessToken = sessionSelectors.get().tokens;
+
 		let response = await fetch(
 			apiConfig.url + endpoint,
 			{
 				method: metodo,
 				headers: {
-					Accept: "application/json",
+					'Accept': 'application/json',  
 					"Authorization": 'Bearer ' + accessToken,
-					"Content-Type": "application/json"
+					//"Content-Type": multipart ? "multipart/form-data" : "application/json",
+					
 				},
 				...(metodo === 'post' ? { body: JSON.stringify(payload) } : {}),
 			}
