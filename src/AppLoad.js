@@ -36,7 +36,7 @@ export default class AppLoad extends React.Component {
           this.props.navigation.navigate("Trabajos");
         }
       }
-      this.props.navigation.navigate("Select");
+      this.props.navigation.navigate("Servicios");
     }, 300);
   }
 

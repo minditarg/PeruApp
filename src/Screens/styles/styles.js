@@ -5,7 +5,7 @@ const faceColor = "#4a6ea8";
 const googleColor = "#f7f7f7";
 const textWhite = "whitesmoke";
 const colorError = "#ff2727";
-
+const bkGray = "#ededed";
 export const stl = StyleSheet.create({
   imgBkground: { width: "100%", height: "100%" },
   imgLogoGrande: {
@@ -54,7 +54,6 @@ export const stl = StyleSheet.create({
   btnText: { padding: 0, textAlign: "center" },
   btnTextRs: { textTransform: "capitalize" },
   txtArea: {
-    // marginLeft: 15,
     marginVertical: 20
   },
   btnSaltar: {
@@ -113,8 +112,129 @@ export const stl = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+
+  btnImgServ: {
+    width: 100,
+    height: 100,
+    borderRadius: 5,
+    backgroundColor: "#ddd",
+    justifyContent: "center",
+    alignItems: "center"
+  },
   iconCam: {
     color: "#444",
     fontSize: 40
+  },
+  headerStyle: {
+    backgroundColor: "#044fb3",
+    borderBottomColor: "red",
+    borderBottomWidth: 4
+  },
+  headerAvatar: {
+    margin: 5,
+    padding: 15,
+    height: 30,
+    aspectRatio: 1
+  },
+  headerIcon: {
+    margin: 5,
+    height: 40,
+    aspectRatio: 1
+  },
+  btnAvatar: {
+    padding: 0,
+    margin: 10,
+    height: 40,
+    width: 40
+  },
+  containerList: {
+    backgroundColor: bkGray,
+    paddingHorizontal: 10,
+    paddingVertical: 5
+  },
+  card: {
+    paddingLeft: 10,
+    paddingVertical: 5,
+    flex: 1,
+    borderRadius: 3,
+    shadowColor: "#ffff",
+    backgroundColor: "#fff",
+    marginVertical: 3,
+    borderColor: "white",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.01,
+    shadowRadius: 1.41,
+
+    elevation: 1
+  },
+  cardHor: {
+    flexDirection: "row"
+  },
+  cardImg: {
+    margin: 10,
+    height: 50,
+    aspectRatio: 1,
+    borderRadius: 5
+  },
+  cardBody: {
+    flex: 2,
+    justifyContent: "flex-start",
+    alignContent: "flex-start",
+    alignItems: "flex-start"
+  },
+  cardLeft: { flex: 1 },
+  cardRight: { flex: 1 },
+  cardTitulo: {
+    fontSize: 20,
+
+    color: "#444"
+  },
+  cardSubtitulo: {
+    fontSize: 15,
+    marginTop: -5,
+    paddingTop: 0,
+    color: "#444"
+  },
+  iconstar: {
+    color: "#e0ba1b",
+    fontSize: 20,
+    marginRight: 2
+  },
+  puntaje: {
+    flexDirection: "row",
+    marginTop: -2
+  },
+  btnRounded: {
+    position: "absolute",
+    right: 20,
+    bottom: 25,
+    borderRadius: 100,
+    width: 60,
+    height: 60
+  },
+  iconPlus: {
+    color: textWhite
+  },
+  listaPadding: {
+    paddingBottom: 90
+  },
+  textBlack: {
+    color: "#444"
+  },
+  picker: {
+    marginLeft: 15,
+    marginTop: 20,
+    paddingBottom: 0,
+    marginBottom: 0
+  },
+  pickerInput: {
+    padding: 0,
+    height: 40
+  },
+  pickerInputText: {
+    backgroundColor: "red"
   }
 });
