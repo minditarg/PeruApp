@@ -11,7 +11,24 @@ export const listado = () => fetchApi(endPoints.listado, {}, 'post');
 
 
 export const crear = (nombre, email, descripcion, direccion, telefono, foto, usuarioId) => {
-    return fetchApi(endPoints.crear, { nombre: nombre, email: email, descripcion: descripcion, direccion: direccion, telefono: telefono, foto: foto, usuarioId: usuarioId }, 'post', true);
+    
+    console.log(foto);
+    const formData = new FormData();
+    formData.append('nombre', nombre);
+    formData.append('email', email);
+    formData.append('descripcion', descripcion);
+    formData.append('direccion', direccion);
+    formData.append('telefono', telefono);
+    formData.append("foto", {
+        name: foto.filename,
+        type: foto.type,
+        uri: foto.uri 
+      });
+    formData.append('usuarioId', usuarioId);
+
+
+    console.log(formData);
+    return fetchApi(endPoints.crear, formData, 'post', true);
 }
     
 

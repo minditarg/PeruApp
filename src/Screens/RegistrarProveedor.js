@@ -65,9 +65,6 @@ export class RegistrarProveedor extends Component {
       allowsEditing: true,
       aspect: [4, 3]
     });
-
-    console.log(result);
-
     if (!result.cancelled) {
       this.setState({ foto: result });
     }
@@ -90,7 +87,7 @@ export class RegistrarProveedor extends Component {
         this.state.foto
       )
       .then(response => {
-        console.log(response);
+        console.log("response " +  JSON.stringify( response));
         // if (response.statusType == "success") {
         //   this.setState(this.initialState);
         //   this.props.navigate("Servicios");
