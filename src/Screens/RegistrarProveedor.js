@@ -239,7 +239,7 @@ export class RegistrarProveedor extends Component {
 
                         <Button
                           block
-                          style={stl.btn}
+                          style={[stl.btn, stl.primary]}
                           onPress={() => this.HandleRegistroBtn()}
                         >
                           <Text style={stl.btnText}>Crear cuenta</Text>

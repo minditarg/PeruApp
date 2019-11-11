@@ -1,9 +1,8 @@
 import React from "react";
-
 import { createAppContainer } from "react-navigation";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createStackNavigator } from "react-navigation-stack";
-import {  Text } from "native-base";
+import { Text } from "native-base";
 import {
   Select,
   Video,
@@ -17,7 +16,10 @@ import {
   Servicios,
   Trabajos
 } from "../src/Screens/Index";
+import { stl } from "./Screens/styles/styles";
+import { NavHeader } from "../src/Componentes/NavHeader";
 import AppLoad from "./AppLoad";
+
 const TrabajosNav = createStackNavigator(
   {
     Trabajos: Trabajos,
@@ -25,6 +27,7 @@ const TrabajosNav = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
+      header: ({ navigation }) => <NavHeader navigation={navigation.state} />,
       title: "Trabajos",
       headerStyle: {
         backgroundColor: "#044fb3",
@@ -45,6 +48,7 @@ const EmpresaNav = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
+      header: ({ navigation }) => <NavHeader navigation={navigation.state} />,
       title: "Empresa",
       headerStyle: {
         backgroundColor: "#044fb3",
@@ -65,12 +69,9 @@ const ServiciosNav = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
+      header: ({ navigation }) => <NavHeader navigation={navigation.state} />,
       title: "Servicios",
-      headerStyle: {
-        backgroundColor: "#044fb3",
-        borderBottomColor: "red",
-        borderBottomWidth: 4
-      },
+      headerStyle: stl.headerStyle,
       headerTintColor: "#fff",
       headerTitleStyle: {
         fontWeight: "bold"
@@ -89,10 +90,10 @@ const TabNavigator = createBottomTabNavigator(
     initialRouteName: "Servicios",
     tabBarOptions: {
       showLabel: false,
-      activeTintColor: "#444",
+      activeTintColor: "#fff",
       inactiveTintColor: "#fff",
-      inactiveBackgroundColor: "#044fb3",
-      activeBackgroundColor: "#fff"
+      inactiveBackgroundColor: "#2e3192",
+      activeBackgroundColor: "#464eb7"
     },
     tabBarStyle: {
       backgroundColor: "#044fb3",
