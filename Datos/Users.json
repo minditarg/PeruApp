@@ -1,0 +1,22 @@
+[{
+        "id": "1",
+        "nombre": "facundo matias carrizo",
+        "mail": "facundocarrizo@gmail.com",
+        "pass": "pass",
+        "tipo": "empresa"
+    },
+    {
+        "id": "2",
+        "nombre": "Ramiro Ferrari",
+        "mail": "ramiroferrari@gmail.com",
+        "pass": "pass",
+        "tipo": "empresa"
+    },
+    {
+        "id": "3",
+        "nombre": "Leandro Canavery",
+        "mail": "lcanavery@gmail.com",
+        "pass": "pass",
+        "tipo": "empresa"
+    }
+]

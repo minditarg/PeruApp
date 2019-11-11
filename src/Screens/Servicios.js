@@ -1,307 +1,32 @@
 import React, { Component } from "react";
-import { View, Image, StyleSheet } from "react-native";
-import { Col, Row, Grid } from "react-native-easy-grid";
-import {
-  Container,
-  Header,
-  Content,
-  List,
-  ListItem,
-  Thumbnail,
-  Text,
-  Left,
-  Body,
-  Right,
-  Button
-} from "native-base";
+import { FlatList } from "react-native";
+import { Container, Content, Button, Icon } from "native-base";
+import Services from "../../Datos/Services.json";
+import { CardList } from "../Componentes/CardList";
+import { stl } from "../Screens/styles/styles";
 
 export class Servicios extends Component {
   render() {
+    console.log(Services);
+
     return (
-      <Container>
+      <Container style={stl.containerList}>
         <Content>
-          <List>
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={require("../../assets/icono1.jpg")} />
-              </Left>
-              <Body>
-                <Text>Sankhadeep</Text>
-                <Text note numberOfLines={1}>
-                  Its time to build a difference . .
-                </Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>a</Text>
-                </Button>
-              </Right>
-              <Right>
-                <Button transparent>
-                  <Text>b</Text>
-                </Button>
-              </Right>
-            </ListItem>
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={require("../../assets/icono1.jpg")} />
-              </Left>
-              <Body>
-                <Text>Sankhadeep</Text>
-                <Text note numberOfLines={1}>
-                  Its time to build a difference . .
-                </Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>a</Text>
-                </Button>
-              </Right>
-              <Right>
-                <Button transparent>
-                  <Text>b</Text>
-                </Button>
-              </Right>
-            </ListItem>
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={require("../../assets/icono1.jpg")} />
-              </Left>
-              <Body>
-                <Text>Sankhadeep</Text>
-                <Text note numberOfLines={1}>
-                  Its time to build a difference . .
-                </Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>a</Text>
-                </Button>
-              </Right>
-              <Right>
-                <Button transparent>
-                  <Text>b</Text>
-                </Button>
-              </Right>
-            </ListItem>
-
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={require("../../assets/icono1.jpg")} />
-              </Left>
-              <Body>
-                <Text>Sankhadeep</Text>
-                <Text note numberOfLines={1}>
-                  Its time to build a difference . .
-                </Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>a</Text>
-                </Button>
-              </Right>
-              <Right>
-                <Button transparent>
-                  <Text>b</Text>
-                </Button>
-              </Right>
-            </ListItem>
-
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={require("../../assets/icono1.jpg")} />
-              </Left>
-              <Body>
-                <Text>Sankhadeep</Text>
-                <Text note numberOfLines={1}>
-                  Its time to build a difference . .
-                </Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>a</Text>
-                </Button>
-              </Right>
-              <Right>
-                <Button transparent>
-                  <Text>b</Text>
-                </Button>
-              </Right>
-            </ListItem>
-
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={require("../../assets/icono1.jpg")} />
-              </Left>
-              <Body>
-                <Text>Sankhadeep</Text>
-                <Text note numberOfLines={1}>
-                  Its time to build a difference . .
-                </Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>a</Text>
-                </Button>
-              </Right>
-              <Right>
-                <Button transparent>
-                  <Text>b</Text>
-                </Button>
-              </Right>
-            </ListItem>
-
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={require("../../assets/icono1.jpg")} />
-              </Left>
-              <Body>
-                <Text>Sankhadeep</Text>
-                <Text note numberOfLines={1}>
-                  Its time to build a difference . .
-                </Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>a</Text>
-                </Button>
-              </Right>
-              <Right>
-                <Button transparent>
-                  <Text>b</Text>
-                </Button>
-              </Right>
-            </ListItem>
-
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={require("../../assets/icono1.jpg")} />
-              </Left>
-              <Body>
-                <Text>Sankhadeep</Text>
-                <Text note numberOfLines={1}>
-                  Its time to build a difference . .
-                </Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>a</Text>
-                </Button>
-              </Right>
-              <Right>
-                <Button transparent>
-                  <Text>b</Text>
-                </Button>
-              </Right>
-            </ListItem>
-
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={require("../../assets/icono1.jpg")} />
-              </Left>
-              <Body>
-                <Text>Sankhadeep</Text>
-                <Text note numberOfLines={1}>
-                  Its time to build a difference . .
-                </Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>a</Text>
-                </Button>
-              </Right>
-              <Right>
-                <Button transparent>
-                  <Text>b</Text>
-                </Button>
-              </Right>
-            </ListItem>
-
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={require("../../assets/icono1.jpg")} />
-              </Left>
-              <Body>
-                <Text>Sankhadeep</Text>
-                <Text note numberOfLines={1}>
-                  Its time to build a difference . .
-                </Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>a</Text>
-                </Button>
-              </Right>
-              <Right>
-                <Button transparent>
-                  <Text>b</Text>
-                </Button>
-              </Right>
-            </ListItem>
-
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={require("../../assets/icono1.jpg")} />
-              </Left>
-              <Body>
-                <Text>Sankhadeep</Text>
-                <Text note numberOfLines={1}>
-                  Its time to build a difference . .
-                </Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>a</Text>
-                </Button>
-              </Right>
-              <Right>
-                <Button transparent>
-                  <Text>b</Text>
-                </Button>
-              </Right>
-            </ListItem>
-
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={require("../../assets/icono1.jpg")} />
-              </Left>
-              <Body>
-                <Text>Sankhadeep</Text>
-                <Text note numberOfLines={1}>
-                  Its time to build a difference . .
-                </Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>a</Text>
-                </Button>
-              </Right>
-              <Right>
-                <Button transparent>
-                  <Text>b</Text>
-                </Button>
-              </Right>
-            </ListItem>
-          </List>
+          <FlatList
+            style={stl.listaPadding}
+            data={Services}
+            renderItem={({ item }) => <CardList Image obj={item} />}
+            keyExtractor={item => item.id}
+          />
         </Content>
         <Button
           onPress={() => this.props.navigation.navigate("AddServicio")}
-          style={stl.btnRounded}
+          style={[stl.btnRounded, stl.primary]}
           block
         >
-          <Text>+</Text>
+          <Icon style={stl.iconPlus} type="Ionicons" name="add" />
         </Button>
       </Container>
     );
   }
 }
-const stl = StyleSheet.create({
-  btnRounded: {
-    position: "absolute",
-    right: 20,
-    bottom: 25,
-    borderRadius: 100,
-    width: 50,
-    height: 50
-  }
-});

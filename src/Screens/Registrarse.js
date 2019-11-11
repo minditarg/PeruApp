@@ -1,119 +1,231 @@
 import React, { Component } from "react";
-import { View, Image, StyleSheet,SafeAreaView } from "react-native";
+import {
+  View,
+  Image,
+  ImageBackground,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
+  SafeAreaView
+} from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { Container,Button, Text, Form, Item, Textarea, Input, Label,Icon, Content } from "native-base";
-import { ScrollView } from "react-native-gesture-handler";
+import { Button, Text, Form, Item, Input, Label } from "native-base";
+import * as usuario from "../Services/usuario";
+import * as session from "../Services/session";
+import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
+import { stl } from "./styles/styles";
 
 export class Registrarse extends Component {
+  constructor() {
+    super();
+    this.state = {
+      email: "",
+      password: "",
+      submitted: false,
+      isLoading: false,
+      error: null
+    };
+  }
+  HandleRegistroBtn() {
+    this.setState({
+      isLoading: true,
+      submitted: true,
+      error: ""
+    });
+    dismissKeyboard();
+    usuario
+      .crear(this.state.email, this.state.email)
+      .then(response => {
+        if (response.statusType == "success") {
+          session
+            .authenticate(this.state.email, this.state.email)
+            .then(response => {
+              this.setState(this.initialState);
+              this.props.navigation.navigate("RegistrarProveedor");
+            })
+            .catch(exception => {
+              const error = api.exceptionExtractError(exception);
+              this.setState({
+                isLoading: false,
+                ...(error ? { error } : {})
+              });
+
+              if (!error) {
+                throw exception;
+              }
+            });
+        } else {
+          this.setState({ error: response.message });
+        }
+      })
+      .catch(exception => {
+        const error = api.exceptionExtractError(exception);
+        this.setState({
+          isLoading: false,
+          ...(error ? { error } : {})
+        });
+
+        if (!error) {
+          throw exception;
+        }
+      });
+  }
+
   render() {
     return (
       <SafeAreaView style={stl.container}>
-      <ScrollView style={stl.scrollView}>
-        <View style={stl.vista}>
-          <View style={stl.center}>
-                   <Image style={stl.logo} source={require('../../assets/icono1.jpg')} />
-                   </View>
-                   <Form style={stl.form}>
-                    <Item style={stl.itm} floatingLabel>
-                      <Label style={stl.lbl} >Mail</Label>
-                      <Input style={stl.input} />
-                    </Item>
-                    <Item style={stl.itm} floatingLabel>
-                      <Label style={stl.lbl} >Nombre Completo</Label>
-                      <Input  style={stl.input} />
-                    </Item>
-                    <Item style={stl.itm} floatingLabel>
-                      <Label style={stl.lbl} >Telefono</Label>
-                      <Input  style={stl.input} />
-                    </Item>
-                    <Item style={stl.itm} floatingLabel>
-                      <Label style={stl.lbl} >Direccion</Label>
-                      <Input secureTextEntry={true} style={stl.input} />
-                    </Item>
-                    <View  style={{paddingTop:10}}  >
-                    <Textarea style={stl.txtArea} ligth rowSpan={5} bordered  placeholderTextColor = "whitesmoke" placeholder="Descripcion" />
-                    </View>
-                    <Button
-                        style={stl.btnFoto}
-                        block light
-                        onPress={() => this.props.navigation.navigate("Login")}
+        <ImageBackground
+          source={require("../../assets/bkblues.png")}
+          style={stl.imgBkground}
+        >
+          <ScrollView>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <Grid>
+                <Row size={2}>
+                  <Image
+                    style={stl.imgLogoGrande}
+                    source={require("../../assets/img-header-18.png")}
+                  />
+                </Row>
+
+                <Row size={3}>
+                  <Col>
+                    <Form style={stl.form}>
+                      <Item
+                        floatingLabel
+                        error={this.state.submitted && !this.state.email}
                       >
-                      <Icon name='home' />
-                      </Button>
-                  </Form>
-                <Row>
-                    <Col>
-                      <Button
-                        style={stl.btn}
-                        bordered light
-                        onPress={() => this.props.navigation.navigate("Login")}
+                        <Label style={stl.textwhite}>Mail</Label>
+                        <Input
+                          style={stl.textwhite}
+                          keyboardType="email-address"
+                          name="email"
+                          value={this.state.email}
+                          onChangeText={email => {
+                            this.setState({ email });
+                          }}
+                        />
+                      </Item>
+                      {this.state.submitted && !this.state.email && (
+                        <Text style={stl.txtError}> El email es requerido</Text>
+                      )}
+                      <Item
+                        floatingLabel
+                        error={this.state.submitted && !this.state.password}
                       >
-                        <Text style={stl.btnText}> Cancelar</Text>
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button block style={stl.btn}>
-                        <Text style={stl.btnText} >Iniciar Sesion</Text>
-                      </Button>
-                    </Col></Row>
-                    </View>
-   </ScrollView>
-   </SafeAreaView>
+                        <Label style={stl.textwhite}>Contraseña</Label>
+                        <Input
+                          secureTextEntry={true}
+                          style={stl.textwhite}
+                          name="password"
+                          value={this.state.password}
+                          onChangeText={password => {
+                            this.setState({ password });
+                          }}
+                        />
+                      </Item>
+                      {this.state.submitted && !this.state.password && (
+                        <Text style={stl.txtError}>
+                          La contraseña es requerida
+                        </Text>
+                      )}
+                      <Text style={stl.txtError}> {this.state.error}</Text>
+                      <View style={stl.btnsRow}>
+                        <Button
+                          style={stl.btn}
+                          bordered
+                          light
+                          onPress={() =>
+                            this.props.navigation.navigate("Login")
+                          }
+                        >
+                          <Text style={stl.btnText}> Cancelar</Text>
+                        </Button>
+                        <Button
+                          block
+                          style={[stl.btn, stl.primary]}
+                          onPress={() => this.HandleRegistroBtn()}
+                        >
+                          <Text style={stl.btnText}>Crear cuenta</Text>
+                        </Button>
+                      </View>
+                    </Form>
+                  </Col>
+                </Row>
+              </Grid>
+            </TouchableWithoutFeedback>
+          </ScrollView>
+        </ImageBackground>
+      </SafeAreaView>
     );
   }
 }
-
+/*
 const stl = StyleSheet.create({
-  vista:{
-    paddingTop:30,
-    paddingBottom:30
+  primary: {
+    backgroundColor: "#2392e5"
   },
-  scrollView:{
-    
-  },
-  content:{paddingTop:50,
-  paddingBottom:20},
-  container: { backgroundColor: '#044fb3' ,
-flex:1},
-  center: { justifyContent: 'flex-end', alignItems: 'center', },
+  container: { backgroundColor: "#044fb3" },
+  center: { justifyContent: "flex-end", alignItems: "center" },
   logo: { width: 40, height: 40, borderRadius: 100 },
-  text1: { color: 'red', fontWeight: 'bold', fontSize: 15 },
-  text2: { color: 'white', fontWeight: 'bold', fontSize: 20 },
+  text1: {
+    color: "#ff2727",
+    fontWeight: "bold",
+    fontSize: 15,
+    paddingLeft: 15
+  },
+  text2: { color: "white", fontWeight: "bold", fontSize: 20, paddingLeft: 15 },
   btn: {
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "center",
     margin: 5,
+    padding: 0,
+    textAlign: "center",
+    borderRadius: 5
+  },
+  btnFace: {
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "center",
+    margin: 5,
+    padding: 0,
+    textAlign: "center",
+    borderRadius: 5,
+    backgroundColor: "#4a6ea8"
+  },
+  iconoImg: {
+    height: 40,
+    width: 40,
+    margin: 0,
+    padding: 0
+  },
+  btnOpacity: {
+    flexDirection: "row",
     marginLeft: 10,
     marginRight: 10,
-    paddingTop: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 20, textAlign: 'center'
+    height: 40,
+    margin: 0,
+    padding: 0,
+    textAlign: "center"
   },
-  btnText: { textAlign: 'center' },
+  btnText: { margin: 0, padding: 0, textAlign: "center" },
   form: {
     marginLeft: 20,
-    marginRight: 30
+    marginRight: 30,
+    marginBottom: 20
   },
-  itm: { borderBottomColor: 'whitesmoke' },
   lbl: {
-    color: 'whitesmoke'
-
+    color: "whitesmoke"
   },
   input: {
-    color: 'whitesmoke'
+    color: "whitesmoke"
   },
-  txtArea:{marginLeft:15,
-   
-    marginVertical:20,
-  color:'whitesmoke'},
   btnAyuda: {
-    color: 'silver'
+    color: "white"
   },
   alignRight: {
-    alignItems: 'flex-end',
-  },btnFoto:{
-    borderRadius:100,
-    marginLeft:15,
-    width:90,
-    height:90
+    alignItems: "flex-end"
   }
-})
+});
+*/

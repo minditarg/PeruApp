@@ -1,147 +1,252 @@
 import React, { Component } from "react";
-import { View, Image, StyleSheet } from "react-native";
-import { Col, Row, Grid } from "react-native-easy-grid";
 import {
-  Container,
-  Button,
-  Text,
-  Form,
-  Item,
-  Input,
-  Icon,
-  Label
-} from "native-base";
+  Image,
+  Linking,
+  Keyboard,
+  TouchableWithoutFeedback,
+  ImageBackground,
+  View,
+  ScrollView,
+  SafeAreaView
+} from "react-native";
+import { Col, Row, Grid } from "react-native-easy-grid";
+import * as WebBrowser from "expo-web-browser";
+import { Button, Text, Form, Item, Input, Label } from "native-base";
+import { connect } from "react-redux";
+import { LOAD_TOKEN_USER } from "../Actions/actionsTypes";
+import * as session from "../Services/session";
+import * as api from "../Services/api";
 
-export class Login extends Component {
+import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
+import { stl } from "./styles/styles";
+
+class Login extends Component {
+  constructor() {
+    super();
+    this.state = {
+      email: "",
+      password: "",
+      submitted: false,
+      showToast: false,
+      authResult: {},
+      isPostBack: false,
+      isLoading: false,
+      error: null
+    };
+  }
+
+  Redirigir() {
+    if (
+      this.state.authResult.type &&
+      this.state.authResult.type === "success"
+    ) {
+      const query = new URLSearchParams(this.state.authResult.url);
+      var regex = /[?&]([^=#]+)=([^&#]*)/g,
+        params = {},
+        match;
+      while ((match = regex.exec(this.state.authResult.url))) {
+        params[match[1]] = match[2];
+      }
+      this.props.dispatch({ type: LOAD_TOKEN_USER, payload: params.token });
+      this.setState({ isPostBack: false });
+
+      //   console.log();
+      if (params.nuevo === "true") {
+        console.log("redirigir login nuevi");
+      } else if (params.nuevo === "false") {
+        console.log("redirigir login vieji");
+      }
+    }
+  }
+
+  // LOGIN De FACEBBOK
+  loginFacebook = async () => {
+    let redirectUrl = await Linking.getInitialURL();
+    let authUrl = "https://10.30.30.125:3000/api/auth/facebook";
+    try {
+      let authResult = await WebBrowser.openAuthSessionAsync(
+        "https://10.30.30.125:3000/api/auth/facebook",
+        redirectUrl
+      );
+      await this.setState({ authResult: authResult, isPostBack: true });
+    } catch (err) {
+      console.log("ERROR loginfacebook:", err);
+    }
+  };
+
+  HandleRegistroBtn() {
+    this.props.navigation.navigate("Servicios");
+  }
+  HandleOlvidePass() {
+    this.props.navigation.navigate("Olvide");
+  }
+
+  HandleInicioBtn() {
+    this.setState({
+      isLoading: true,
+      submitted: true,
+      error: ""
+    });
+    dismissKeyboard();
+    session
+      .authenticate(this.state.email, this.state.password)
+      .then(response => {
+        if (response.statusType == "success") {
+          this.setState(this.initialState);
+          this.props.navigation.navigate("Trabajos");
+        } else {
+          this.setState({ error: response.message });
+        }
+      })
+      .catch(exception => {
+        const error = api.exceptionExtractError(exception);
+        this.setState({
+          isLoading: false,
+          ...(error ? { error } : {})
+        });
+
+        if (!error) {
+          throw exception;
+        }
+      });
+  }
+
   render() {
+    if (this.state.isPostBack) {
+      this.Redirigir();
+    }
     return (
-      <Container style={stl.container}>
-        <Grid>
-          <Row size={5}>
-            <Col>
-              <Row size={2}>
-                <Col style={stl.center}>
+      <SafeAreaView style={stl.container}>
+        <ImageBackground
+          source={require("../../assets/bkblues.png")}
+          style={stl.imgBkground}
+        >
+          <ScrollView>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <Grid>
+                <Row size={2}>
                   <Image
-                    style={stl.logo}
-                    source={require("../../assets/icono1.jpg")}
+                    style={stl.imgLogoGrande}
+                    source={require("../../assets/img-header-18.png")}
                   />
-                </Col>
-              </Row>
-              <Row size={3}>
-                <Col>
-                  <Form style={stl.form}>
-                    <Item style={stl.itm} floatingLabel>
-                      <Label style={stl.lbl}>Mail</Label>
-                      <Input style={stl.input} />
-                    </Item>
-                    <Item style={stl.itm} floatingLabel>
-                      <Label style={stl.lbl}>Contraseña</Label>
-                      <Input secureTextEntry={true} style={stl.input} />
-                    </Item>
-                  </Form>
-                </Col>
-              </Row>
-              <Row size={2}>
-                <Col>
-                  <Row size={1}>
-                    <Col>
-                      <Button
-                        style={stl.btn}
-                        bordered
-                        light
-                        onPress={() =>
-                          this.props.navigation.navigate("Registrarse")
-                        }
+                </Row>
+                <Row size={3}>
+                  <Col>
+                    <Form style={stl.form}>
+                      <Item
+                        floatingLabel
+                        error={this.state.submitted && !this.state.email}
                       >
-                        <Text style={stl.btnText}>Registarse</Text>
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button
-                        block
-                        style={stl.btn}
-                        onPress={() => this.props.navigation.navigate("Index")}
+                        <Label style={stl.textwhite}>Mail</Label>
+                        <Input
+                          style={stl.textwhite}
+                          keyboardType="email-address"
+                          name="email"
+                          value={this.state.email}
+                          onChangeText={email => {
+                            this.setState({ email });
+                          }}
+                        />
+                      </Item>
+                      {this.state.submitted && !this.state.email && (
+                        <Text style={stl.txtError}> El email es requerido</Text>
+                      )}
+                      <Item
+                        floatingLabel
+                        error={this.state.submitted && !this.state.password}
                       >
-                        <Text style={stl.btnText}>Iniciar Sesion</Text>
-                      </Button>
-                    </Col>
-                  </Row>
-                  <Row size={1}>
-                    <Col style={stl.alignRight}>
-                      <Button
-                        transparent
-                        small
-                        onPress={() => this.props.navigation.navigate("Olvide")}
-                      >
-                        <Text style={stl.btnAyuda}>
-                          Ayuda! Olvide mi contraseña
+                        <Label style={stl.textwhite}>Contraseña</Label>
+                        <Input
+                          secureTextEntry={true}
+                          style={stl.textwhite}
+                          name="password"
+                          value={this.state.password}
+                          onChangeText={password => {
+                            this.setState({ password });
+                          }}
+                        />
+                      </Item>
+                      {this.state.submitted && !this.state.password && (
+                        <Text style={stl.txtError}>
+                          La contraseña es requerida
                         </Text>
-                      </Button>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          <Row size={2}>
-            <Col>
-              <Button
-                block
-                light
-                style={stl.btn}
-                onPress={() => this.props.navigation.navigate("Index")}
-              >
-                <Icon name="home" />
-                <Text style={stl.btnText}>Iniciar con Google</Text>
-              </Button>
-              <Button
-                block
-                style={stl.btn}
-                onPress={() => this.props.navigation.navigate("Index")}
-              >
-                <Icon name="home" />
-                <Text style={stl.btnText}>Iniciar con Facebook</Text>
-              </Button>
-            </Col>
-          </Row>
-        </Grid>
-      </Container>
+                      )}
+                      <Text style={stl.txtError}> {this.state.error}</Text>
+                      <View style={stl.btnsRow}>
+                        <Button
+                          style={stl.btn}
+                          bordered
+                          light
+                          onPress={() => {
+                            this.HandleRegistroBtn();
+                          }}
+                        >
+                          <Text style={stl.btnText}>Registarse</Text>
+                        </Button>
+
+                        <Button
+                          block
+                          style={[stl.btn, stl.primary]}
+                          onPress={() => this.HandleInicioBtn()}
+                        >
+                          <Text style={stl.btnText}>Iniciar Sesion</Text>
+                        </Button>
+                      </View>
+                      <View style={stl.btnsRow}>
+                        <Button
+                          transparent
+                          small
+                          onPress={() => {
+                            this.HandleOlvidePass();
+                          }}
+                        >
+                          <Text style={stl.textwhite}>
+                            Ayuda! Olvide mi contraseña
+                          </Text>
+                        </Button>
+                      </View>
+                      <View style={[stl.btnsRow, stl.mTop20]}>
+                        <Button
+                          iconLeft
+                          block
+                          light
+                          style={[stl.btn, stl.Google]}
+                          onPress={() => this.HandleGoogleLoginBtn()}
+                        >
+                          <Image
+                            source={require("../../assets/google.png")}
+                            style={stl.iconoImg}
+                            name="google"
+                          />
+                          <Text style={stl.btnTextRs}>Usar Google</Text>
+                        </Button>
+
+                        <Button
+                          iconLeft
+                          style={[stl.btn, stl.Face]}
+                          onPress={this.loginFacebook}
+                        >
+                          <Image
+                            source={require("../../assets/facebook.png")}
+                            style={stl.iconoImg}
+                            name="facebook"
+                          />
+
+                          <Text style={stl.btnTextRs}>Usar Facebook</Text>
+                        </Button>
+                      </View>
+                    </Form>
+                  </Col>
+                </Row>
+              </Grid>
+            </TouchableWithoutFeedback>
+          </ScrollView>
+        </ImageBackground>
+      </SafeAreaView>
     );
   }
 }
-
-const stl = StyleSheet.create({
-  container: { backgroundColor: "#044fb3" },
-  center: { justifyContent: "flex-end", alignItems: "center" },
-  logo: { width: 40, height: 40, borderRadius: 100 },
-  text1: { color: "red", fontWeight: "bold", fontSize: 15 },
-  text2: { color: "white", fontWeight: "bold", fontSize: 20 },
-  btn: {
-    margin: 5,
-    marginLeft: 10,
-    marginRight: 10,
-    paddingTop: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 20,
-    textAlign: "center"
-  },
-  btnText: { textAlign: "center" },
-  form: {
-    marginLeft: 20,
-    marginRight: 30
-  },
-  itm: { borderBottomColor: "whitesmoke" },
-  lbl: {
-    color: "whitesmoke"
-  },
-  input: {
-    color: "whitesmoke"
-  },
-  btnAyuda: {
-    color: "silver"
-  },
-  alignRight: {
-    alignItems: "flex-end"
-  }
-});
+mapStateToProps = state => {
+  return { seleccion: state };
+};
+export default connect(mapStateToProps)(Login);
