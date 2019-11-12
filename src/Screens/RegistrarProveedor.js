@@ -27,6 +27,7 @@ import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
+
 import { stl } from "./styles/styles";
 
 export class RegistrarProveedor extends Component {
@@ -54,15 +55,17 @@ export class RegistrarProveedor extends Component {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (status !== "granted") {
-        alert("Sorry, we need camera roll permissions to make this work!");
+        alert("Disculpe, necesitamos permiso para acceder a la cámara!");
       }
     }
   };
 
   _pickImage = async () => {
+    this.componentDidMount();
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
+      base64: true,
       aspect: [4, 3]
     });
     if (!result.cancelled) {
@@ -87,14 +90,12 @@ export class RegistrarProveedor extends Component {
         this.state.foto
       )
       .then(response => {
-        console.log("response " + JSON.stringify(response));
-        // if (response.statusType == "success") {
-        //   this.setState(this.initialState);
-        //   this.props.navigate("Servicios");
-        // } else {
-        //     console.log("responseee" + response);
-        //   //this.setState({ error: response.message });
-        // }
+        if (response.statusType == "success") {
+          //this.setState(this.initialState);
+          this.props.navigation.navigate("Servicios");
+        } else {
+          this.setState({ error: response.message });
+        }
       })
       .catch(exception => {
         const error = exception;

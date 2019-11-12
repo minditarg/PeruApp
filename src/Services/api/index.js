@@ -27,10 +27,10 @@ export async function fetchApi(endpoint, payload = {}, metodo = 'get', multipart
 				headers: {
 					'Accept': 'application/json',  
 					"Authorization": 'Bearer ' + accessToken, 
-					'Content-Type': 'multipart/form-data',
+					"Content-Type": multipart ? "multipart/form-data" : "application/json",
 					
 				},
-				...(metodo === 'post' ? { body: payload } : {}),
+				...(metodo === 'post' ? { body: JSON.stringify(payload) } : {}),
 			}
 		);
 		let responseJson = await response.json();

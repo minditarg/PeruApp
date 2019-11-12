@@ -95,7 +95,7 @@ class Login extends Component {
       .then(response => {
         if (response.statusType == "success") {
           this.setState(this.initialState);
-          this.props.navigation.navigate("Trabajos");
+          this.props.navigation.navigate("Servicios");
         } else {
           this.setState({ error: response.message });
         }

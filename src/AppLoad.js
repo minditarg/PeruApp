@@ -32,8 +32,12 @@ export default class AppLoad extends React.Component {
         if (usuarioLogueado.Proveedor != null) {
           this.props.navigation.navigate("Servicios");
         }
-        if (usuarioLogueado.Cliente != null) {
+        else if(usuarioLogueado.Cliente != null) {
           this.props.navigation.navigate("Trabajos");
+        }
+        else{
+          //esta logueado pero no completo sus datos aun. chequear que boton del select toco.
+          this.props.navigation.navigate("RegistrarProveedor");
         }
       }
       this.props.navigation.navigate("Select");
