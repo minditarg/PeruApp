@@ -1,15 +1,24 @@
 
 import * as api from './api';
 import * as session from '../session';
+import store from '../../Store';
+
+import * as actionCreators from '../session/actions';
+
+
+const onRequestSuccess = (response) => {
+     
+	if(response.statusType== "success") store.dispatch(actionCreators.update({ "user.Proveedor": response.data }));
+     return response;
+};
+
+const onRequestFailed = (exception) => {
+     throw exception;
+};
 
 
 export const listado = () => api.listado()
-export const crear = (nombre,email,descripcion,direccion,telefono,foto) =>
-     api.crear(nombre,email,descripcion,direccion,telefono,foto, 1);
-//session.usuarioLogueado().id
-// const formData = new FormData();
-//     formData.append('photo', {
-//       uri,
-//       name: `photo.${fileType}`,
-//       type: `image/${fileType}`,
-//     });
+export const crear = (nombre, email, descripcion, direccion, telefono, foto) =>
+     api.crear(nombre, email, descripcion, direccion, telefono, foto, session.usuarioLogueado().id)
+          .then(onRequestSuccess)
+          .catch(onRequestFailed); 

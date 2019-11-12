@@ -75,7 +75,7 @@ class Login extends Component {
   };
 
   HandleRegistroBtn() {
-    this.props.navigation.navigate("Servicios");
+    this.props.navigation.navigate("Registrarse");
   }
   HandleOlvidePass() {
     this.props.navigation.navigate("Olvide");
@@ -93,7 +93,7 @@ class Login extends Component {
       .then(response => {
         if (response.statusType == "success") {
           this.setState(this.initialState);
-          this.props.navigation.navigate("Trabajos");
+          this.props.navigation.navigate("Servicios");
         } else {
           this.setState({ error: response.message });
         }

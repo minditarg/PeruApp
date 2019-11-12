@@ -12,6 +12,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import { Button, Text, Form, Item, Input, Label } from "native-base";
 import * as usuario from "../Services/usuario";
 import * as session from "../Services/session";
+import * as api from "../Services/api";
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import { stl } from "./styles/styles";
 
@@ -34,14 +35,18 @@ export class Registrarse extends Component {
     });
     dismissKeyboard();
     usuario
-      .crear(this.state.email, this.state.email)
+      .crear(this.state.email, this.state.password)
       .then(response => {
+        console.log(response);
         if (response.statusType == "success") {
           session
-            .authenticate(this.state.email, this.state.email)
+            .authenticate(this.state.email, this.state.password)
             .then(response => {
-              this.setState(this.initialState);
-              this.props.navigation.navigate("RegistrarProveedor");
+              if (response.statusType == "success") {
+                this.props.navigation.navigate("RegistrarProveedor");
+              } else {
+                this.setState({ error: response.message });
+              }
             })
             .catch(exception => {
               const error = api.exceptionExtractError(exception);

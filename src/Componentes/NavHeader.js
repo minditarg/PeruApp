@@ -13,13 +13,13 @@ import {
   View
 } from "native-base";
 import { stl } from "../Screens/styles/styles";
+import * as session from "../Services/session";
 
 export class NavHeader extends React.Component {
   constructor() {
     super();
   }
   render() {
-    console.log(this.props);
     return (
       <ImageBackground
         source={require("../../assets/headerbk-18.png")}
@@ -40,8 +40,8 @@ export class NavHeader extends React.Component {
           <Right>
             <Button transparent>
               <Thumbnail
-                style={stl.btnAvatar}
-                source={require("../../assets/icon.png")}
+               style={stl.btnAvatar}
+                source={{uri: "data:image/png;base64," + session.usuarioLogueado().Proveedor.foto }}
               />
             </Button>
           </Right>
