@@ -7,11 +7,12 @@ import {
   ImageBackground,
   View,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
+  TextInput
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import * as WebBrowser from "expo-web-browser";
-import { Button, Text, Form, Item, Input, Label } from "native-base";
+import { Button, Text, Form, Item, Input, Label, Toast } from "native-base";
 import { connect } from "react-redux";
 import { LOAD_TOKEN_USER } from "../Actions/actionsTypes";
 import * as session from "../Services/session";
@@ -31,7 +32,8 @@ class Login extends Component {
       authResult: {},
       isPostBack: false,
       isLoading: false,
-      error: null
+      error: null,
+      passwordInput: ""
     };
   }
 
@@ -75,7 +77,7 @@ class Login extends Component {
   };
 
   HandleRegistroBtn() {
-    this.props.navigation.navigate("Servicios");
+    this.props.navigation.navigate("Registrarse");
   }
   HandleOlvidePass() {
     this.props.navigation.navigate("Olvide");
@@ -143,6 +145,9 @@ class Login extends Component {
                           keyboardType="email-address"
                           name="email"
                           value={this.state.email}
+                          onSubmitEditing={event => {
+                            this._pass._root.focus();
+                          }}
                           onChangeText={email => {
                             this.setState({ email });
                           }}
@@ -157,10 +162,14 @@ class Login extends Component {
                       >
                         <Label style={stl.textwhite}>Contraseña</Label>
                         <Input
+                          getRef={c => (this._pass = c)}
                           secureTextEntry={true}
                           style={stl.textwhite}
                           name="password"
                           value={this.state.password}
+                          onSubmitEditing={() => {
+                            Keyboard.dismiss;
+                          }}
                           onChangeText={password => {
                             this.setState({ password });
                           }}
@@ -186,6 +195,7 @@ class Login extends Component {
 
                         <Button
                           block
+                          ref={"logins"}
                           style={[stl.btn, stl.primary]}
                           onPress={() => this.HandleInicioBtn()}
                         >
@@ -211,7 +221,12 @@ class Login extends Component {
                           block
                           light
                           style={[stl.btn, stl.Google]}
-                          onPress={() => this.HandleGoogleLoginBtn()}
+                          onPress={() =>
+                            Toast.show({
+                              text: "Wrong password!",
+                              buttonText: "Okay"
+                            })
+                          }
                         >
                           <Image
                             source={require("../../assets/google.png")}

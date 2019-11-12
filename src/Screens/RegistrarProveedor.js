@@ -87,7 +87,7 @@ export class RegistrarProveedor extends Component {
         this.state.foto
       )
       .then(response => {
-        console.log("response " +  JSON.stringify( response));
+        console.log("response " + JSON.stringify(response));
         // if (response.statusType == "success") {
         //   this.setState(this.initialState);
         //   this.props.navigate("Servicios");
@@ -97,7 +97,7 @@ export class RegistrarProveedor extends Component {
         // }
       })
       .catch(exception => {
-        const error = (exception);
+        const error = exception;
         this.setState({
           isLoading: false,
           ...(error ? { error } : {})
@@ -220,7 +220,10 @@ export class RegistrarProveedor extends Component {
                             </View>
                           )}
                           {this.state.foto && (
-                            <Image source={{ uri: this.state.foto.uri }} style={stl.btnImg} />
+                            <Image
+                              source={{ uri: this.state.foto.uri }}
+                              style={stl.btnImg}
+                            />
                           )}
                         </TouchableOpacity>
                       </View>

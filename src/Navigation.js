@@ -1,4 +1,5 @@
 import React from "react";
+import { Root } from "native-base";
 import { createAppContainer } from "react-navigation";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createStackNavigator } from "react-navigation-stack";
@@ -92,11 +93,11 @@ const TabNavigator = createBottomTabNavigator(
       showLabel: false,
       activeTintColor: "#fff",
       inactiveTintColor: "#fff",
-      inactiveBackgroundColor: "#2e3192",
-      activeBackgroundColor: "#464eb7"
+      inactiveBackgroundColor: "#4d50a2",
+      activeBackgroundColor: "#5b62bf"
     },
     tabBarStyle: {
-      backgroundColor: "#044fb3",
+      backgroundColor: "#4d50a2",
       shadow: "none",
       border: "none",
       fontWeight: "bold"
@@ -136,4 +137,10 @@ const RootStack = createStackNavigator(
   }
 );
 
-export default Navigation = createAppContainer(RootStack);
+const Nav = createAppContainer(RootStack);
+
+export default () => (
+  <Root>
+    <Nav></Nav>
+  </Root>
+);

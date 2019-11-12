@@ -114,9 +114,10 @@ export const stl = StyleSheet.create({
   },
 
   btnImgServ: {
-    width: 100,
-    height: 100,
+    width: 90,
+    height: 90,
     borderRadius: 5,
+    //margin: 5,
     backgroundColor: "#ddd",
     justifyContent: "center",
     alignItems: "center"
@@ -236,5 +237,13 @@ export const stl = StyleSheet.create({
   },
   pickerInputText: {
     backgroundColor: "red"
+  },
+  vistaimgs: {
+    width: "100%",
+    justifyContent: "space-between",
+    flexWrap: "wrap"
+  },
+  imgbtn: {
+    marginBottom: 5
   }
 });
