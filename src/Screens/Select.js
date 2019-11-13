@@ -44,7 +44,9 @@ class Select extends Component {
                     block
                     onPress={() => this.Elegir("Cliente")}
                   >
-                    <Text style={stl.btnText}>Quiero Construir</Text>
+                    <Text style={stl.btnText}>
+                      Quiero contratar un servicio
+                    </Text>
                   </Button>
                 </Col>
                 <Col>
@@ -53,7 +55,7 @@ class Select extends Component {
                     block
                     onPress={() => this.Elegir("Empresa")}
                   >
-                    <Text style={stl.btnText}>Soy Constructor</Text>
+                    <Text style={stl.btnText}>Quiero ofrecer un servicio</Text>
                   </Button>
                 </Col>
               </Row>

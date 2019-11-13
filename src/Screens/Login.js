@@ -12,7 +12,16 @@ import {
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import * as WebBrowser from "expo-web-browser";
-import { Button, Text, Form, Item, Input, Label, Toast } from "native-base";
+import {
+  Button,
+  Text,
+  Form,
+  Item,
+  Input,
+  Label,
+  Toast,
+  Spinner
+} from "native-base";
 import { connect } from "react-redux";
 import { LOAD_TOKEN_USER } from "../Actions/actionsTypes";
 import * as session from "../Services/session";
@@ -52,7 +61,6 @@ class Login extends Component {
       this.props.dispatch({ type: LOAD_TOKEN_USER, payload: params.token });
       this.setState({ isPostBack: false });
 
-      //   console.log();
       if (params.nuevo === "true") {
         console.log("redirigir login nuevi");
       } else if (params.nuevo === "false") {
@@ -97,7 +105,17 @@ class Login extends Component {
           this.setState(this.initialState);
           this.props.navigation.navigate("Servicios");
         } else {
-          this.setState({ error: response.message });
+          if (response.error) {
+            this.setState({ isLoading: false, error: response.error });
+          } else {
+            this.setState({ isLoading: false, error: response.message });
+          }
+          Toast.show({
+            text: this.state.error,
+            buttonText: "OK",
+            position: "top",
+            type: "danger"
+          });
         }
       })
       .catch(exception => {
@@ -117,6 +135,7 @@ class Login extends Component {
     if (this.state.isPostBack) {
       this.Redirigir();
     }
+
     return (
       <SafeAreaView style={stl.container}>
         <ImageBackground
@@ -180,7 +199,6 @@ class Login extends Component {
                           La contraseña es requerida
                         </Text>
                       )}
-                      <Text style={stl.txtError}> {this.state.error}</Text>
                       <View style={stl.btnsRow}>
                         <Button
                           style={stl.btn}
@@ -224,7 +242,8 @@ class Login extends Component {
                           onPress={() =>
                             Toast.show({
                               text: "Wrong password!",
-                              buttonText: "Okay"
+                              buttonText: "Okay",
+                              position: "top"
                             })
                           }
                         >
@@ -233,7 +252,7 @@ class Login extends Component {
                             style={stl.iconoImg}
                             name="google"
                           />
-                          <Text style={stl.btnTextRs}>Usar Google</Text>
+                          <Text style={stl.btnTextRsGoogle}>Usar Google</Text>
                         </Button>
 
                         <Button
@@ -247,12 +266,20 @@ class Login extends Component {
                             name="facebook"
                           />
 
-                          <Text style={stl.btnTextRs}>Usar Facebook</Text>
+                          <Text style={stl.btnTextRsFace}>Usar Facebook</Text>
                         </Button>
                       </View>
                     </Form>
                   </Col>
                 </Row>
+
+                {this.state.isLoading && (
+                  <View style={stl.loading}>
+                    <View style={stl.loadingbk}>
+                      <Spinner color="white" />
+                    </View>
+                  </View>
+                )}
               </Grid>
             </TouchableWithoutFeedback>
           </ScrollView>
@@ -261,7 +288,5 @@ class Login extends Component {
     );
   }
 }
-mapStateToProps = state => {
-  return { seleccion: state };
-};
-export default connect(mapStateToProps)(Login);
+
+export default Login;

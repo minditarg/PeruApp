@@ -1,7 +1,10 @@
 import React from "react";
-import { Image, StyleSheet, ImageBackground } from "react-native";
+import { Image, View, ImageBackground } from "react-native";
 import { AppLoading } from "expo";
-import { Container, Text } from "native-base";
+import { Spinner } from "native-base";
+import { stl } from "./Screens/styles/styles";
+
+import { Container, Toast } from "native-base";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -31,11 +34,9 @@ export default class AppLoad extends React.Component {
         let usuarioLogueado = session.usuarioLogueado();
         if (usuarioLogueado.Proveedor != null) {
           this.props.navigation.navigate("Servicios");
-        }
-        else if(usuarioLogueado.Cliente != null) {
+        } else if (usuarioLogueado.Cliente != null) {
           this.props.navigation.navigate("Trabajos");
-        }
-        else{
+        } else {
           //esta logueado pero no completo sus datos aun. chequear que boton del select toco.
           this.props.navigation.navigate("RegistrarProveedor");
         }
@@ -45,15 +46,23 @@ export default class AppLoad extends React.Component {
   }
 
   render() {
-    if (!this.state.isReady) {
+    /* if (!this.state.isReady) {
       return <AppLoading />;
-    }
+    }*/
     return (
       <Container>
         <ImageBackground
           source={require("../assets/splash.png")}
           style={{ width: "100%", height: "100%" }}
-        ></ImageBackground>
+        >
+          {!this.state.isReady && (
+            <View style={stl.loading}>
+              <View style={stl.loadingbk}>
+                <Spinner color="white" />
+              </View>
+            </View>
+          )}
+        </ImageBackground>
       </Container>
     );
   }
