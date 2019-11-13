@@ -23,9 +23,10 @@ import {
 import { stl } from "../Screens/styles/styles";
 import * as servicioService from "../Services/servicios";
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
-import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
+import * as ImagePicker from "expo-image-picker";
+
 export class AddServicio extends Component {
   constructor() {
     super();
@@ -124,6 +125,25 @@ export class AddServicio extends Component {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />
     });
   }
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+      }
+    }
+  };
+
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3]
+    });
+    if (!result.cancelled) {
+      this.setState({ foto: result });
+    }
+  };
 
   render() {
     let { foto } = this.state;
@@ -174,9 +194,7 @@ export class AddServicio extends Component {
                     selectedValue={this.state.categoria}
                     onValueChange={this.onChangeCategoria.bind(this)}
                   >
-
                     {categoriasItems}
-
                   </Picker>
                 </Item>
                 <Item
@@ -192,11 +210,10 @@ export class AddServicio extends Component {
                     name="subcategoria"
                     selectedValue={this.state.subcategoria}
                   >
-
                     {subcategoriasItems}
-
                   </Picker>
                 </Item>
+
                 <View style={stl.areaText}>
                   <Label style={stl.textBlack}>Descripción</Label>
                   <Textarea
@@ -212,10 +229,11 @@ export class AddServicio extends Component {
                     }}
                   />
                 </View>
+
                 <View style={stl.vista}>
                   <TouchableOpacity onPress={this._pickImage}>
-                    {!foto && (
-                      <View style={stl.btnImgServ}>
+                    {!this.state.foto && (
+                      <View style={stl.btnImg}>
                         <Icon
                           style={stl.iconCam}
                           type="FontAwesome"
@@ -223,11 +241,13 @@ export class AddServicio extends Component {
                         />
                       </View>
                     )}
-                    {/* {foto && (
-                      <Image source={{ uri: foto }} style={stl.btnImgServ} />
+                    {/* {this.state.foto && (
+                      <Image
+                        source={{ uri: this.state.foto.uri }}
+                        style={stl.btnImg}
+                      />
                     )} */}
                   </TouchableOpacity>
-
                 </View>
 
                 <Text style={stl.txtError}> {this.state.error}</Text>

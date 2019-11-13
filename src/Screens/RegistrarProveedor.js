@@ -47,7 +47,6 @@ export class RegistrarProveedor extends Component {
     };
   }
 
-  
   componentDidMount() {
     this.getPermissionAsync();
   }
@@ -62,12 +61,11 @@ export class RegistrarProveedor extends Component {
   };
 
   _pickImage = async () => {
-    
     this.componentDidMount();
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      base64 :true,
+      base64: true,
       aspect: [4, 3]
     });
     if (!result.cancelled) {
@@ -100,7 +98,7 @@ export class RegistrarProveedor extends Component {
         }
       })
       .catch(exception => {
-        const error = (exception);
+        const error = exception;
         this.setState({
           isLoading: false,
           ...(error ? { error } : {})
@@ -223,7 +221,10 @@ export class RegistrarProveedor extends Component {
                             </View>
                           )}
                           {this.state.foto && (
-                            <Image source={{ uri: this.state.foto.uri }} style={stl.btnImg} />
+                            <Image
+                              source={{ uri: this.state.foto.uri }}
+                              style={stl.btnImg}
+                            />
                           )}
                         </TouchableOpacity>
                       </View>
