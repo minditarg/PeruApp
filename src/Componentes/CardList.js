@@ -17,13 +17,13 @@ export class CardList extends Component {
             <Left style={stl.cardLeft}>
               <Image
                 style={stl.cardImg}
-                source={require("../../assets/icon.png")}
+                source={{uri: "data:image/png;base64," + obj.foto }}
               />
             </Left>
           )}
           <Body style={stl.cardBody}>
-            <Text style={stl.cardTitulo}>{obj.tipo}</Text>
-            <Text style={stl.cardSubtitulo}>{obj.tipo}</Text>
+            <Text style={stl.cardTitulo}>{obj.nombre}</Text>
+            <Text style={stl.cardSubtitulo}>{obj.descripcion}</Text>
             <View style={stl.puntaje}>
               <Icon style={stl.iconstar} type="Ionicons" name="star" />
               <Icon style={stl.iconstar} type="Ionicons" name="star" />

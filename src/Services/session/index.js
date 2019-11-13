@@ -26,7 +26,7 @@ const onRequestSuccess = (response) => {
 	// 	...prev,
 	// 	[item.type]: item,
 	// // }), {}); 
-	if(response.statusType== "success") store.dispatch(actionCreators.update({ tokens:response.data.tokens, user: response.data.user }));
+	if (response.statusType == "success") store.dispatch(actionCreators.update({ tokens: response.data.tokens, user: response.data.user }));
 	//setSessionTimeout(tokens.access.expiresIn);
 	return response;
 };
@@ -36,39 +36,63 @@ const onRequestFailed = (exception) => {
 	throw exception;
 };
 
-export const refreshToken = () => {
-	const session = selectors.get();
+// export const refreshToken = () => {
+// 	const session = selectors.get();
 
-	if (!session.tokens.refresh.value || !session.user.id) {
-		return Promise.reject();
-	}
+// 	if (!session.tokens.refresh.value || !session.user.id) {
+// 		return Promise.reject();
+// 	}
 
-	return api.refresh(session.tokens.refresh, session.user)
-	.then(onRequestSuccess)
-	.catch(onRequestFailed);
-};
+// 	return api.refresh(session.tokens.refresh, session.user)
+// 		.then(onRequestSuccess)
+// 		.catch(onRequestFailed);
+// };
 
-export const authenticate = (email, password) => 
+export const authenticate = (email, password) =>
 	api.authenticate(email, password)
-	.then(onRequestSuccess)
-	.catch(onRequestFailed); 
+		.then(onRequestSuccess)
+		.catch(onRequestFailed);
 
-export const revoke = () => {
-	const session = selectors.get();
-	return api.revoke(Object.keys(session.tokens).map(tokenKey => ({
-		type: session.tokens[tokenKey].type,
-		value: session.tokens[tokenKey].value,
-	})))
-	.then(clearSession())
-	.catch(() => {});
-};
+// export const revoke = () => {
+// 	const session = selectors.get();
+// 	return api.revoke(Object.keys(session.tokens).map(tokenKey => ({
+// 		type: session.tokens[tokenKey].type,
+// 		value: session.tokens[tokenKey].value,
+// 	})))
+// 		.then(clearSession())
+// 		.catch(() => { });
+// };
 
 //TODO traer desde el servidor los datos de expireIn y demas del token.
-export const estaLogueado= () => {
+export const estaLogueado = () => {
 	const session = selectors.get();
 	return session.user != null && session.user.id > 0;
 }
-export const usuarioLogueado= () => {
+export const usuarioLogueado = () => {
 	const session = selectors.get();
 	return session.user != null && session.user.id > 0 ? session.user : null;
 }
+export const avatar = () => {
+	if (usuarioLogueado().Proveedor != null) {
+		return "data:image/png;base64," + usuarioLogueado().Proveedor.foto;
+	}
+	if (this.usuarioLogueado().Cliente != null) {
+		return "data:image/png;base64," + usuarioLogueado().avatar;
+	}
+}
+
+
+export const elegirTipoApp = (tipo) => {
+	 store.dispatch(actionCreators.update({ tipo: tipo }));
+};
+export const esAppTipoCliente = () => {
+	return selectors.get().tipo == "Cliente";
+};
+
+
+export const esUsuarioTipoCliente = () => {
+	return usuarioLogueado() && usuarioLogueado().Cliente != null;
+};
+export const esUsuarioTipoEmpresa = () => {
+	return usuarioLogueado() && usuarioLogueado().Proveedor != null;
+};

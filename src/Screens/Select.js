@@ -6,19 +6,14 @@ import { connect } from "react-redux";
 import { APP_CHOOSE_TYPE } from "../Actions/actionsTypes";
 import { stl } from "./styles/styles";
 
+import * as session from "../Services/session";
 class Select extends Component {
   constructor() {
     super();
   }
 
   Elegir(tipo) {
-    this.props.dispatch({
-      type: APP_CHOOSE_TYPE,
-      playload: {
-        tipo: tipo
-      }
-    });
-
+    session.elegirTipoApp(tipo);
     this.props.navigation.navigate("Video");
   }
 

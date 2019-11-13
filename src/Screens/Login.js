@@ -93,7 +93,18 @@ class Login extends Component {
       .then(response => {
         if (response.statusType == "success") {
           this.setState(this.initialState);
-          this.props.navigation.navigate("Servicios");
+          if (session.esUsuarioTipoCliente())
+            this.props.navigation.navigate("Trabajos");
+          if (session.esUsuarioTipoEmpresa())
+            this.props.navigation.navigate("Servicios");
+          else {
+            //se pudo registrar pero no completo los datos particulares
+            if (session.esAppTipoCliente()) {
+              this.props.navigation.navigate("Trabajos");
+            } else {
+              this.props.navigation.navigate("RegistrarProveedor");
+            }
+          }
         } else {
           this.setState({ error: response.message });
         }

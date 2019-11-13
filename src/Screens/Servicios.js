@@ -1,20 +1,20 @@
 import React, { Component } from "react";
 import { FlatList } from "react-native";
 import { Container, Content, Button, Icon } from "native-base";
-import Services from "../../Datos/Services.json";
 import { CardList } from "../Componentes/CardList";
 import { stl } from "../Screens/styles/styles";
+import * as session from "../Services/session";
 
 export class Servicios extends Component {
   render() {
-    console.log(Services);
+    
 
     return (
       <Container style={stl.containerList}>
         <Content>
           <FlatList
             style={stl.listaPadding}
-            data={Services}
+            data={session.usuarioLogueado().Proveedor.servicios}
             renderItem={({ item }) => <CardList Image obj={item} />}
             keyExtractor={item => item.id}
           />

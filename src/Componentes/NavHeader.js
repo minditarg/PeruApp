@@ -41,7 +41,7 @@ export class NavHeader extends React.Component {
             <Button transparent>
               <Thumbnail
                style={stl.btnAvatar}
-                source={{uri: "data:image/png;base64," + session.usuarioLogueado().Proveedor.foto }}
+                source={{uri:  session.avatar() != null ? session.avatar() : "" }}
               />
             </Button>
           </Right>

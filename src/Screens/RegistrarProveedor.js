@@ -63,7 +63,7 @@ export class RegistrarProveedor extends Component {
 
   _pickImage = async () => {
     
-  this.componentDidMount();
+    this.componentDidMount();
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,

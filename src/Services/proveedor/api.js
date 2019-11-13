@@ -1,5 +1,4 @@
-import { fetchApi } from '../api';
-import * as common from '../common';
+import { fetchApi } from '../api'
 
 const endPoints = {
     listado: '/proveedor/listado',

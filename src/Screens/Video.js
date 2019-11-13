@@ -4,7 +4,7 @@ import { Row, Grid } from "react-native-easy-grid";
 import { Container, Button, Text } from "native-base";
 import { connect } from "react-redux";
 import { stl } from "./styles/styles";
-
+import * as session from "../Services/session";
 class Video extends Component {
   constructor() {
     super();
@@ -18,7 +18,7 @@ class Video extends Component {
             <WebView
               javaScriptEnabled={true}
               source={{
-                ...(this.props.seleccion.appPara === "Cliente"
+                ...(session.esAppTipoCliente()
                   ? { uri: "https://www.youtube.com/embed/GDAcE3hN0iQ" }
                   : { uri: "https://www.youtube.com/embed/qFPKcgaGCrI" })
               }}
@@ -36,9 +36,6 @@ class Video extends Component {
     );
   }
 }
-mapStateToProps = state => {
-  //console.log(state);
-  return { seleccion: state.AppChose[0] };
-};
 
-export default connect(mapStateToProps)(Video);
+
+export default Video;

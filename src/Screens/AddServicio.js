@@ -21,24 +21,121 @@ import {
   Label
 } from "native-base";
 import { stl } from "../Screens/styles/styles";
-
+import * as servicioService from "../Services/servicios";
+import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
+import * as ImagePicker from "expo-image-picker";
+import Constants from "expo-constants";
+import * as Permissions from "expo-permissions";
 export class AddServicio extends Component {
   constructor() {
     super();
     this.state = {
-      titulo: "",
+      categorias: [{ id: 0, nombre: 'Seleccione categoría' }],
+      subcategorias: [{ id: 0, nombre: 'Seleccione subcategoría' }],
       submitted: false,
-      image: null,
-      selected2: undefined
+
+      titulo: "",
+      descripcion: "",
+      foto: "",
+      categoria: undefined,
+      subcategoria: undefined
     };
   }
-  onValueChange2(value: string) {
+
+  componentDidMount() {
+    servicioService.listadoCategorias().then(response => {
+      this.setState({
+        categorias: response
+      })
+    })
+    this.getPermissionAsync();
+  }
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== "granted") {
+        alert("Disculpe, necesitamos permiso para acceder a la cámara!");
+      }
+    }
+  };
+
+  _pickImage = async () => {
+    //this.componentDidMount();
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      base64: true,
+      aspect: [4, 3]
+    });
+    if (!result.cancelled) {
+      this.setState({ foto: result });
+    }
+  };
+
+  HandleRegistroBtn() {
     this.setState({
-      selected2: value
+      isLoading: true,
+      submitted: true,
+      error: ""
+    });
+    dismissKeyboard();
+    servicioService
+      .crear(
+        this.state.nombre,
+        this.state.descripcion,
+        this.state.foto,
+        this.state.subcategoria,
+      )
+      .then(response => {
+        if (response.statusType == "success") {
+          this.props.navigation.navigate("Servicios");
+        } else {
+          this.setState({ error: response.message });
+        }
+      })
+      .catch(exception => {
+        const error = (exception);
+        this.setState({
+          isLoading: false,
+          ...(error ? { error } : {})
+        });
+
+        if (!error) {
+          throw exception;
+        }
+      });
+  }
+
+  onChangeCategoria(value) {
+    console.log("onChangeCategoria", value);
+    this.setState({
+      categoria: value,
+      subcategorias: this.state.categorias.find(item => item.id === value).subcategorias
+    });
+    this.cambiarSubcategorias();
+  }
+
+  cambiarSubcategorias() {
+    console.log(this.state.subcategorias);
+    this.setState({
+      subcategoria: 1
+    });
+    subcategoriasItems = this.state.subcategorias.map((s, i) => {
+      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />
     });
   }
+
   render() {
-    let { image } = this.state;
+    let { foto } = this.state;
+
+    let categoriasItems = this.state.categorias.map((s, i) => {
+      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />
+    });
+
+    let subcategoriasItems = this.state.subcategorias.map((s, i) => {
+      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />
+    });
+
 
     return (
       <Container style={stl.containerList}>
@@ -48,20 +145,20 @@ export class AddServicio extends Component {
               <Form style={stl.form}>
                 <Item
                   floatingLabel
-                  error={this.state.submitted && !this.state.titulo}
+                  error={this.state.submitted && !this.state.nombre}
                 >
                   <Label style={stl.textBlack}>Título</Label>
                   <Input
                     style={stl.textBlack}
-                    name="titulo"
-                    value={this.state.email}
-                    onChangeText={email => {
-                      this.setState({ email });
+                    name="nombre"
+                    value={this.state.nombre}
+                    onChangeText={nombre => {
+                      this.setState({ nombre });
                     }}
                   />
                 </Item>
-                {this.state.submitted && !this.state.email && (
-                  <Text style={stl.txtError}> El título es requerido</Text>
+                {this.state.submitted && !this.state.nombre && (
+                  <Text style={stl.txtError}> El nombre es requerido</Text>
                 )}
                 <Item
                   picker
@@ -74,14 +171,30 @@ export class AddServicio extends Component {
                     iosIcon={<Icon name="arrow-down" />}
                     style={[stl.textBlack, stl.pickerInput]}
                     name="categoria"
-                    selectedValue={this.state.selected2}
-                    onValueChange={this.onValueChange2.bind(this)}
+                    selectedValue={this.state.categoria}
+                    onValueChange={this.onChangeCategoria.bind(this)}
                   >
-                    <Picker.Item label="Carpinteria" value="key0" />
-                    <Picker.Item label="ATM Card" value="key1" />
-                    <Picker.Item label="Debit Card" value="key2" />
-                    <Picker.Item label="Credit Card" value="key3" />
-                    <Picker.Item label="Net Banking" value="key4" />
+
+                    {categoriasItems}
+
+                  </Picker>
+                </Item>
+                <Item
+                  picker
+                  style={stl.picker}
+                  error={this.state.submitted && !this.state.email}
+                >
+                  <Picker
+                    mode="dropdown"
+                    placeholder="SubCategoria"
+                    iosIcon={<Icon name="arrow-down" />}
+                    style={[stl.textBlack, stl.pickerInput]}
+                    name="subcategoria"
+                    selectedValue={this.state.subcategoria}
+                  >
+
+                    {subcategoriasItems}
+
                   </Picker>
                 </Item>
                 <View style={stl.areaText}>
@@ -101,7 +214,7 @@ export class AddServicio extends Component {
                 </View>
                 <View style={stl.vista}>
                   <TouchableOpacity onPress={this._pickImage}>
-                    {!image && (
+                    {!foto && (
                       <View style={stl.btnImgServ}>
                         <Icon
                           style={stl.iconCam}
@@ -110,11 +223,14 @@ export class AddServicio extends Component {
                         />
                       </View>
                     )}
-                    {image && (
-                      <Image source={{ uri: image }} style={stl.btnImgServ} />
-                    )}
+                    {/* {foto && (
+                      <Image source={{ uri: foto }} style={stl.btnImgServ} />
+                    )} */}
                   </TouchableOpacity>
+
                 </View>
+
+                <Text style={stl.txtError}> {this.state.error}</Text>
                 <View style={stl.btnsRow}>
                   <Button
                     style={stl.btn}
