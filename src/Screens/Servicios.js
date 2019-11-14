@@ -6,16 +6,31 @@ import { stl } from "../Screens/styles/styles";
 import * as session from "../Services/session";
 
 export class Servicios extends Component {
+
+  constructor() {
+    super();
+    //this.componentDidUpdate();
+    this.state = {
+      servicios: session.usuarioLogueado().Proveedor.servicios
+    };
+  }
+  
+  shouldComponentUpdate() {
+    this.state = {
+      servicios: session.usuarioLogueado().Proveedor.servicios
+    }; 
+  }
+
   render() {
-    
+
 
     return (
       <Container style={stl.containerList}>
         <Content>
           <FlatList
             style={stl.listaPadding}
-            data={session.usuarioLogueado().Proveedor.servicios}
-            renderItem={({ item }) => <CardList Image obj={item} />}
+            data={ this.state.servicios}
+            renderItem={({ item }) => <CardList navigation={this.props.navigation} Image obj={item} />}
             keyExtractor={item => item.id}
           />
         </Content>

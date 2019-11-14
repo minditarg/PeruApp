@@ -43,6 +43,7 @@ export class AddServicio extends Component {
     };
   }
 
+  
   componentDidMount() {
     servicioService.listadoCategorias().then(response => {
       this.setState({
@@ -89,7 +90,9 @@ export class AddServicio extends Component {
       )
       .then(response => {
         if (response.statusType == "success") {
-          this.props.navigation.navigate("Servicios");
+          this.prop.navigation.push("Servicios");
+
+          //this.props.navigation.navigate("Servicios");
         } else {
           this.setState({ error: response.message });
         }

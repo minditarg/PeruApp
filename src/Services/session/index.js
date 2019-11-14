@@ -83,7 +83,7 @@ export const avatar = () => {
 
 
 export const elegirTipoApp = (tipo) => {
-	 store.dispatch(actionCreators.update({ tipo: tipo }));
+	store.dispatch(actionCreators.update({ tipo: tipo }));
 };
 export const esAppTipoCliente = () => {
 	return selectors.get().tipo == "Cliente";
@@ -96,3 +96,19 @@ export const esUsuarioTipoCliente = () => {
 export const esUsuarioTipoEmpresa = () => {
 	return usuarioLogueado() && usuarioLogueado().Proveedor != null;
 };
+
+export const actualizarUsuario = () => {
+	 return api.actualizarUsuario(usuarioLogueado().id)
+		.then(response => {
+			let token= selectors.get().tokens;
+			let tipo= selectors.get().tipo;
+			if (response.statusType == "success"){
+				store.dispatch(actionCreators.update({ user: response.data, tokens: token, tipo:tipo }));
+				return response;
+			} 
+		}
+		).catch(exception => {
+			throw exception;
+		}
+	);
+}

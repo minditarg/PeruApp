@@ -28,3 +28,7 @@ export const crear = (nombre, descripcion, foto, subcategoriaId) => {
     let imgbase64 = foto != null ? foto.base64 : null;
      api.crear(nombre, descripcion, imgbase64, subcategoriaId, session.usuarioLogueado().Proveedor.id).then(onRequestSuccess).catch(onRequestFailed);
 }
+
+export const eliminar = (servicioId) => {
+    return api.eliminar(servicioId);
+}

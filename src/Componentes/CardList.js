@@ -1,9 +1,63 @@
 import React, { Component } from "react";
-import { View, Image, TouchableOpacity } from "react-native";
-import { Text, Left, Body, Right, Button, Icon } from "native-base";
+import { View, Image, TouchableOpacity, Alert } from "react-native";
+import { Text, Left, Body, Right, Button, Icon, Toast } from "native-base";
 import { stl } from "../Screens/styles/styles";
-
+import * as servicioService from "../Services/servicios";
+import * as sessionService from "../Services/session";
 export class CardList extends Component {
+  constructor() {
+    super();
+  }
+  EliminarServicio(servicioId) {
+    servicioService.eliminar(servicioId)
+      .then(response => {
+        if (response.statusType == "success") {
+          Toast.show({
+            text: response.message,
+            buttonText: "OK",
+            position: "top",
+            type: "success"
+          });
+
+          sessionService.actualizarUsuario().then(response => { 
+            console.log(response);
+            this.props.navigation.push("Servicios")
+          });
+        } else {
+          Toast.show({
+            text: response.message,
+            buttonText: "OK",
+            position: "top",
+            type: "danger"
+          });
+        }
+      })
+      .catch(exception => {
+        Toast.show({
+          text: exception,
+          buttonText: "OK",
+          position: "top",
+          type: "danger"
+        });
+        console.log(exception, "exc");
+      });
+  }
+  HandleEliminarBtn(servicio) {
+    Alert.alert(
+      'Eliminar servicio',
+      '¿Estás seguro de eliminar el servicio: ' + servicio.nombre + ' ?',
+      [
+        {
+          style: 'cancel',
+          text: 'Cancelar',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        { text: 'Eliminar', style: 'destructive', onPress: () => this.EliminarServicio(servicio.id) },
+      ],
+      { cancelable: false },
+    );
+  }
   render() {
     let obj = this.props.obj;
     return (
@@ -17,7 +71,7 @@ export class CardList extends Component {
             <Left style={stl.cardLeft}>
               <Image
                 style={stl.cardImg}
-                source={{uri: "data:image/png;base64," + obj.foto }}
+                source={{ uri: "data:image/png;base64," + obj.foto }}
               />
             </Left>
           )}
@@ -36,7 +90,7 @@ export class CardList extends Component {
             <Button
               transparent
               onPress={() => {
-                console.log("trash");
+                this.HandleEliminarBtn(obj)
               }}
             >
               <Icon style={stl.iconCam} type="EvilIcons" name="trash" />
