@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   ScrollView,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  Alert
 } from "react-native";
 import {
   Container,
@@ -31,13 +32,12 @@ export class AddServicio extends Component {
   constructor() {
     super();
     this.state = {
-      categorias: [{ id: 0, nombre: 'Seleccione categoría' }],
-      subcategorias: [{ id: 0, nombre: 'Seleccione subcategoría' }],
+      categorias: [{ id: 0, nombre: "Seleccione categoría" }],
+      subcategorias: [{ id: 0, nombre: "Seleccione subcategoría" }],
       submitted: false,
-
       titulo: "",
       descripcion: "",
-      foto: "",
+      foto: [],
       categoria: undefined,
       subcategoria: undefined
     };
@@ -48,8 +48,8 @@ export class AddServicio extends Component {
     servicioService.listadoCategorias().then(response => {
       this.setState({
         categorias: response
-      })
-    })
+      });
+    });
     this.getPermissionAsync();
   }
   getPermissionAsync = async () => {
@@ -70,7 +70,8 @@ export class AddServicio extends Component {
       aspect: [4, 3]
     });
     if (!result.cancelled) {
-      this.setState({ foto: result });
+      this.setState({ foto: [...this.state.foto, result] });
+      console.log(this.state.foto);
     }
   };
 
@@ -86,7 +87,7 @@ export class AddServicio extends Component {
         this.state.nombre,
         this.state.descripcion,
         this.state.foto,
-        this.state.subcategoria,
+        this.state.subcategoria
       )
       .then(response => {
         if (response.statusType == "success") {
@@ -98,7 +99,7 @@ export class AddServicio extends Component {
         }
       })
       .catch(exception => {
-        const error = (exception);
+        const error = exception;
         this.setState({
           isLoading: false,
           ...(error ? { error } : {})
@@ -114,7 +115,8 @@ export class AddServicio extends Component {
     console.log("onChangeCategoria", value);
     this.setState({
       categoria: value,
-      subcategorias: this.state.categorias.find(item => item.id === value).subcategorias
+      subcategorias: this.state.categorias.find(item => item.id === value)
+        .subcategorias
     });
     this.cambiarSubcategorias();
   }
@@ -125,7 +127,7 @@ export class AddServicio extends Component {
       subcategoria: 1
     });
     subcategoriasItems = this.state.subcategorias.map((s, i) => {
-      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />
+      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
   }
   getPermissionAsync = async () => {
@@ -137,28 +139,54 @@ export class AddServicio extends Component {
     }
   };
 
-  _pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3]
-    });
-    if (!result.cancelled) {
-      this.setState({ foto: result });
-    }
-  };
-
   render() {
-    let { foto } = this.state;
+    let foto = this.state.foto;
 
     let categoriasItems = this.state.categorias.map((s, i) => {
-      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />
+      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
 
     let subcategoriasItems = this.state.subcategorias.map((s, i) => {
-      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />
+      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
-
+    let fotos = this.state.foto.map((s, i) => {
+      return (
+        <TouchableOpacity
+          key={s.uri}
+          style={stl.touchableImg}
+          onPress={() => {
+            Alert.alert(
+              "Eliminar imagen",
+              "¡Quiere eliminar la imagen?",
+              [
+                {
+                  text: "Volver",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel"
+                },
+                {
+                  text: "SI, eliminala",
+                  onPress: () =>
+                    this.setState({
+                      foto: this.state.foto.filter(x => x.uri != s.uri)
+                    })
+                }
+              ],
+              { cancelable: true }
+            );
+          }}
+        >
+          <Image source={{ uri: s.uri }} style={stl.btnImgServ} />
+          <View style={stl.btnEliminarFoto}>
+            <Icon
+              style={stl.iconEliminarFoto}
+              type="FontAwesome"
+              name="close"
+            />
+          </View>
+        </TouchableOpacity>
+      );
+    });
 
     return (
       <Container style={stl.containerList}>
@@ -233,23 +261,16 @@ export class AddServicio extends Component {
                   />
                 </View>
 
-                <View style={stl.vista}>
+                <View style={[stl.vista, stl.vistaimgs]}>
+                  {fotos}
                   <TouchableOpacity onPress={this._pickImage}>
-                    {!this.state.foto && (
-                      <View style={stl.btnImg}>
-                        <Icon
-                          style={stl.iconCam}
-                          type="FontAwesome"
-                          name="camera"
-                        />
-                      </View>
-                    )}
-                    {/* {this.state.foto && (
-                      <Image
-                        source={{ uri: this.state.foto.uri }}
-                        style={stl.btnImg}
+                    <View style={stl.btnImgServ}>
+                      <Icon
+                        style={stl.iconCam}
+                        type="FontAwesome"
+                        name="camera"
                       />
-                    )} */}
+                    </View>
                   </TouchableOpacity>
                 </View>
 

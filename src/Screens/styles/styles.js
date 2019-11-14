@@ -242,11 +242,16 @@ export const stl = StyleSheet.create({
   },
   vistaimgs: {
     width: "100%",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     flexWrap: "wrap"
   },
   imgbtn: {
     marginBottom: 5
+  },
+  touchableImg: {
+    marginBottom: 15,
+    borderColor: "#ddd",
+    borderWidth: 1
   },
   loading: {
     position: "absolute",
@@ -254,6 +259,20 @@ export const stl = StyleSheet.create({
     width: "100%",
     flex: 1,
     flexDirection: "row",
+    justifyContent: "center"
+  },
+  btnEliminarFoto: {
+    position: "absolute",
+    bottom: -20,
+    right: -20
+  },
+  iconEliminarFoto: {
+    fontSize: 30,
+    aspectRatio: 1,
+    padding: 5,
+
+    color: colorError,
+
     justifyContent: "center"
   },
   loadingbk: {
