@@ -20,7 +20,6 @@ export class CardList extends Component {
           });
 
           sessionService.actualizarUsuario().then(response => { 
-            console.log(response);
             this.props.navigation.push("Servicios")
           });
         } else {

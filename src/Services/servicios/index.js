@@ -6,17 +6,6 @@ import store from '../../Store';
 import * as actionCreators from '../session/actions';
 
 
-const onRequestSuccess = (response) => {
-    if (response.statusType == "success") store.dispatch(actionCreators.update({  user: response.data.user }));
-	return response;
-
-};
-
-const onRequestFailed = (exception) => {
-
-};
-
-
 export const listadoCategorias = () => {
     return api.listadoCategorias().then(response => {
         if (response.statusType == "success") {
@@ -24,9 +13,9 @@ export const listadoCategorias = () => {
         }
     })
 }
-export const crear = (nombre, descripcion, foto, subcategoriaId) => {
-    let imgbase64 = foto != null ? foto.base64 : null;
-     api.crear(nombre, descripcion, imgbase64, subcategoriaId, session.usuarioLogueado().Proveedor.id).then(onRequestSuccess).catch(onRequestFailed);
+export const crear = (nombre, descripcion, fotos, subcategoriaId) => {
+    let imagenes= fotos.map(function(img, i){ return  { foto: img.base64 }});
+    return api.crear(nombre, descripcion, imagenes, subcategoriaId, session.usuarioLogueado().Proveedor.id);
 }
 
 export const eliminar = (servicioId) => {

@@ -69,7 +69,7 @@ export const estaLogueado = () => {
 	return session.user != null && session.user.id > 0;
 }
 export const usuarioLogueado = () => {
-	const session = selectors.get();
+	let session = selectors.get();
 	return session.user != null && session.user.id > 0 ? session.user : null;
 }
 export const avatar = () => {
@@ -98,6 +98,7 @@ export const esUsuarioTipoEmpresa = () => {
 };
 
 export const actualizarUsuario = () => {
+	console.log("usuairop", usuarioLogueado());
 	 return api.actualizarUsuario(usuarioLogueado().id)
 		.then(response => {
 			let token= selectors.get().tokens;

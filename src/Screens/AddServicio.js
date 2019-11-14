@@ -19,7 +19,8 @@ import {
   Item,
   Input,
   Textarea,
-  Label
+  Label,
+  Toast
 } from "native-base";
 import { stl } from "../Screens/styles/styles";
 import * as servicioService from "../Services/servicios";
@@ -27,6 +28,7 @@ import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
+import * as sessionService from "../Services/session";
 
 export class AddServicio extends Component {
   constructor() {
@@ -71,7 +73,6 @@ export class AddServicio extends Component {
     });
     if (!result.cancelled) {
       this.setState({ foto: [...this.state.foto, result] });
-      console.log(this.state.foto);
     }
   };
 
@@ -90,12 +91,25 @@ export class AddServicio extends Component {
         this.state.subcategoria
       )
       .then(response => {
+        console.log("then",response);
         if (response.statusType == "success") {
-          this.prop.navigation.push("Servicios");
-
-          //this.props.navigation.navigate("Servicios");
+          Toast.show({
+            text: response.message,
+            buttonText: "OK",
+            position: "top",
+            type: "success"
+          });
+          sessionService.actualizarUsuario().then(response => { 
+            this.props.navigation.push("Servicios")
+          });
         } else {
           this.setState({ error: response.message });
+          Toast.show({
+            text: response.message,
+            buttonText: "OK",
+            position: "top",
+            type: "danger"
+          });
         }
       })
       .catch(exception => {
