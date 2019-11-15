@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { FlatList } from "react-native";
-import { Container, Content, Button, Icon } from "native-base";
+import { Container, Content, Button, Icon, Spinner } from "native-base";
 import { CardList } from "../Componentes/CardList";
 import { stl } from "../Screens/styles/styles";
 import * as session from "../Services/session";
 
 export class Servicios extends Component {
-
   constructor() {
     super();
     //this.componentDidUpdate();
@@ -14,28 +13,30 @@ export class Servicios extends Component {
       servicios: session.usuarioLogueado().Proveedor.servicios
     };
   }
-  
+
   shouldComponentUpdate() {
     this.state = {
       servicios: session.usuarioLogueado().Proveedor.servicios
-    }; 
+    };
   }
 
   render() {
-
-
     return (
       <Container style={stl.containerList}>
         <Content>
           <FlatList
             style={stl.listaPadding}
-            data={ this.state.servicios}
-            renderItem={({ item }) => <CardList navigation={this.props.navigation} Image obj={item} />}
+            data={this.state.servicios}
+            renderItem={({ item }) => (
+              <CardList navigation={this.props.navigation} Image obj={item} />
+            )}
             keyExtractor={item => item.id}
           />
         </Content>
         <Button
-          onPress={() => this.props.navigation.navigate("AddServicio")}
+          onPress={() => {
+            this.props.navigation.navigate("AddServicio");
+          }}
           style={[stl.btnRounded, stl.primary]}
           block
         >

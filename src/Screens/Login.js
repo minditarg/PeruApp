@@ -8,7 +8,8 @@ import {
   View,
   ScrollView,
   SafeAreaView,
-  TextInput
+  TextInput,
+  KeyboardAvoidingView
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import * as WebBrowser from "expo-web-browser";
@@ -147,155 +148,161 @@ class Login extends Component {
       this.Redirigir();
     }
 
+    console.log(this.props.navigation);
     return (
-      <SafeAreaView style={stl.container}>
-        <ImageBackground
-          source={require("../../assets/bkblues.png")}
-          style={stl.imgBkground}
-        >
-          <ScrollView>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <Grid>
-                <Row size={2}>
-                  <Image
-                    style={stl.imgLogoGrande}
-                    source={require("../../assets/img-header-18.png")}
-                  />
-                </Row>
-                <Row size={3}>
-                  <Col>
-                    <Form style={stl.form}>
-                      <Item
-                        floatingLabel
-                        error={this.state.submitted && !this.state.email}
-                      >
-                        <Label style={stl.textwhite}>Mail</Label>
-                        <Input
-                          style={stl.textwhite}
-                          keyboardType="email-address"
-                          name="email"
-                          value={this.state.email}
-                          onSubmitEditing={event => {
-                            this._pass._root.focus();
-                          }}
-                          onChangeText={email => {
-                            this.setState({ email });
-                          }}
-                        />
-                      </Item>
-                      {this.state.submitted && !this.state.email && (
-                        <Text style={stl.txtError}> El email es requerido</Text>
-                      )}
-                      <Item
-                        floatingLabel
-                        error={this.state.submitted && !this.state.password}
-                      >
-                        <Label style={stl.textwhite}>Contraseña</Label>
-                        <Input
-                          getRef={c => (this._pass = c)}
-                          secureTextEntry={true}
-                          style={stl.textwhite}
-                          name="password"
-                          value={this.state.password}
-                          onSubmitEditing={() => {
-                            Keyboard.dismiss;
-                          }}
-                          onChangeText={password => {
-                            this.setState({ password });
-                          }}
-                        />
-                      </Item>
-                      {this.state.submitted && !this.state.password && (
-                        <Text style={stl.txtError}>
-                          La contraseña es requerida
-                        </Text>
-                      )}
-                      <View style={stl.btnsRow}>
-                        <Button
-                          style={stl.btn}
-                          bordered
-                          light
-                          onPress={() => {
-                            this.HandleRegistroBtn();
-                          }}
+      <KeyboardAvoidingView behavior="padding" enabled>
+        <SafeAreaView style={stl.container}>
+          <ImageBackground
+            source={require("../../assets/bkblues.png")}
+            style={stl.imgBkground}
+          >
+            <ScrollView>
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <Grid>
+                  <Row size={2}>
+                    <Image
+                      style={stl.imgLogoGrande}
+                      source={require("../../assets/img-header-18.png")}
+                    />
+                  </Row>
+                  <Row size={3}>
+                    <Col>
+                      <Form style={stl.form}>
+                        <Item
+                          floatingLabel
+                          error={this.state.submitted && !this.state.email}
                         >
-                          <Text style={stl.btnText}>Registarse</Text>
-                        </Button>
-
-                        <Button
-                          block
-                          ref={"logins"}
-                          style={[stl.btn, stl.primary]}
-                          onPress={() => this.HandleInicioBtn()}
-                        >
-                          <Text style={stl.btnText}>Iniciar Sesion</Text>
-                        </Button>
-                      </View>
-                      <View style={stl.btnsRow}>
-                        <Button
-                          transparent
-                          small
-                          onPress={() => {
-                            this.HandleOlvidePass();
-                          }}
-                        >
-                          <Text style={stl.textwhite}>
-                            Ayuda! Olvide mi contraseña
+                          <Label style={stl.textwhite}>Mail</Label>
+                          <Input
+                            style={stl.textwhite}
+                            keyboardType="email-address"
+                            name="email"
+                            value={this.state.email}
+                            onSubmitEditing={event => {
+                              this._pass._root.focus();
+                            }}
+                            onChangeText={email => {
+                              this.setState({ email });
+                            }}
+                          />
+                        </Item>
+                        {this.state.submitted && !this.state.email && (
+                          <Text style={stl.txtError}>
+                            {" "}
+                            El email es requerido
                           </Text>
-                        </Button>
-                      </View>
-                      <View style={[stl.btnsRow, stl.mTop20]}>
-                        <Button
-                          iconLeft
-                          block
-                          light
-                          style={[stl.btn, stl.Google]}
-                          onPress={() =>
-                            Toast.show({
-                              text: "Wrong password!",
-                              buttonText: "Okay",
-                              position: "top"
-                            })
-                          }
+                        )}
+                        <Item
+                          floatingLabel
+                          error={this.state.submitted && !this.state.password}
                         >
-                          <Image
-                            source={require("../../assets/google.png")}
-                            style={stl.iconoImg}
-                            name="google"
+                          <Label style={stl.textwhite}>Contraseña</Label>
+                          <Input
+                            getRef={c => (this._pass = c)}
+                            secureTextEntry={true}
+                            style={stl.textwhite}
+                            name="password"
+                            value={this.state.password}
+                            onSubmitEditing={() => {
+                              Keyboard.dismiss;
+                            }}
+                            onChangeText={password => {
+                              this.setState({ password });
+                            }}
                           />
-                          <Text style={stl.btnTextRsGoogle}>Usar Google</Text>
-                        </Button>
+                        </Item>
+                        {this.state.submitted && !this.state.password && (
+                          <Text style={stl.txtError}>
+                            La contraseña es requerida
+                          </Text>
+                        )}
+                        <View style={stl.btnsRow}>
+                          <Button
+                            style={stl.btn}
+                            bordered
+                            light
+                            onPress={() => {
+                              this.HandleRegistroBtn();
+                            }}
+                          >
+                            <Text style={stl.btnText}>Registarse</Text>
+                          </Button>
 
-                        <Button
-                          iconLeft
-                          style={[stl.btn, stl.Face]}
-                          onPress={this.loginFacebook}
-                        >
-                          <Image
-                            source={require("../../assets/facebook.png")}
-                            style={stl.iconoImg}
-                            name="facebook"
-                          />
+                          <Button
+                            block
+                            ref={"logins"}
+                            style={[stl.btn, stl.primary]}
+                            onPress={() => this.HandleInicioBtn()}
+                          >
+                            <Text style={stl.btnText}>Iniciar Sesion</Text>
+                          </Button>
+                        </View>
+                        <View style={stl.btnsRow}>
+                          <Button
+                            transparent
+                            small
+                            onPress={() => {
+                              this.HandleOlvidePass();
+                            }}
+                          >
+                            <Text style={stl.textwhite}>
+                              Ayuda! Olvide mi contraseña
+                            </Text>
+                          </Button>
+                        </View>
+                        <View style={[stl.btnsRow, stl.mTop20]}>
+                          <Button
+                            iconLeft
+                            block
+                            light
+                            style={[stl.btn, stl.Google]}
+                            onPress={() =>
+                              Toast.show({
+                                text: "Wrong password!",
+                                buttonText: "Okay",
+                                position: "top"
+                              })
+                            }
+                          >
+                            <Image
+                              source={require("../../assets/google.png")}
+                              style={stl.iconoImg}
+                              name="google"
+                            />
+                            <Text style={stl.btnTextRsGoogle}>Usar Google</Text>
+                          </Button>
 
-                          <Text style={stl.btnTextRsFace}>Usar Facebook</Text>
-                        </Button>
+                          <Button
+                            iconLeft
+                            style={[stl.btn, stl.Face]}
+                            onPress={this.loginFacebook}
+                          >
+                            <Image
+                              source={require("../../assets/facebook.png")}
+                              style={stl.iconoImg}
+                              name="facebook"
+                            />
+
+                            <Text style={stl.btnTextRsFace}>Usar Facebook</Text>
+                          </Button>
+                        </View>
+                      </Form>
+                    </Col>
+                  </Row>
+
+                  {this.state.isLoading && (
+                    <View style={stl.loading}>
+                      <View style={stl.loadingbk}>
+                        <Spinner color="white" />
                       </View>
-                    </Form>
-                  </Col>
-                </Row>
-
-                {this.state.isLoading && (
-                  <View style={stl.loading}>
-                    <View style={stl.loadingbk}>
-                      <Spinner color="white" />
                     </View>
-                  </View>
-                )}
-              </Grid>
-            </TouchableWithoutFeedback>
-          </ScrollView>
-        </ImageBackground>
-      </SafeAreaView>
+                  )}
+                </Grid>
+              </TouchableWithoutFeedback>
+            </ScrollView>
+          </ImageBackground>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     );
   }
 }
