@@ -33,8 +33,10 @@ export const crear = (nombre, email, descripcion, direccion, telefono, foto, usu
 }
 
 
-export const actualizar = (id) =>
-    fetchApi(endPoints.actualizar + id, { nombre: nombre, email: email, descripcion: descripcion, direccion: direccion, telefono: telefono, foto: foto }, 'put');
+export const actualizar = (nombre, email, descripcion, direccion, telefono, foto, usuarioId) => { 
+    let imgbase64=  foto != null ?  foto.base64 : null;
+    return fetchApi(endPoints.actualizar + usuarioId, { nombre: nombre, email: email, descripcion: descripcion, direccion: direccion, telefono: telefono, foto: imgbase64 }, 'put');
 
+}
 
 export const eliminar = (id) => fetchApi(endPoints.eliminar + id, {}, 'delete');

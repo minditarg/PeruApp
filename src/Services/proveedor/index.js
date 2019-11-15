@@ -7,8 +7,8 @@ import * as actionCreators from '../session/actions';
 
 
 const onRequestSuccess = (response) => {
-     
-	if(response.statusType== "success") store.dispatch(actionCreators.update({ "user.Proveedor": response.data }));
+
+     if (response.statusType == "success") store.dispatch(actionCreators.update({ "user.Proveedor": response.data }));
      return response;
 };
 
@@ -20,5 +20,10 @@ const onRequestFailed = (exception) => {
 export const listado = () => api.listado()
 export const crear = (nombre, email, descripcion, direccion, telefono, foto) =>
      api.crear(nombre, email, descripcion, direccion, telefono, foto, session.usuarioLogueado().id)
+          .then(onRequestSuccess)
+          .catch(onRequestFailed);
+
+export const actualizar = (nombre, email, descripcion, direccion, telefono, foto) =>
+     api.actualizar(nombre, email, descripcion, direccion, telefono, foto, session.usuarioLogueado().Proveedor.id)
           .then(onRequestSuccess)
           .catch(onRequestFailed); 

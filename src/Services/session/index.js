@@ -53,6 +53,10 @@ export const authenticate = (email, password) =>
 		.then(onRequestSuccess)
 		.catch(onRequestFailed);
 
+export const logout = () => {
+	clearSession();
+};
+
 // export const revoke = () => {
 // 	const session = selectors.get();
 // 	return api.revoke(Object.keys(session.tokens).map(tokenKey => ({
@@ -98,18 +102,17 @@ export const esUsuarioTipoEmpresa = () => {
 };
 
 export const actualizarUsuario = () => {
-	console.log("usuairop", usuarioLogueado());
-	 return api.actualizarUsuario(usuarioLogueado().id)
+	return api.actualizarUsuario(usuarioLogueado().id)
 		.then(response => {
-			let token= selectors.get().tokens;
-			let tipo= selectors.get().tipo;
-			if (response.statusType == "success"){
-				store.dispatch(actionCreators.update({ user: response.data, tokens: token, tipo:tipo }));
+			let token = selectors.get().tokens;
+			let tipo = selectors.get().tipo;
+			if (response.statusType == "success") {
+				store.dispatch(actionCreators.update({ user: response.data, tokens: token, tipo: tipo }));
 				return response;
-			} 
+			}
 		}
 		).catch(exception => {
 			throw exception;
 		}
-	);
+		);
 }

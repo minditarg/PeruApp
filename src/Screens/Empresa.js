@@ -21,22 +21,89 @@ import {
   Content
 } from "native-base";
 import { stl } from "./styles/styles";
+import * as sessionService from "../Services/session";
+import * as proveedorService from "../Services/proveedor";
+import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
+import * as ImagePicker from "expo-image-picker";
+import Constants from "expo-constants";
+import * as Permissions from "expo-permissions";
 
 export class Empresa extends Component {
   constructor() {
     super();
-
+    let usuarioLogueado = sessionService.usuarioLogueado();
     this.state = {
-      nombre: "",
-      email: "",
-      descripcion: "",
-      direccion: "",
-      telefono: "",
-      foto: null,
+      nombre: usuarioLogueado.Proveedor.nombre,
+      email: usuarioLogueado.Proveedor.email,
+      descripcion: usuarioLogueado.Proveedor.descripcion,
+      direccion: usuarioLogueado.Proveedor.direccion,
+      telefono: usuarioLogueado.Proveedor.telefono,
+      foto: usuarioLogueado.Proveedor.foto,
+      fotoNueva:{ base64: usuarioLogueado.Proveedor.foto},
       submitted: false,
       isLoading: false,
       error: null
     };
+  }
+  componentDidMount() {
+    this.getPermissionAsync();
+  }
+
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== "granted") {
+        alert("Disculpe, necesitamos permiso para acceder a la cámara!");
+      }
+    }
+  };
+
+  _pickImage = async () => {
+    this.componentDidMount();
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      base64: true,
+      aspect: [4, 3]
+    });
+    if (!result.cancelled) {
+      this.setState({ fotoNueva: result, foto:result.base64 });
+    }
+  };
+
+  HandleGuardarBtn() {
+    dismissKeyboard();
+    proveedorService
+      .actualizar(
+        this.state.nombre,
+        this.state.email,
+        this.state.descripcion,
+        this.state.direccion,
+        this.state.telefono,
+        this.state.fotoNueva
+      )
+      .then(response => {
+        if (response.statusType == "success") {
+          this.props.navigation.navigate("Servicios");
+        } else {
+          this.setState({ error: response.message });
+        }
+      })
+      .catch(exception => {
+        const error = exception;
+        this.setState({
+          isLoading: false,
+          ...(error ? { error } : {})
+        });
+
+        if (!error) {
+          throw exception;
+        }
+      });
+  }
+
+  logout() {
+    sessionService.logout();
   }
   render() {
     return (
@@ -58,17 +125,16 @@ export class Empresa extends Component {
                     )}
                     {this.state.foto && (
                       <Image
-                        source={{ uri: this.state.foto.uri }}
+                        source={{ uri: "data:image/png;base64," +  this.state.foto }}
                         style={stl.btnImg}
                       />
                     )}
                   </TouchableOpacity>
                 </View>
-                <Text style={stl.txtError}> {this.state.error}</Text>
                 <Button
                   block
                   style={[stl.btn, stl.primary]}
-                  onPress={() => this.HandleRegistroBtn()}
+                  onPress={() => this.logout()}
                 >
                   <Text style={stl.btnText}>Cerrar Sesión</Text>
                 </Button>
@@ -152,7 +218,7 @@ export class Empresa extends Component {
                     }}
                   />
                 </View>
-
+                <Text style={stl.txtError}> {this.state.error}</Text>
                 <View style={stl.btnsRow}>
                   <Button
                     style={stl.btn}
@@ -165,7 +231,7 @@ export class Empresa extends Component {
                   <Button
                     block
                     style={[stl.btn, stl.primary]}
-                    onPress={() => this.HandleRegistroBtn()}
+                    onPress={() => this.HandleGuardarBtn()}
                   >
                     <Text style={stl.btnText}>Guardar Cambios</Text>
                   </Button>

@@ -21,8 +21,6 @@ export function fetchApi(
   metodo = "get",
   multipart = false
 ) {
-  console.log("gat1");
-
   const accessToken = sessionSelectors.get().tokens;
   return fetch(apiConfig.url + endpoint, {
     method: metodo,
@@ -31,7 +29,7 @@ export function fetchApi(
       Authorization: "Bearer " + accessToken,
       "Content-Type": multipart ? "multipart/form-data" : "application/json"
     },
-    ...(metodo === "post" ? { body: JSON.stringify(payload) } : {})
+    ...(metodo === "post" | metodo === "put" ? { body: JSON.stringify(payload) } : {})
   })
     .then(response => {
       return response.json();
