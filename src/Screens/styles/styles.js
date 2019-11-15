@@ -52,7 +52,9 @@ export const stl = StyleSheet.create({
     backgroundColor: googleColor
   },
   btnText: { padding: 0, textAlign: "center" },
-  btnTextRs: { textTransform: "capitalize" },
+  btnTextRsGoogle: { textTransform: "capitalize", color: "#444" },
+  btnTextRsFace: { textTransform: "capitalize" },
+
   txtArea: {
     marginVertical: 20
   },
@@ -114,9 +116,10 @@ export const stl = StyleSheet.create({
   },
 
   btnImgServ: {
-    width: 100,
-    height: 100,
+    width: 90,
+    height: 90,
     borderRadius: 5,
+    //margin: 5,
     backgroundColor: "#ddd",
     justifyContent: "center",
     alignItems: "center"
@@ -236,5 +239,47 @@ export const stl = StyleSheet.create({
   },
   pickerInputText: {
     backgroundColor: "red"
+  },
+  vistaimgs: {
+    width: "100%",
+    justifyContent: "space-around",
+    flexWrap: "wrap"
+  },
+  imgbtn: {
+    marginBottom: 5
+  },
+  touchableImg: {
+    marginBottom: 15,
+    borderColor: "#ddd",
+    borderWidth: 1
+  },
+  loading: {
+    position: "absolute",
+    top: "50%",
+    width: "100%",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center"
+  },
+  btnEliminarFoto: {
+    position: "absolute",
+    bottom: -20,
+    right: -20
+  },
+  iconEliminarFoto: {
+    fontSize: 30,
+    aspectRatio: 1,
+    padding: 5,
+
+    color: colorError,
+
+    justifyContent: "center"
+  },
+  loadingbk: {
+    width: 100,
+    height: 100,
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,.5)",
+    borderRadius: 5
   }
 });

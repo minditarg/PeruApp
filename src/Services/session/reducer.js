@@ -1,6 +1,7 @@
 import * as actionTypes from './actionTypes';
 
 export const initialState = {
+	tipo: "",
 	tokens: String,
 	user: {
 		
