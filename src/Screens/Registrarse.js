@@ -6,7 +6,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
+  KeyboardAvoidingView
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { Button, Text, Form, Item, Input, Label } from "native-base";
@@ -78,94 +79,102 @@ export class Registrarse extends Component {
 
   render() {
     return (
-      <SafeAreaView style={stl.container}>
-        <ImageBackground
-          source={require("../../assets/bkblues.png")}
-          style={stl.imgBkground}
-        >
-          <ScrollView>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <Grid>
-                <Row size={2}>
-                  <Image
-                    style={stl.imgLogoGrande}
-                    source={require("../../assets/img-header-18.png")}
-                  />
-                </Row>
+      <KeyboardAvoidingView behavior="padding" enabled>
+        <SafeAreaView style={stl.container}>
+          <ImageBackground
+            source={require("../../assets/bkblues.png")}
+            style={stl.imgBkground}
+          >
+            <ScrollView>
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <Grid>
+                  <Row size={2}>
+                    <Image
+                      style={stl.imgLogoGrande}
+                      source={require("../../assets/img-header-18.png")}
+                    />
+                  </Row>
 
-                <Row size={3}>
-                  <Col>
-                    <Form style={stl.form}>
-                      <Item
-                        floatingLabel
-                        error={this.state.submitted && !this.state.email}
-                      >
-                        <Label style={stl.textwhite}>Mail</Label>
-                        <Input
-                          style={stl.textwhite}
-                          keyboardType="email-address"
-                          name="email"
-                          value={this.state.email}
-                          onSubmitEditing={event => {
-                            this._pass._root.focus();
-                          }}
-                          onChangeText={email => {
-                            this.setState({ email });
-                          }}
-                        />
-                      </Item>
-                      {this.state.submitted && !this.state.email && (
-                        <Text style={stl.txtError}> El email es requerido</Text>
-                      )}
-                      <Item
-                        floatingLabel
-                        error={this.state.submitted && !this.state.password}
-                      >
-                        <Label style={stl.textwhite}>Contraseña</Label>
-                        <Input
-                          getRef={c => (this._pass = c)}
-                          secureTextEntry={true}
-                          style={stl.textwhite}
-                          name="password"
-                          value={this.state.password}
-                          onChangeText={password => {
-                            this.setState({ password });
-                          }}
-                        />
-                      </Item>
-                      {this.state.submitted && !this.state.password && (
-                        <Text style={stl.txtError}>
-                          La contraseña es requerida
-                        </Text>
-                      )}
-                      <Text style={stl.txtError}> {this.state.error}</Text>
-                      <View style={stl.btnsRow}>
-                        <Button
-                          style={stl.btn}
-                          bordered
-                          light
-                          onPress={() =>
-                            this.props.navigation.navigate("Login")
-                          }
+                  <Row size={3}>
+                    <Col>
+                      <Form style={stl.form}>
+                        <Item
+                          floatingLabel
+                          error={this.state.submitted && !this.state.email}
                         >
-                          <Text style={stl.btnText}> Cancelar</Text>
-                        </Button>
-                        <Button
-                          block
-                          style={[stl.btn, stl.primary]}
-                          onPress={() => this.HandleRegistroBtn()}
+                          <Label style={stl.textwhite}>Mail</Label>
+                          <Input
+                            style={stl.textwhite}
+                            keyboardType="email-address"
+                            name="email"
+                            value={this.state.email}
+                            onSubmitEditing={event => {
+                              this._pass._root.focus();
+                            }}
+                            onChangeText={email => {
+                              this.setState({ email });
+                            }}
+                          />
+                        </Item>
+                        {this.state.submitted && !this.state.email && (
+                          <Text style={stl.txtError}>
+                            {" "}
+                            El email es requerido
+                          </Text>
+                        )}
+                        <Item
+                          floatingLabel
+                          error={this.state.submitted && !this.state.password}
                         >
-                          <Text style={stl.btnText}>Crear cuenta</Text>
-                        </Button>
-                      </View>
-                    </Form>
-                  </Col>
-                </Row>
-              </Grid>
-            </TouchableWithoutFeedback>
-          </ScrollView>
-        </ImageBackground>
-      </SafeAreaView>
+                          <Label style={stl.textwhite}>Contraseña</Label>
+                          <Input
+                            getRef={c => (this._pass = c)}
+                            secureTextEntry={true}
+                            style={stl.textwhite}
+                            name="password"
+                            value={this.state.password}
+                            onSubmitEditing={event => {
+                              Keyboard.dismiss;
+                            }}
+                            onChangeText={password => {
+                              this.setState({ password });
+                            }}
+                          />
+                        </Item>
+                        {this.state.submitted && !this.state.password && (
+                          <Text style={stl.txtError}>
+                            La contraseña es requerida
+                          </Text>
+                        )}
+                        <Text style={stl.txtError}> {this.state.error}</Text>
+                        <View style={stl.btnsRow}>
+                          <Button
+                            style={stl.btn}
+                            bordered
+                            light
+                            onPress={() =>
+                              this.props.navigation.navigate("Login")
+                            }
+                          >
+                            <Text style={stl.btnText}> Cancelar</Text>
+                          </Button>
+                          <Button
+                            block
+                            style={[stl.btn, stl.primary]}
+                            onPress={() => this.HandleRegistroBtn()}
+                          >
+                            <Text style={stl.btnText}>Crear cuenta</Text>
+                          </Button>
+                        </View>
+                      </Form>
+                    </Col>
+                  </Row>
+                </Grid>
+              </TouchableWithoutFeedback>
+            </ScrollView>
+          </ImageBackground>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     );
   }
 }

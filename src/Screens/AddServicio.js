@@ -6,7 +6,9 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert
+  Alert,
+  KeyboardAvoidingView,
+  SafeAreaView
 } from "react-native";
 import {
   Container,
@@ -45,7 +47,6 @@ export class AddServicio extends Component {
     };
   }
 
-  
   componentDidMount() {
     servicioService.listadoCategorias().then(response => {
       this.setState({
@@ -91,7 +92,7 @@ export class AddServicio extends Component {
         this.state.subcategoria
       )
       .then(response => {
-        console.log("then",response);
+        console.log("then", response);
         if (response.statusType == "success") {
           Toast.show({
             text: response.message,
@@ -99,8 +100,8 @@ export class AddServicio extends Component {
             position: "top",
             type: "success"
           });
-          sessionService.actualizarUsuario().then(response => { 
-            this.props.navigation.push("Servicios")
+          sessionService.actualizarUsuario().then(response => {
+            this.props.navigation.push("Servicios");
           });
         } else {
           this.setState({ error: response.message });
@@ -203,114 +204,116 @@ export class AddServicio extends Component {
     });
 
     return (
-      <Container style={stl.containerList}>
-        <ScrollView>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <Content style={stl.card}>
-              <Form style={stl.form}>
-                <Item
-                  floatingLabel
-                  error={this.state.submitted && !this.state.nombre}
-                >
-                  <Label style={stl.textBlack}>Título</Label>
-                  <Input
-                    style={stl.textBlack}
-                    name="nombre"
-                    value={this.state.nombre}
-                    onChangeText={nombre => {
-                      this.setState({ nombre });
-                    }}
-                  />
-                </Item>
-                {this.state.submitted && !this.state.nombre && (
-                  <Text style={stl.txtError}> El nombre es requerido</Text>
-                )}
-                <Item
-                  picker
-                  style={stl.picker}
-                  error={this.state.submitted && !this.state.email}
-                >
-                  <Picker
-                    mode="dropdown"
-                    placeholder="Categoria"
-                    iosIcon={<Icon name="arrow-down" />}
-                    style={[stl.textBlack, stl.pickerInput]}
-                    name="categoria"
-                    selectedValue={this.state.categoria}
-                    onValueChange={this.onChangeCategoria.bind(this)}
+      <KeyboardAvoidingView behavior="padding" enabled>
+        <SafeAreaView style={stl.containerList}>
+          <ScrollView>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <Content style={stl.card}>
+                <Form style={stl.form}>
+                  <Item
+                    floatingLabel
+                    error={this.state.submitted && !this.state.nombre}
                   >
-                    {categoriasItems}
-                  </Picker>
-                </Item>
-                <Item
-                  picker
-                  style={stl.picker}
-                  error={this.state.submitted && !this.state.email}
-                >
-                  <Picker
-                    mode="dropdown"
-                    placeholder="SubCategoria"
-                    iosIcon={<Icon name="arrow-down" />}
-                    style={[stl.textBlack, stl.pickerInput]}
-                    name="subcategoria"
-                    selectedValue={this.state.subcategoria}
+                    <Label style={stl.textBlack}>Título</Label>
+                    <Input
+                      style={stl.textBlack}
+                      name="nombre"
+                      value={this.state.nombre}
+                      onChangeText={nombre => {
+                        this.setState({ nombre });
+                      }}
+                    />
+                  </Item>
+                  {this.state.submitted && !this.state.nombre && (
+                    <Text style={stl.txtError}> El nombre es requerido</Text>
+                  )}
+                  <Item
+                    picker
+                    style={stl.picker}
+                    error={this.state.submitted && !this.state.email}
                   >
-                    {subcategoriasItems}
-                  </Picker>
-                </Item>
-
-                <View style={stl.areaText}>
-                  <Label style={stl.textBlack}>Descripción</Label>
-                  <Textarea
-                    style={[stl.textBlack, stl.txtArea]}
-                    ligth
-                    rowSpan={5}
-                    name="descripcion"
-                    bordered
-                    placeholder="Descripcion"
-                    value={this.state.descripcion}
-                    onChangeText={descripcion => {
-                      this.setState({ descripcion });
-                    }}
-                  />
-                </View>
-
-                <View style={[stl.vista, stl.vistaimgs]}>
-                  {fotos}
-                  <TouchableOpacity onPress={this._pickImage}>
-                    <View style={stl.btnImgServ}>
-                      <Icon
-                        style={stl.iconCam}
-                        type="FontAwesome"
-                        name="camera"
-                      />
-                    </View>
-                  </TouchableOpacity>
-                </View>
-
-                <Text style={stl.txtError}> {this.state.error}</Text>
-                <View style={stl.btnsRow}>
-                  <Button
-                    style={stl.btn}
-                    bordered
-                    onPress={() => this.props.navigation.goBack()}
+                    <Picker
+                      mode="dropdown"
+                      placeholder="Categoria"
+                      iosIcon={<Icon name="arrow-down" />}
+                      style={[stl.textBlack, stl.pickerInput]}
+                      name="categoria"
+                      selectedValue={this.state.categoria}
+                      onValueChange={this.onChangeCategoria.bind(this)}
+                    >
+                      {categoriasItems}
+                    </Picker>
+                  </Item>
+                  <Item
+                    picker
+                    style={stl.picker}
+                    error={this.state.submitted && !this.state.email}
                   >
-                    <Text style={stl.btnText}> Cancelar</Text>
-                  </Button>
+                    <Picker
+                      mode="dropdown"
+                      placeholder="SubCategoria"
+                      iosIcon={<Icon name="arrow-down" />}
+                      style={[stl.textBlack, stl.pickerInput]}
+                      name="subcategoria"
+                      selectedValue={this.state.subcategoria}
+                    >
+                      {subcategoriasItems}
+                    </Picker>
+                  </Item>
 
-                  <Button
-                    block
-                    style={[stl.btn, stl.primary]}
-                    onPress={() => this.HandleRegistroBtn()}
-                  >
-                    <Text style={stl.btnText}>Crear Servicio</Text>
-                  </Button>
-                </View>
-              </Form>
-            </Content>
-          </TouchableWithoutFeedback>
-        </ScrollView>
-      </Container>
+                  <View style={stl.areaText}>
+                    <Label style={stl.textBlack}>Descripción</Label>
+                    <Textarea
+                      style={[stl.textBlack, stl.txtArea]}
+                      ligth
+                      rowSpan={5}
+                      name="descripcion"
+                      bordered
+                      placeholder="Descripcion"
+                      value={this.state.descripcion}
+                      onChangeText={descripcion => {
+                        this.setState({ descripcion });
+                      }}
+                    />
+                  </View>
+
+                  <View style={[stl.vista, stl.vistaimgs]}>
+                    {fotos}
+                    <TouchableOpacity onPress={this._pickImage}>
+                      <View style={stl.btnImgServ}>
+                        <Icon
+                          style={stl.iconCam}
+                          type="FontAwesome"
+                          name="camera"
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+
+                  <Text style={stl.txtError}> {this.state.error}</Text>
+                  <View style={stl.btnsRow}>
+                    <Button
+                      style={stl.btn}
+                      bordered
+                      onPress={() => this.props.navigation.goBack()}
+                    >
+                      <Text style={stl.btnText}> Cancelar</Text>
+                    </Button>
+
+                    <Button
+                      block
+                      style={[stl.btn, stl.primary]}
+                      onPress={() => this.HandleRegistroBtn()}
+                    >
+                      <Text style={stl.btnText}>Crear Servicio</Text>
+                    </Button>
+                  </View>
+                </Form>
+              </Content>
+            </TouchableWithoutFeedback>
+          </ScrollView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     );
   }
 }
