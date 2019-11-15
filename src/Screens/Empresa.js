@@ -23,6 +23,7 @@ import {
 } from "native-base";
 import { stl } from "./styles/styles";
 import * as sessionService from "../Services/session";
+import apiConfig from "../Services/api/config";
 import * as proveedorService from "../Services/proveedor";
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import * as ImagePicker from "expo-image-picker";
@@ -39,8 +40,8 @@ export class Empresa extends Component {
       descripcion: usuarioLogueado.Proveedor.descripcion,
       direccion: usuarioLogueado.Proveedor.direccion,
       telefono: usuarioLogueado.Proveedor.telefono,
-      foto: usuarioLogueado.Proveedor.foto,
-      fotoNueva: { base64: usuarioLogueado.Proveedor.foto },
+      foto: apiConfig.pathFiles  + usuarioLogueado.Proveedor.foto,
+      fotoNueva: null,
       submitted: false,
       isLoading: false,
       error: null
@@ -68,7 +69,7 @@ export class Empresa extends Component {
       aspect: [4, 3]
     });
     if (!result.cancelled) {
-      this.setState({ fotoNueva: result, foto: result.base64 });
+      this.setState({ fotoNueva: result, foto: result.uri});
     }
   };
 
@@ -130,7 +131,7 @@ export class Empresa extends Component {
                       {this.state.foto && (
                         <Image
                           source={{
-                            uri: "data:image/png;base64," + this.state.foto
+                            uri:   this.state.foto
                           }}
                           style={stl.btnImg}
                         />
