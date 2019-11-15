@@ -7,8 +7,7 @@ import * as actionCreators from '../session/actions';
 
 
 const onRequestSuccess = (response) => {
-
-     if (response.statusType == "success") store.dispatch(actionCreators.update({ "user.Proveedor": response.data }));
+     if (response.statusType == "success") session.actualizarProveedorEnStore(response.data);
      return response;
 };
 

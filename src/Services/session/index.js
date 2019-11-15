@@ -3,6 +3,7 @@ import * as api from './api';
 import * as selectors from './selectors';
 import * as actionCreators from './actions';
 import { initialState } from './reducer';
+import apiConfig from "../api/config";
 
 const SESSION_TIMEOUT_THRESHOLD = 300; // Will refresh the access token 5 minutes before it expires
 
@@ -78,7 +79,8 @@ export const usuarioLogueado = () => {
 }
 export const avatar = () => {
 	if (usuarioLogueado().Proveedor != null) {
-		return "data:image/png;base64," + usuarioLogueado().Proveedor.foto;
+		return apiConfig.pathFiles + usuarioLogueado().Proveedor.foto;
+		//return "data:image/png;base64," + usuarioLogueado().Proveedor.foto;
 	}
 	if (this.usuarioLogueado().Cliente != null) {
 		return "data:image/png;base64," + usuarioLogueado().avatar;
@@ -115,4 +117,13 @@ export const actualizarUsuario = () => {
 			throw exception;
 		}
 		);
+}
+
+export const actualizarProveedorEnStore = (proveedor) => {
+	let token = selectors.get().tokens;
+	let tipo = selectors.get().tipo;
+	let usuario = selectors.get().user;
+	usuario.Proveedor = proveedor;
+	store.dispatch(actionCreators.update({ user: usuario, tokens: token, tipo: tipo }));
+	return true;
 }
