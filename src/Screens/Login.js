@@ -73,10 +73,10 @@ class Login extends Component {
   // LOGIN De FACEBBOK
   loginFacebook = async () => {
     let redirectUrl = await Linking.getInitialURL();
-    let authUrl = "https://10.30.30.125:3000/api/auth/facebook";
+    let authUrl = "https://50.63.166.215:5000/api/auth/facebook";
     try {
       let authResult = await WebBrowser.openAuthSessionAsync(
-        "https://10.30.30.125:3000/api/auth/facebook",
+        "https://50.63.166.215:5000/api/auth/facebook",
         redirectUrl
       );
       await this.setState({ authResult: authResult, isPostBack: true });
