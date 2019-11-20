@@ -22,7 +22,8 @@ import {
   Input,
   Textarea,
   Label,
-  Toast
+  Toast,
+  Spinner
 } from "native-base";
 import { stl } from "../Screens/styles/styles";
 import * as servicioService from "../Services/servicios";
@@ -39,9 +40,11 @@ export class AddServicio extends Component {
       categorias: [{ id: 0, nombre: "Seleccione categoría" }],
       subcategorias: [{ id: 0, nombre: "Seleccione subcategoría" }],
       submitted: false,
+      isLoading: false,
       titulo: "",
       descripcion: "",
       foto: [],
+      visible: false,
       categoria: undefined,
       subcategoria: undefined
     };
@@ -94,6 +97,9 @@ export class AddServicio extends Component {
       .then(response => {
         console.log("then", response);
         if (response.statusType == "success") {
+          this.setState({
+            isLoading: false
+          });
           Toast.show({
             text: response.message,
             buttonText: "OK",
@@ -104,7 +110,7 @@ export class AddServicio extends Component {
             this.props.navigation.push("Servicios");
           });
         } else {
-          this.setState({ error: response.message });
+          this.setState({ isLoading: false, error: response.message });
           Toast.show({
             text: response.message,
             buttonText: "OK",
@@ -192,13 +198,22 @@ export class AddServicio extends Component {
           }}
         >
           <Image source={{ uri: s.uri }} style={stl.btnImgServ} />
-          <View style={stl.btnEliminarFoto}>
+          <View style={stl.imgActions}>
+            <TouchableOpacity style={stl.imgAction}>
+              <Icon type="FontAwesome" name="star" />
+            </TouchableOpacity>
+            <TouchableOpacity style={stl.imgAction}>
+              <Icon type="FontAwesome" name="trash" />
+            </TouchableOpacity>
+          </View>
+
+          {/*<View style={stl.btnEliminarFoto}>
             <Icon
               style={stl.iconEliminarFoto}
               type="FontAwesome"
               name="close"
             />
-          </View>
+          </View>*/}
         </TouchableOpacity>
       );
     });
@@ -308,6 +323,13 @@ export class AddServicio extends Component {
                       <Text style={stl.btnText}>Crear Servicio</Text>
                     </Button>
                   </View>
+                  {this.state.isLoading && (
+                    <View style={stl.loading}>
+                      <View style={stl.loadingbk}>
+                        <Spinner color="white" />
+                      </View>
+                    </View>
+                  )}
                 </Form>
               </Content>
             </TouchableWithoutFeedback>

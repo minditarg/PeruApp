@@ -116,8 +116,8 @@ export const stl = StyleSheet.create({
   },
 
   btnImgServ: {
-    width: 90,
-    height: 90,
+    width: 150,
+    height: 150,
     borderRadius: 5,
     //margin: 5,
     backgroundColor: "#ddd",
@@ -281,5 +281,21 @@ export const stl = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "rgba(0,0,0,.5)",
     borderRadius: 5
+  },
+  imgActions: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "rgba(255,255,255,.5)"
+  },
+  imgAction: {
+    flex: 1,
+    justifyContent: "center",
+    borderColor: "rgba(0,0,0,0)",
+    borderWidth: 1,
+    padding: 3
   }
 });

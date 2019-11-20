@@ -30,7 +30,7 @@ export class Servicios extends Component {
             renderItem={({ item }) => (
               <CardList navigation={this.props.navigation} Image obj={item} />
             )}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id.toString()}
           />
         </Content>
         <Button

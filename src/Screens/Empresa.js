@@ -19,7 +19,9 @@ import {
   Input,
   Label,
   Icon,
-  Content
+  Content,
+  Spinner,
+  Toast
 } from "native-base";
 import { stl } from "./styles/styles";
 import * as sessionService from "../Services/session";
@@ -34,18 +36,20 @@ export class Empresa extends Component {
   constructor() {
     super();
     let usuarioLogueado = sessionService.usuarioLogueado();
-    this.state = {
+
+    this.initialState = {
       nombre: usuarioLogueado.Proveedor.nombre,
       email: usuarioLogueado.Proveedor.email,
       descripcion: usuarioLogueado.Proveedor.descripcion,
       direccion: usuarioLogueado.Proveedor.direccion,
       telefono: usuarioLogueado.Proveedor.telefono,
-      foto: apiConfig.pathFiles  + usuarioLogueado.Proveedor.foto,
+      foto: apiConfig.pathFiles + usuarioLogueado.Proveedor.foto,
       fotoNueva: null,
       submitted: false,
       isLoading: false,
       error: null
     };
+    this.state = this.initialState;
   }
   componentDidMount() {
     this.getPermissionAsync();
@@ -69,11 +73,16 @@ export class Empresa extends Component {
       aspect: [4, 3]
     });
     if (!result.cancelled) {
-      this.setState({ fotoNueva: result, foto: result.uri});
+      this.setState({ fotoNueva: result, foto: result.uri });
     }
   };
-
+  HandleCancelarBtn() {
+    this.setState(this.initialState);
+  }
   HandleGuardarBtn() {
+    this.setState({
+      isLoading: true
+    });
     dismissKeyboard();
     proveedorService
       .actualizar(
@@ -86,9 +95,17 @@ export class Empresa extends Component {
       )
       .then(response => {
         if (response.statusType == "success") {
-          this.props.navigation.navigate("Servicios");
+          this.setState({
+            isLoading: false
+          });
+          Toast.show({
+            text: response.message,
+            buttonText: "OK",
+            position: "top",
+            type: "success"
+          });
         } else {
-          this.setState({ error: response.message });
+          this.setState({ isLoading: false, error: response.message });
         }
       })
       .catch(exception => {
@@ -130,7 +147,7 @@ export class Empresa extends Component {
                       {this.state.foto && (
                         <Image
                           source={{
-                            uri:   this.state.foto
+                            uri: this.state.foto
                           }}
                           style={stl.btnImg}
                         />
@@ -249,7 +266,7 @@ export class Empresa extends Component {
                     <Button
                       style={stl.btn}
                       bordered
-                      onPress={() => this.props.navigation.navigate("Login")}
+                      onPress={() => this.HandleCancelarBtn()}
                     >
                       <Text style={stl.btnText}> Cancelar</Text>
                     </Button>
@@ -263,6 +280,13 @@ export class Empresa extends Component {
                     </Button>
                   </View>
                 </Form>
+                {this.state.isLoading && (
+                  <View style={stl.loading}>
+                    <View style={stl.loadingbk}>
+                      <Spinner color="white" />
+                    </View>
+                  </View>
+                )}
               </Content>
             </TouchableWithoutFeedback>
           </ScrollView>

@@ -34,7 +34,7 @@ import { stl } from "./styles/styles";
 class Login extends Component {
   constructor() {
     super();
-    this.state = {
+    this.initialState = {
       email: "",
       password: "",
       submitted: false,
@@ -45,6 +45,8 @@ class Login extends Component {
       error: null,
       passwordInput: ""
     };
+
+    this.state = this.initialState;
   }
 
   Redirigir() {

@@ -21,7 +21,8 @@ import {
   Input,
   Label,
   Icon,
-  Textarea
+  Textarea,
+  Spinner
 } from "native-base";
 import * as proveedor from "../Services/proveedor";
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
@@ -36,7 +37,7 @@ export class RegistrarProveedor extends Component {
   constructor() {
     super();
 
-    this.state = {
+    this.initialState = {
       nombre: "",
       email: "",
       descripcion: "",
@@ -47,6 +48,7 @@ export class RegistrarProveedor extends Component {
       isLoading: false,
       error: null
     };
+    this.state = this.initialState;
   }
 
   componentDidMount() {
@@ -93,10 +95,10 @@ export class RegistrarProveedor extends Component {
       )
       .then(response => {
         if (response.statusType == "success") {
-          //this.setState(this.initialState);
+          this.setState(this.initialState);
           this.props.navigation.navigate("Servicios");
         } else {
-          this.setState({ error: response.message });
+          this.setState({ isLoading: false, error: response.message });
         }
       })
       .catch(exception => {
@@ -279,6 +281,13 @@ export class RegistrarProveedor extends Component {
                       </Form>
                     </Col>
                   </View>
+                  {this.state.isLoading && (
+                    <View style={stl.loading}>
+                      <View style={stl.loadingbk}>
+                        <Spinner color="white" />
+                      </View>
+                    </View>
+                  )}
                 </Grid>
               </TouchableWithoutFeedback>
             </ScrollView>
