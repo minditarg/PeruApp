@@ -4,6 +4,7 @@ import { Text, Left, Body, Right, Button, Icon, Toast } from "native-base";
 import { stl } from "../Screens/styles/styles";
 import * as servicioService from "../Services/servicios";
 import * as sessionService from "../Services/session";
+import apiConfig from "../Services/api/config";
 export class CardList extends Component {
   constructor() {
     super();
@@ -70,7 +71,7 @@ export class CardList extends Component {
             <Left style={stl.cardLeft}>
               <Image
                 style={stl.cardImg}
-                source={{ uri: "data:image/png;base64," + obj.foto }}
+                source={{ uri: apiConfig.pathFiles + obj.foto }}
               />
             </Left>
           )}
