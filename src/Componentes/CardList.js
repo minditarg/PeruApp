@@ -45,7 +45,7 @@ export class CardList extends Component {
   HandleEliminarBtn(servicio) {
     Alert.alert(
       'Eliminar servicio',
-      '¿Estás seguro de eliminar el servicio: ' + servicio.nombre + ' ?',
+      '¿Estás seguro de eliminar el servicio: ' + obj.nombre + ' ?',
       [
         {
           style: 'cancel',
@@ -63,7 +63,7 @@ export class CardList extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          console.log("select");
+          this.props.navigation.navigate("UpdateServicio", {id: obj.id} );
         }}
       >
         <View style={[stl.card, stl.cardHor]}>

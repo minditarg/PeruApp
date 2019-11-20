@@ -6,6 +6,7 @@ import { Olvide } from "./Olvide";
 import { Registrarse } from "./Registrarse";
 import { RegistrarProveedor } from "./RegistrarProveedor";
 import { AddServicio } from "./AddServicio";
+import { UpdateServicio } from "./UpdateServicio";
 
 import { AddTrabajo } from "./AddTrabajo";
 import { Empresa } from "./Empresa";
@@ -20,6 +21,7 @@ export {
   Registrarse,
   RegistrarProveedor,
   AddServicio,
+  UpdateServicio,
   AddTrabajo,
   Empresa,
   Servicios,

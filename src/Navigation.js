@@ -12,6 +12,7 @@ import {
   Registrarse,
   RegistrarProveedor,
   AddServicio,
+  UpdateServicio,
   AddTrabajo,
   Empresa,
   Servicios,
@@ -66,7 +67,8 @@ const EmpresaNav = createStackNavigator(
 const ServiciosNav = createStackNavigator(
   {
     Servicios: Servicios,
-    AddServicio: AddServicio
+    AddServicio: AddServicio,
+    UpdateServicio: UpdateServicio
   },
   {
     defaultNavigationOptions: {
