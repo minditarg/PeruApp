@@ -148,7 +148,6 @@ class Login extends Component {
       this.Redirigir();
     }
 
-    console.log(this.props.navigation);
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         <SafeAreaView style={stl.container}>

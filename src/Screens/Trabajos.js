@@ -7,8 +7,6 @@ import { stl } from "../Screens/styles/styles";
 
 export class Trabajos extends Component {
   render() {
-    console.log(works);
-
     return (
       <Container style={stl.containerList}>
         <Content>
