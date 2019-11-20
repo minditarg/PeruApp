@@ -106,7 +106,6 @@ export class Empresa extends Component {
 
   logout() {
     sessionService.logout();
-    console.log(this.props.navigation);
     this.props.navigation.navigate("Login");
   }
   render() {

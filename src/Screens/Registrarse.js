@@ -38,7 +38,6 @@ export class Registrarse extends Component {
     usuario
       .crear(this.state.email, this.state.password)
       .then(response => {
-        console.log(response);
         if (response.statusType == "success") {
           session
             .authenticate(this.state.email, this.state.password)
