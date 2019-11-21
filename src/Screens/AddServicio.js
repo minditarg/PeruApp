@@ -36,7 +36,7 @@ import * as sessionService from "../Services/session";
 export class AddServicio extends Component {
   constructor() {
     super();
-    this.state = {
+    this.initialState = {
       categorias: [{ id: 0, nombre: "Seleccione categoría" }],
       subcategorias: [{ id: 0, nombre: "Seleccione subcategoría" }],
       submitted: false,
@@ -48,6 +48,7 @@ export class AddServicio extends Component {
       categoria: undefined,
       subcategoria: undefined
     };
+    this.state = this.initialState;
   }
 
   componentDidMount() {
@@ -107,7 +108,17 @@ export class AddServicio extends Component {
             type: "success"
           });
           sessionService.actualizarUsuario().then(response => {
-            this.props.navigation.push("Servicios");
+            this.setState({
+              submitted: false,
+              isLoading: false,
+              nombre: "",
+              descripcion: "",
+              foto: [],
+              visible: false,
+              categoria: undefined,
+              subcategoria: undefined
+            });
+            this.props.navigation.navigate("Servicios");
           });
         } else {
           this.setState({ isLoading: false, error: response.message });
