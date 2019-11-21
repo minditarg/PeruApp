@@ -104,7 +104,7 @@ export const esUsuarioTipoEmpresa = () => {
 };
 
 export const actualizarUsuario = () => {
-	 api.actualizarUsuario(usuarioLogueado().id)
+	return  api.actualizarUsuario(usuarioLogueado().id)
 		.then(response => {
 			let token = selectors.get().tokens;
 			let tipo = selectors.get().tipo;
