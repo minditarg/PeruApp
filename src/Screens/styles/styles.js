@@ -288,14 +288,15 @@ export const stl = StyleSheet.create({
     left: 0,
     right: 0,
     display: "flex",
-    flexDirection: "row",
-    backgroundColor: "rgba(255,255,255,.5)"
+    flexDirection: "row"
+    // backgroundColor: "rgba(255,255,255,.5)"
   },
   imgAction: {
     flex: 1,
     justifyContent: "center",
     // borderColor: "rgba(0,0,0,0)",
     // borderWidth: 1,
+    backgroundColor: "rgba(255,255,255,.5)",
     padding: 3
   },
   imgActionFirst: {
@@ -306,5 +307,14 @@ export const stl = StyleSheet.create({
     fontSize: 20,
     alignSelf: "center",
     color: "#fff"
+  },
+  imgActionIconFirst: {
+    color: "#ffc107"
+  },
+  firstItem: {
+    backgroundColor: "rgba(0,0,0,0)"
+  },
+  imgDeleteIcon: {
+    color: "#000"
   }
 });

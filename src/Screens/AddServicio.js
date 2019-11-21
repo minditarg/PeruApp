@@ -172,12 +172,19 @@ export class AddServicio extends Component {
     });
     let fotos = this.state.foto.map((s, i) => {
       let arrayToOrder = this.state.foto;
+      let iconClassArray = [stl.imgActionIcon];
+      let firstItemClassArray = [stl.imgAction, stl.imgActionFirst];
+
+      if (i < 1) {
+        iconClassArray.push(stl.imgActionIconFirst);
+        firstItemClassArray.push(stl.firstItem);
+      }
       return (
         <View key={s.uri} style={stl.touchableImg}>
           <Image source={{ uri: s.uri }} style={stl.btnImgServ} />
           <View style={stl.imgActions}>
             <TouchableOpacity
-              style={[stl.imgAction, stl.imgActionFirst]}
+              style={firstItemClassArray}
               onPress={() => {
                 Alert.alert(
                   "Seleccionar Imagen",
@@ -191,7 +198,6 @@ export class AddServicio extends Component {
                     {
                       text: "SI",
                       onPress: () => {
-                        console.log(arrayToOrder);
                         arrayToOrder = arrayToOrder.filter(x => x.uri != s.uri);
                         arrayToOrder.unshift(s);
                         this.setState({
@@ -204,7 +210,7 @@ export class AddServicio extends Component {
                 );
               }}
             >
-              <Icon type="FontAwesome" style={stl.imgActionIcon} name="star" />
+              <Icon type="FontAwesome" style={iconClassArray} name="star" />
             </TouchableOpacity>
             <TouchableOpacity
               style={stl.imgAction}
@@ -230,7 +236,11 @@ export class AddServicio extends Component {
                 );
               }}
             >
-              <Icon type="FontAwesome" style={stl.imgActionIcon} name="trash" />
+              <Icon
+                type="FontAwesome"
+                style={[stl.imgActionIcon, stl.imgDeleteIcon]}
+                name="trash"
+              />
             </TouchableOpacity>
           </View>
         </View>
