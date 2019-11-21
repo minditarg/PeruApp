@@ -199,11 +199,11 @@ export class AddServicio extends Component {
         >
           <Image source={{ uri: s.uri }} style={stl.btnImgServ} />
           <View style={stl.imgActions}>
-            <TouchableOpacity style={stl.imgAction}>
-              <Icon type="FontAwesome" name="star" />
+            <TouchableOpacity style={[stl.imgAction, stl.imgActionFirst]}>
+              <Icon type="FontAwesome" style={stl.imgActionIcon} name="star" />
             </TouchableOpacity>
             <TouchableOpacity style={stl.imgAction}>
-              <Icon type="FontAwesome" name="trash" />
+              <Icon type="FontAwesome" style={stl.imgActionIcon} name="trash" />
             </TouchableOpacity>
           </View>
 

@@ -32,18 +32,17 @@ export default class AppLoad extends React.Component {
       // this.setState({ cargo: true });
       if (session.estaLogueado()) {
         if (session.esUsuarioTipoCliente())
+          this.props.navigation.navigate("Trabajos");
+        if (session.esUsuarioTipoEmpresa())
+          this.props.navigation.navigate("Servicios");
+        else {
+          //se pudo registrar pero no completo los datos particulares
+          if (session.esAppTipoCliente()) {
             this.props.navigation.navigate("Trabajos");
-          if (session.esUsuarioTipoEmpresa())
-            this.props.navigation.navigate("Servicios");
-          else {
-            //se pudo registrar pero no completo los datos particulares
-            if (session.esAppTipoCliente()) {
-              this.props.navigation.navigate("Trabajos");
-            } else {
-              this.props.navigation.navigate("RegistrarProveedor");
-            }
+          } else {
+            this.props.navigation.navigate("RegistrarProveedor");
           }
-
+        }
       }
       this.props.navigation.navigate("Select");
     }, 300);

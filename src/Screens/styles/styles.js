@@ -297,5 +297,14 @@ export const stl = StyleSheet.create({
     borderColor: "rgba(0,0,0,0)",
     borderWidth: 1,
     padding: 3
+  },
+  imgActionFirst: {
+    borderRightColor: "#333",
+    borderRightWidth: 1
+  },
+  imgActionIcon: {
+    fontSize: 20,
+    alignSelf: "center",
+    color: "#fff"
   }
 });
