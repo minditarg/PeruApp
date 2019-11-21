@@ -104,12 +104,13 @@ export const esUsuarioTipoEmpresa = () => {
 };
 
 export const actualizarUsuario = () => {
-	return api.actualizarUsuario(usuarioLogueado().id)
+	 api.actualizarUsuario(usuarioLogueado().id)
 		.then(response => {
 			let token = selectors.get().tokens;
 			let tipo = selectors.get().tipo;
 			if (response.statusType == "success") {
 				store.dispatch(actionCreators.update({ user: response.data, tokens: token, tipo: tipo }));
+				console.log("daaaaaaaaaaa",response.data);
 				return response;
 			}
 		}

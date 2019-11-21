@@ -54,11 +54,12 @@ export const crear = (
   formData.append("telefono", telefono);
   formData.append("usuarioId", usuarioId);
 
-  let localUri = foto.uri;
-  let filename = localUri.split("/").pop();
-  let match = /\.(\w+)$/.exec(filename);
-  let type = match ? `image/${match[1]}` : `image`;
-  formData.append("foto", { uri: localUri, name: filename, type });
-
+  if (foto != null) {
+    let localUri = foto.uri;
+    let filename = localUri.split("/").pop();
+    let match = /\.(\w+)$/.exec(filename);
+    let type = match ? `image/${match[1]}` : `image`;
+    formData.append("foto", { uri: localUri, name: filename, type });
+  }
   return fetchApi(endPoints.crear, formData, "post", true);
 };

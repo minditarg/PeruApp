@@ -41,7 +41,7 @@ export class AddServicio extends Component {
       subcategorias: [{ id: 0, nombre: "Seleccione subcategoría" }],
       submitted: false,
       isLoading: false,
-      titulo: "",
+      nombre: "",
       descripcion: "",
       foto: [],
       visible: false,
