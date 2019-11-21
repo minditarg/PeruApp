@@ -4,8 +4,8 @@ import { Container, Content, Button, Icon, Spinner } from "native-base";
 import { CardList } from "../Componentes/CardList";
 import { stl } from "../Screens/styles/styles";
 import * as session from "../Services/session";
-
-export class Servicios extends Component {
+import { connect } from "react-redux";
+class Servicios extends Component {
   constructor() {
     super();
     //this.componentDidUpdate();
@@ -26,7 +26,7 @@ export class Servicios extends Component {
         <Content>
           <FlatList
             style={stl.listaPadding}
-            data={this.state.servicios}
+            data={this.props.servicios}
             renderItem={({ item }) => (
               <CardList navigation={this.props.navigation} Image obj={item} />
             )}
@@ -46,3 +46,10 @@ export class Servicios extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    servicios: session.usuarioLogueado().Proveedor.servicios
+  };
+};
+export default connect(mapStateToProps)(Servicios);

@@ -10,7 +10,7 @@ import { UpdateServicio } from "./UpdateServicio";
 
 import { AddTrabajo } from "./AddTrabajo";
 import { Empresa } from "./Empresa";
-import { Servicios } from "./Servicios";
+import Servicios from "./Servicios";
 import { Trabajos } from "./Trabajos";
 
 export {
