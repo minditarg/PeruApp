@@ -14,7 +14,7 @@ export class Servicios extends Component {
     };
   }
 
-  shouldComponentUpdate() {
+  componentDidMount() {
     this.state = {
       servicios: session.usuarioLogueado().Proveedor.servicios
     };

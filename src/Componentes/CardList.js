@@ -45,7 +45,7 @@ export class CardList extends Component {
   HandleEliminarBtn(servicio) {
     Alert.alert(
       'Eliminar servicio',
-      '¿Estás seguro de eliminar el servicio: ' + obj.nombre + ' ?',
+      '¿Estás seguro de eliminar el servicio: ' + servicio.nombre + ' ?',
       [
         {
           style: 'cancel',
@@ -71,7 +71,7 @@ export class CardList extends Component {
             <Left style={stl.cardLeft}>
               <Image
                 style={stl.cardImg}
-                source={{ uri: apiConfig.pathFiles + obj.foto }}
+                source={{ uri: obj.foto ?  apiConfig.pathFiles + obj.foto : null }}
               />
             </Left>
           )}
