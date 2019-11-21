@@ -171,50 +171,69 @@ export class AddServicio extends Component {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
     let fotos = this.state.foto.map((s, i) => {
+      let arrayToOrder = this.state.foto;
       return (
-        <TouchableOpacity
-          key={s.uri}
-          style={stl.touchableImg}
-          onPress={() => {
-            Alert.alert(
-              "Eliminar imagen",
-              "¡Quiere eliminar la imagen?",
-              [
-                {
-                  text: "Volver",
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel"
-                },
-                {
-                  text: "SI, eliminala",
-                  onPress: () =>
-                    this.setState({
-                      foto: this.state.foto.filter(x => x.uri != s.uri)
-                    })
-                }
-              ],
-              { cancelable: true }
-            );
-          }}
-        >
+        <View key={s.uri} style={stl.touchableImg}>
           <Image source={{ uri: s.uri }} style={stl.btnImgServ} />
           <View style={stl.imgActions}>
-            <TouchableOpacity style={[stl.imgAction, stl.imgActionFirst]}>
+            <TouchableOpacity
+              style={[stl.imgAction, stl.imgActionFirst]}
+              onPress={() => {
+                Alert.alert(
+                  "Seleccionar Imagen",
+                  "¿Establecer como portada?",
+                  [
+                    {
+                      text: "Volver",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel"
+                    },
+                    {
+                      text: "SI",
+                      onPress: () => {
+                        console.log(arrayToOrder);
+                        arrayToOrder = arrayToOrder.filter(x => x.uri != s.uri);
+                        arrayToOrder.unshift(s);
+                        this.setState({
+                          foto: arrayToOrder
+                        });
+                      }
+                    }
+                  ],
+                  { cancelable: true }
+                );
+              }}
+            >
               <Icon type="FontAwesome" style={stl.imgActionIcon} name="star" />
             </TouchableOpacity>
-            <TouchableOpacity style={stl.imgAction}>
+            <TouchableOpacity
+              style={stl.imgAction}
+              onPress={() => {
+                Alert.alert(
+                  "Eliminar imagen",
+                  "¿Quiere eliminar la imagen?",
+                  [
+                    {
+                      text: "Volver",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel"
+                    },
+                    {
+                      text: "SI, eliminala",
+                      onPress: () =>
+                        this.setState({
+                          foto: this.state.foto.filter(x => x.uri != s.uri)
+                        })
+                    }
+                  ],
+                  { cancelable: true }
+                );
+              }}
+            >
               <Icon type="FontAwesome" style={stl.imgActionIcon} name="trash" />
             </TouchableOpacity>
           </View>
-
-          {/*<View style={stl.btnEliminarFoto}>
-            <Icon
-              style={stl.iconEliminarFoto}
-              type="FontAwesome"
-              name="close"
-            />
-          </View>*/}
-        </TouchableOpacity>
+        </View>
       );
     });
 

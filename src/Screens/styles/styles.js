@@ -249,9 +249,9 @@ export const stl = StyleSheet.create({
     marginBottom: 5
   },
   touchableImg: {
-    marginBottom: 15,
-    borderColor: "#ddd",
-    borderWidth: 1
+    marginBottom: 15
+    //  borderColor: "#ddd",
+    //  borderWidth: 1
   },
   loading: {
     position: "absolute",
@@ -294,8 +294,8 @@ export const stl = StyleSheet.create({
   imgAction: {
     flex: 1,
     justifyContent: "center",
-    borderColor: "rgba(0,0,0,0)",
-    borderWidth: 1,
+    // borderColor: "rgba(0,0,0,0)",
+    // borderWidth: 1,
     padding: 3
   },
   imgActionFirst: {
