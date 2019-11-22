@@ -152,6 +152,12 @@ export class AddServicio extends Component {
     });
     this.cambiarSubcategorias();
   }
+  onChangeSubcategoria(value) {
+    console.log(value);
+    this.setState({
+      subcategoria: value,
+    });
+  }
 
   cambiarSubcategorias() {
     console.log(this.state.subcategorias);
@@ -293,6 +299,7 @@ export class AddServicio extends Component {
                       iosIcon={<Icon name="arrow-down" />}
                       style={[stl.textBlack, stl.pickerInput]}
                       name="categoria"
+                      value={this.state.categoria}
                       selectedValue={this.state.categoria}
                       onValueChange={this.onChangeCategoria.bind(this)}
                     >
@@ -311,6 +318,7 @@ export class AddServicio extends Component {
                       style={[stl.textBlack, stl.pickerInput]}
                       name="subcategoria"
                       selectedValue={this.state.subcategoria}
+                      onValueChange={this.onChangeSubcategoria.bind(this)}
                     >
                       {subcategoriasItems}
                     </Picker>

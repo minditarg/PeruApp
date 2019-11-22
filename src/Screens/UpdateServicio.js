@@ -39,8 +39,8 @@ export class UpdateServicio extends Component {
     super();
     this.state = {
       id: "",
-      categorias: [{ id: 0, nombre: "Seleccione categoría" }],
-      subcategorias: [{ id: 0, nombre: "Seleccione subcategoría" }],
+      categorias: [],
+      subcategorias: [],
       submitted: false,
       nombre: "",
       descripcion: "",
@@ -48,12 +48,10 @@ export class UpdateServicio extends Component {
       categoria: undefined,
       subcategoria: undefined
     };
-  }
-
-  componentDidMount() {
-    servicioService.listadoCategorias().then(servicio => {
+    servicioService.listadoCategorias().then(categorias => {
+      console.log("eseteo categorias");
       this.setState({
-        categorias: servicio
+        categorias: categorias
       });
       servicioService
         .get(this.props.navigation.getParam("id"))
@@ -66,19 +64,27 @@ export class UpdateServicio extends Component {
             subcategoria: servicio.subcategoriaId,
             foto: this.galeriaExterna(servicio)
           });
-          console.log(this.state.foto);
+          // this.onChangeCategoria(servicio.subcategoria.categoria.id);
+          // console.log("entre al contructor", servicio.subcategoria.categoria.id);
+          // this.onChangeSubcategoria(servicio.subcategoriaId);
         });
+
     });
+  }
+
+  componentDidMount() {
+
     this.getPermissionAsync();
+    this.onChangeCategoria(this.state.categoria);
+    console.log("componentDidMount 222");
+    this.onChangeSubcategoria(this.state.subcategoria);
   }
   galeriaExterna(servicio) {
     if (!servicio.foto) {
       return [];
     }
     servicio.galeria.unshift({ foto: servicio.foto });
-    console.log(servicio.foto);
     return servicio.galeria.map((s, i) => {
-      console.log("entre");
       return { uri: apiConfig.pathFiles + s.foto, name: s.foto };
     });
   }
@@ -156,22 +162,26 @@ export class UpdateServicio extends Component {
   }
 
   onChangeCategoria(value) {
-    console.log("onChangeCategoria", value);
-    this.setState({
-      categoria: value,
-      subcategorias: this.state.categorias.find(item => item.id === value)
-        .subcategorias
-    });
-    this.cambiarSubcategorias();
+    if (value) {
+      this.setState({
+        categoria: value,
+        subcategorias: this.state.categorias.find(item => item.id === value)
+          .subcategorias
+      });
+      this.cambiarSubcategorias();
+    }
   }
 
   cambiarSubcategorias() {
-    console.log(this.state.subcategorias);
-    this.setState({
-      subcategoria: 1
-    });
+    console.log("cambiarSubcategorias");
     subcategoriasItems = this.state.subcategorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
+    });
+  }
+  onChangeSubcategoria(value) {
+    console.log("onChangeSubcategoria", value);
+    this.setState({
+      subcategoria: value,
     });
   }
   getPermissionAsync = async () => {
@@ -294,7 +304,7 @@ export class UpdateServicio extends Component {
                   <Item
                     picker
                     style={stl.picker}
-                    error={this.state.submitted && !this.state.email}
+                    error={this.state.submitted && !this.state.categoria}
                   >
                     <Picker
                       mode="dropdown"
@@ -302,6 +312,7 @@ export class UpdateServicio extends Component {
                       iosIcon={<Icon name="arrow-down" />}
                       style={[stl.textBlack, stl.pickerInput]}
                       name="categoria"
+                      value={this.state.categoria}
                       selectedValue={this.state.categoria}
                       onValueChange={this.onChangeCategoria.bind(this)}
                     >
@@ -311,7 +322,7 @@ export class UpdateServicio extends Component {
                   <Item
                     picker
                     style={stl.picker}
-                    error={this.state.submitted && !this.state.email}
+                    error={this.state.submitted && !this.state.subcategoria}
                   >
                     <Picker
                       mode="dropdown"
@@ -320,11 +331,11 @@ export class UpdateServicio extends Component {
                       style={[stl.textBlack, stl.pickerInput]}
                       name="subcategoria"
                       selectedValue={this.state.subcategoria}
+                      onValueChange={this.onChangeSubcategoria.bind(this)}
                     >
                       {subcategoriasItems}
                     </Picker>
                   </Item>
-
                   <View style={stl.areaText}>
                     <Label style={stl.textBlack}>Descripción</Label>
                     <Textarea
