@@ -66,13 +66,19 @@ export class UpdateServicio extends Component {
             subcategoria: servicio.subcategoriaId,
             foto: this.galeriaExterna(servicio)
           });
+          console.log(this.state.foto);
         });
     });
     this.getPermissionAsync();
   }
   galeriaExterna(servicio) {
+    if (!servicio.foto) {
+      return [];
+    }
     servicio.galeria.unshift({ foto: servicio.foto });
+    console.log(servicio.foto);
     return servicio.galeria.map((s, i) => {
+      console.log("entre");
       return { uri: apiConfig.pathFiles + s.foto, name: s.foto };
     });
   }

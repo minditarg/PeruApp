@@ -10,7 +10,8 @@ export class CardList extends Component {
     super();
   }
   EliminarServicio(servicioId) {
-    servicioService.eliminar(servicioId)
+    servicioService
+      .eliminar(servicioId)
       .then(response => {
         if (response.statusType == "success") {
           Toast.show({
@@ -20,8 +21,8 @@ export class CardList extends Component {
             type: "success"
           });
 
-          sessionService.actualizarUsuario().then(response => { 
-            this.props.navigation.push("Servicios")
+          sessionService.actualizarUsuario().then(response => {
+            this.props.navigation.push("Servicios");
           });
         } else {
           Toast.show({
@@ -44,18 +45,22 @@ export class CardList extends Component {
   }
   HandleEliminarBtn(servicio) {
     Alert.alert(
-      'Eliminar servicio',
-      '¿Estás seguro de eliminar el servicio: ' + servicio.nombre + ' ?',
+      "Eliminar servicio",
+      "¿Estás seguro de eliminar el servicio: " + servicio.nombre + " ?",
       [
         {
-          style: 'cancel',
-          text: 'Cancelar',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
+          style: "cancel",
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
         },
-        { text: 'Eliminar', style: 'destructive', onPress: () => this.EliminarServicio(servicio.id) },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: () => this.EliminarServicio(servicio.id)
+        }
       ],
-      { cancelable: false },
+      { cancelable: false }
     );
   }
   render() {
@@ -63,7 +68,7 @@ export class CardList extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.props.navigation.navigate("UpdateServicio", {id: obj.id} );
+          this.props.navigation.navigate("UpdateServicio", { id: obj.id });
         }}
       >
         <View style={[stl.card, stl.cardHor]}>
@@ -71,7 +76,11 @@ export class CardList extends Component {
             <Left style={stl.cardLeft}>
               <Image
                 style={stl.cardImg}
-                source={{ uri: obj.foto ?  apiConfig.pathFiles + obj.foto : null }}
+                source={
+                  obj.foto
+                    ? { uri: apiConfig.pathFiles + obj.foto }
+                    : require("../../assets/nofotoservice.png")
+                }
               />
             </Left>
           )}
@@ -90,7 +99,7 @@ export class CardList extends Component {
             <Button
               transparent
               onPress={() => {
-                this.HandleEliminarBtn(obj)
+                this.HandleEliminarBtn(obj);
               }}
             >
               <Icon style={stl.iconCam} type="EvilIcons" name="trash" />
