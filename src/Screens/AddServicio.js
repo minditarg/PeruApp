@@ -74,7 +74,7 @@ export class AddServicio extends Component {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       base64: true,
-      aspect: [4, 3]
+      aspect: [1, 1]
     });
     if (!result.cancelled) {
       this.setState({ foto: [...this.state.foto, result] });
@@ -155,9 +155,9 @@ export class AddServicio extends Component {
 
   cambiarSubcategorias() {
     console.log(this.state.subcategorias);
-    this.setState({
-      subcategoria: 1
-    });
+    // this.setState({
+    //   subcategoria: 1
+    // });
     subcategoriasItems = this.state.subcategorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });

@@ -19,7 +19,11 @@ import { connect } from "react-redux";
 class NavHeader extends React.Component {
   constructor() {
     super();
+    this.state = {
+      foto: session.avatar()
+    };
   }
+
   render() {
     /*  let icon =
       session.avatar() != null
@@ -48,7 +52,7 @@ class NavHeader extends React.Component {
           </Body>
           <Right>
             <Button transparent>
-              <Thumbnail style={stl.btnAvatar} source={icon} />
+              <Thumbnail style={stl.btnAvatar} source={this.icon} />
             </Button>
           </Right>
         </Header>

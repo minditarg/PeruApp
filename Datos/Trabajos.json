@@ -1,7 +1,7 @@
 [{
         "id": "1",
-        "tipo": "trabajo1",
-        "descripcion": "descripcion 1 lorem ipsum",
+        "nombre": "Albanileria",
+        "descripcion": "Muy buen trabajo, a tiempo",
         "usuarioId": "1",
         "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
         "activo": "1",
@@ -10,63 +10,9 @@
     },
     {
         "id": "2",
-        "tipo": "trabajo2",
-        "descripcion": "descripcion 2lorem ipsum",
+        "nombre": "Electricidad",
+        "descripcion": "Colocación de aire perfecto",
         "usuarioId": "1",
-        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
-        "activo": "1",
-        "puntaje": "4",
-        "usuarioReceptorId": "2"
-    }, {
-        "id": "3",
-        "tipo": "trabajo3",
-        "descripcion": "descripcion 3 lorem ipsum",
-        "usuarioId": "1",
-        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
-        "activo": "1",
-        "puntaje": "4",
-        "usuarioReceptorId": "2"
-    }, {
-        "id": "4",
-        "tipo": "trabajo4",
-        "descripcion": "descripcion 1 lorem ipsum",
-        "usuarioId": "2",
-        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
-        "activo": "1",
-        "puntaje": "4",
-        "usuarioReceptorId": "2"
-    }, {
-        "id": "5",
-        "tipo": "Carpinteria",
-        "descripcion": "descripcion 1 lorem ipsum",
-        "usuarioId": "2",
-        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
-        "activo": "1",
-        "puntaje": "4",
-        "usuarioReceptorId": "2"
-    }, {
-        "id": "6",
-        "tipo": "Construccin",
-        "descripcion": "descripcion 1 lorem ipsum",
-        "usuarioId": "2",
-        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
-        "activo": "0",
-        "puntaje": "4",
-        "usuarioReceptorId": "2"
-    }, {
-        "id": "7",
-        "tipo": "Pintura",
-        "descripcion": "descripcion 1 lorem ipsum",
-        "usuarioId": "3",
-        "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
-        "activo": "1",
-        "puntaje": "4",
-        "usuarioReceptorId": "2"
-    }, {
-        "id": "8",
-        "tipo": "Carpinteria",
-        "descripcion": "descripcion 1 lorem ipsum",
-        "usuarioId": "3",
         "imgUrl": "https://images.unsplash.com/photo-1516559828984-fb3b99548b21?ixlib=rb-1.2.1&auto=format&fit=crop&w=2100&q=80",
         "activo": "1",
         "puntaje": "4",

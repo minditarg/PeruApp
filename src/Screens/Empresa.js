@@ -71,7 +71,7 @@ export class Empresa extends Component {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       base64: true,
-      aspect: [4, 3]
+      aspect: [1, 1]
     });
     if (!result.cancelled) {
       this.setState({ fotoNueva: result, foto: result.uri, hasChange: true });
