@@ -25,14 +25,11 @@ class NavHeader extends React.Component {
   }
 
   render() {
-    /*  let icon =
-      session.avatar() != null
-        ? { uri: session.avatar() }
-        : require("../../assets/noFoto.png");*/
     let icon =
       this.props.avatar != null
         ? { uri: this.props.avatar }
         : require("../../assets/noFoto.png");
+
     return (
       <ImageBackground
         source={require("../../assets/headerbk-18.png")}
@@ -52,7 +49,7 @@ class NavHeader extends React.Component {
           </Body>
           <Right>
             <Button transparent>
-              <Thumbnail style={stl.btnAvatar} source={this.icon} />
+              <Thumbnail style={stl.btnAvatar} source={icon} />
             </Button>
           </Right>
         </Header>
