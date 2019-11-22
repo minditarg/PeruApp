@@ -79,11 +79,13 @@ export const usuarioLogueado = () => {
 }
 export const avatar = () => {
 	if (usuarioLogueado().Proveedor != null) {
-		return apiConfig.pathFiles + usuarioLogueado().Proveedor.foto;
+		return { uri: apiConfig.pathFiles + usuarioLogueado().Proveedor.foto };
 		//return "data:image/png;base64," + usuarioLogueado().Proveedor.foto;
 	}
 	if (this.usuarioLogueado().Cliente != null) {
 		return "data:image/png;base64," + usuarioLogueado().avatar;
+	}else{
+		return require("../../../assets/noFoto.png");
 	}
 }
 
@@ -110,7 +112,6 @@ export const actualizarUsuario = () => {
 			let tipo = selectors.get().tipo;
 			if (response.statusType == "success") {
 				store.dispatch(actionCreators.update({ user: response.data, tokens: token, tipo: tipo }));
-				console.log("daaaaaaaaaaa",response.data);
 				return response;
 			}
 		}

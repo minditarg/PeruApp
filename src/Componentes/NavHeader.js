@@ -14,16 +14,18 @@ import {
 } from "native-base";
 import { stl } from "../Screens/styles/styles";
 import * as session from "../Services/session";
+import { connect } from "react-redux";
 
 export class NavHeader extends React.Component {
   constructor() {
     super();
+    this.state = {
+      foto: session.avatar() 
+    };
   }
+  
   render() {
-    let icon =
-      session.avatar() != null
-        ? { uri: session.avatar() }
-        : require("../../assets/noFoto.png");
+    
     return (
       <ImageBackground
         source={require("../../assets/headerbk-18.png")}
@@ -43,7 +45,7 @@ export class NavHeader extends React.Component {
           </Body>
           <Right>
             <Button transparent>
-              <Thumbnail style={stl.btnAvatar} source={icon} />
+              <Thumbnail style={stl.btnAvatar} source={this.state.foto} />
             </Button>
           </Right>
         </Header>
@@ -51,3 +53,9 @@ export class NavHeader extends React.Component {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    foto: session.avatar()
+  };
+};
+export default connect(mapStateToProps)(NavHeader);
