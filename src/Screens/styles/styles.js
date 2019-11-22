@@ -316,5 +316,8 @@ export const stl = StyleSheet.create({
   },
   imgDeleteIcon: {
     color: "#000"
+  },
+  disabled: {
+    backgroundColor: "#eee"
   }
 });

@@ -47,7 +47,8 @@ export class Empresa extends Component {
       fotoNueva: null,
       submitted: false,
       isLoading: false,
-      error: null
+      error: null,
+      hasChange: false
     };
     this.state = this.initialState;
   }
@@ -73,11 +74,12 @@ export class Empresa extends Component {
       aspect: [4, 3]
     });
     if (!result.cancelled) {
-      this.setState({ fotoNueva: result, foto: result.uri });
+      this.setState({ fotoNueva: result, foto: result.uri, hasChange: true });
     }
   };
   HandleCancelarBtn() {
     this.setState(this.initialState);
+    this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true });
   }
   HandleGuardarBtn() {
     this.setState({
@@ -98,6 +100,7 @@ export class Empresa extends Component {
           this.setState({
             isLoading: false
           });
+          this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true });
           Toast.show({
             text: response.message,
             buttonText: "OK",
@@ -126,10 +129,15 @@ export class Empresa extends Component {
     this.props.navigation.navigate("Login");
   }
   render() {
+    let classesBtn = [stl.btn, stl.primary];
+    if (!this.state.hasChange) {
+      classesBtn.push(stl.disabled);
+    }
+    console.log(classesBtn);
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         <SafeAreaView style={stl.containerList}>
-          <ScrollView style={stl.scrollView}>
+          <ScrollView ref="_scrollView" style={stl.scrollView}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <Content style={stl.card}>
                 <Form style={stl.form}>
@@ -161,7 +169,6 @@ export class Empresa extends Component {
                   >
                     <Text style={stl.btnText}>Cerrar Sesión</Text>
                   </Button>
-
                   <Item
                     floatingLabel
                     error={this.state.submitted && !this.state.email}
@@ -177,14 +184,13 @@ export class Empresa extends Component {
                       name="email"
                       value={this.state.email}
                       onChangeText={email => {
-                        this.setState({ email });
+                        this.setState({ email, hasChange: true });
                       }}
                     />
                   </Item>
                   {this.state.submitted && !this.state.email && (
                     <Text style={stl.txtError}> El email es requerido</Text>
                   )}
-
                   <Item
                     floatingLabel
                     error={this.state.submitted && !this.state.nombre}
@@ -200,14 +206,13 @@ export class Empresa extends Component {
                       autoCompleteType="name"
                       value={this.state.nombre}
                       onChangeText={nombre => {
-                        this.setState({ nombre });
+                        this.setState({ nombre, hasChange: true });
                       }}
                     />
                   </Item>
                   {this.state.submitted && !this.state.nombre && (
                     <Text style={stl.txtError}>El nombre es requerido</Text>
                   )}
-
                   <Item floatingLabel>
                     <Label style={stl.textBlack}>Teléfono</Label>
                     <Input
@@ -217,14 +222,14 @@ export class Empresa extends Component {
                       getRef={c => (this._tel = c)}
                       style={stl.textBlack}
                       name="telefono"
+                      keyboardType="phone-pad"
                       autoCompleteType="tel"
                       value={this.state.telefono}
                       onChangeText={telefono => {
-                        this.setState({ telefono });
+                        this.setState({ telefono, hasChange: true });
                       }}
                     />
                   </Item>
-
                   <Item floatingLabel>
                     <Label style={stl.textBlack}>Dirección</Label>
                     <Input
@@ -237,7 +242,7 @@ export class Empresa extends Component {
                       autoCompleteType="street-address"
                       value={this.state.direccion}
                       onChangeText={direccion => {
-                        this.setState({ direccion });
+                        this.setState({ direccion, hasChange: true });
                       }}
                     />
                   </Item>
@@ -257,7 +262,7 @@ export class Empresa extends Component {
                       placeholder="Descripcion"
                       value={this.state.descripcion}
                       onChangeText={descripcion => {
-                        this.setState({ descripcion });
+                        this.setState({ descripcion, hasChange: true });
                       }}
                     />
                   </Item>
@@ -273,7 +278,8 @@ export class Empresa extends Component {
 
                     <Button
                       block
-                      style={[stl.btn, stl.primary]}
+                      disabled={!this.state.hasChange}
+                      style={classesBtn}
                       onPress={() => this.HandleGuardarBtn()}
                     >
                       <Text style={stl.btnText}>Guardar Cambios</Text>

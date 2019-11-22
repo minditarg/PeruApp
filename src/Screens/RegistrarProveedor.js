@@ -193,6 +193,7 @@ export class RegistrarProveedor extends Component {
                             }}
                             style={stl.textwhite}
                             name="telefono"
+                            keyboardType="phone-pad"
                             autoCompleteType="tel"
                             value={this.state.telefono}
                             onChangeText={telefono => {

@@ -14,15 +14,20 @@ import {
 } from "native-base";
 import { stl } from "../Screens/styles/styles";
 import * as session from "../Services/session";
+import { connect } from "react-redux";
 
-export class NavHeader extends React.Component {
+class NavHeader extends React.Component {
   constructor() {
     super();
   }
   render() {
-    let icon =
+    /*  let icon =
       session.avatar() != null
         ? { uri: session.avatar() }
+        : require("../../assets/noFoto.png");*/
+    let icon =
+      this.props.avatar != null
+        ? { uri: this.props.avatar }
         : require("../../assets/noFoto.png");
     return (
       <ImageBackground
@@ -51,3 +56,9 @@ export class NavHeader extends React.Component {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    avatar: session.avatar()
+  };
+};
+export default connect(mapStateToProps)(NavHeader);

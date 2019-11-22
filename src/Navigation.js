@@ -19,7 +19,7 @@ import {
   Trabajos
 } from "../src/Screens/Index";
 import { stl } from "./Screens/styles/styles";
-import { NavHeader } from "../src/Componentes/NavHeader";
+import NavHeader from "../src/Componentes/NavHeader";
 import AppLoad from "./AppLoad";
 
 const TrabajosNav = createStackNavigator(
