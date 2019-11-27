@@ -56,6 +56,22 @@ export class Empresa extends Component {
     this.getPermissionAsync();
   }
 
+  igualarEstados() {
+    this.initialState = {
+      nombre: this.state.nombre,
+      email: this.state.email,
+      descripcion: this.state.descripcion,
+      direccion: this.state.direccion,
+      telefono: this.state.telefono,
+      foto: this.state.foto,
+      fotoNueva: null,
+      submitted: false,
+      isLoading: false,
+      error: null,
+      hasChange: false
+    };
+  }
+
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -98,8 +114,10 @@ export class Empresa extends Component {
       .then(response => {
         if (response.statusType == "success") {
           this.setState({
-            isLoading: false
+            isLoading: false,
+            hasChange: false
           });
+          this.igualarEstados();
           this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true });
           Toast.show({
             text: response.message,
@@ -133,7 +151,6 @@ export class Empresa extends Component {
     if (!this.state.hasChange) {
       classesBtn.push(stl.disabled);
     }
-    console.log(classesBtn);
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         <SafeAreaView style={stl.containerList}>

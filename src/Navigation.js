@@ -29,7 +29,7 @@ const TrabajosNav = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({ navigation }) => <NavHeader navigation={navigation.state} />,
+      header: ({ navigation }) => <NavHeader navigation={navigation} />,
       title: "Trabajos",
       headerStyle: {
         backgroundColor: "#044fb3",
@@ -50,7 +50,7 @@ const EmpresaNav = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({ navigation }) => <NavHeader navigation={navigation.state} />,
+      header: ({ navigation }) => <NavHeader navigation={navigation} />,
       title: "Empresa",
       headerStyle: {
         backgroundColor: "#044fb3",
@@ -72,7 +72,7 @@ const ServiciosNav = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({ navigation }) => <NavHeader navigation={navigation.state} />,
+      header: ({ navigation }) => <NavHeader navigation={navigation} />,
       title: "Servicios",
       headerStyle: stl.headerStyle,
       headerTintColor: "#fff",

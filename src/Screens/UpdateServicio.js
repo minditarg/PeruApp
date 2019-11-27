@@ -68,12 +68,10 @@ export class UpdateServicio extends Component {
           // console.log("entre al contructor", servicio.subcategoria.categoria.id);
           // this.onChangeSubcategoria(servicio.subcategoriaId);
         });
-
     });
   }
 
   componentDidMount() {
-
     this.getPermissionAsync();
     this.onChangeCategoria(this.state.categoria);
     console.log("componentDidMount 222");
@@ -181,7 +179,7 @@ export class UpdateServicio extends Component {
   onChangeSubcategoria(value) {
     console.log("onChangeSubcategoria", value);
     this.setState({
-      subcategoria: value,
+      subcategoria: value
     });
   }
   getPermissionAsync = async () => {
@@ -301,42 +299,52 @@ export class UpdateServicio extends Component {
                   {this.state.submitted && !this.state.nombre && (
                     <Text style={stl.txtError}> El nombre es requerido</Text>
                   )}
-                  <Item
-                    picker
-                    style={stl.picker}
-                    error={this.state.submitted && !this.state.categoria}
-                  >
-                    <Picker
-                      mode="dropdown"
-                      placeholder="Categoria"
-                      iosIcon={<Icon name="arrow-down" />}
-                      style={[stl.textBlack, stl.pickerInput]}
-                      name="categoria"
-                      value={this.state.categoria}
-                      selectedValue={this.state.categoria}
-                      onValueChange={this.onChangeCategoria.bind(this)}
+                  <View>
+                    <Text style={[stl.textBlack, stl.pickerlbl]}>
+                      Categoría
+                    </Text>
+                    <Item
+                      picker
+                      style={stl.picker}
+                      error={this.state.submitted && !this.state.categoria}
                     >
-                      {categoriasItems}
-                    </Picker>
-                  </Item>
-                  <Item
-                    picker
-                    style={stl.picker}
-                    error={this.state.submitted && !this.state.subcategoria}
-                  >
-                    <Picker
-                      mode="dropdown"
-                      placeholder="SubCategoria"
-                      iosIcon={<Icon name="arrow-down" />}
-                      style={[stl.textBlack, stl.pickerInput]}
-                      name="subcategoria"
-                      selectedValue={this.state.subcategoria}
-                      onValueChange={this.onChangeSubcategoria.bind(this)}
+                      <Picker
+                        mode="dropdown"
+                        placeholder="Categoria"
+                        iosIcon={<Icon name="arrow-down" />}
+                        style={[stl.textBlack, stl.pickerInput]}
+                        name="categoria"
+                        value={this.state.categoria}
+                        selectedValue={this.state.categoria}
+                        onValueChange={this.onChangeCategoria.bind(this)}
+                      >
+                        {categoriasItems}
+                      </Picker>
+                    </Item>
+                  </View>
+                  <View>
+                    <Text style={[stl.textBlack, stl.pickerlbl]}>
+                      SubCategoría
+                    </Text>
+                    <Item
+                      picker
+                      style={stl.picker}
+                      error={this.state.submitted && !this.state.subcategoria}
                     >
-                      {subcategoriasItems}
-                    </Picker>
-                  </Item>
-                  <View style={stl.areaText}>
+                      <Picker
+                        mode="dropdown"
+                        placeholder="SubCategoria"
+                        iosIcon={<Icon name="arrow-down" />}
+                        style={[stl.textBlack, stl.pickerInput]}
+                        name="subcategoria"
+                        selectedValue={this.state.subcategoria}
+                        onValueChange={this.onChangeSubcategoria.bind(this)}
+                      >
+                        {subcategoriasItems}
+                      </Picker>
+                    </Item>
+                  </View>
+                  <Label style={stl.areaText}>
                     <Label style={stl.textBlack}>Descripción</Label>
                     <Textarea
                       style={[stl.textBlack, stl.txtArea]}
@@ -350,7 +358,7 @@ export class UpdateServicio extends Component {
                         this.setState({ descripcion });
                       }}
                     />
-                  </View>
+                  </Label>
 
                   <View style={[stl.vista, stl.vistaimgs]}>
                     {fotos}

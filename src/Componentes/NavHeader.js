@@ -15,6 +15,7 @@ import {
 import { stl } from "../Screens/styles/styles";
 import * as session from "../Services/session";
 import { connect } from "react-redux";
+import { withNavigation } from "react-navigation";
 
 class NavHeader extends React.Component {
   constructor() {
@@ -37,18 +38,26 @@ class NavHeader extends React.Component {
       >
         <Header transparent noShadow>
           <Left>
-            <Thumbnail
-              style={stl.btnAvatar}
-              source={require("../../assets/icono1.jpg")}
-            />
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate("Servicios")}
+            >
+              <Thumbnail
+                style={stl.btnAvatar}
+                source={require("../../assets/icono1.jpg")}
+              />
+            </Button>
           </Left>
           <Body>
             <Title style={{ paddingLeft: 10 }}>
-              {this.props.navigation.key}
+              {this.props.navigation.state.key}
             </Title>
           </Body>
           <Right>
-            <Button transparent>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate("Empresa")}
+            >
               <Thumbnail style={stl.btnAvatar} source={icon} />
             </Button>
           </Right>
@@ -57,6 +66,7 @@ class NavHeader extends React.Component {
     );
   }
 }
+
 const mapStateToProps = state => {
   return {
     avatar: session.avatar()
