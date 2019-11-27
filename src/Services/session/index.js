@@ -4,11 +4,30 @@ import * as selectors from "./selectors";
 import * as actionCreators from "./actions";
 import { initialState } from "./reducer";
 import apiConfig from "../api/config";
+import { AsyncStorage } from 'react-native';
 
 const SESSION_TIMEOUT_THRESHOLD = 300; // Will refresh the access token 5 minutes before it expires
 
 let sessionTimeout = null;
 
+const deleteTokenEnStore = async () => {
+  try {
+    await AsyncStorage.removeItem('token');
+  } catch (error) {
+  }
+};
+const saveTokenEnStore = async (token) => {
+  try {
+    await AsyncStorage.setItem('token', token);
+  } catch (error) {
+  }
+};
+const getTokenEnStore = async () => {
+  try {
+    return await AsyncStorage.getItem('token');
+  } catch (error) {
+  }
+};
 const setSessionTimeout = duration => {
   clearTimeout(sessionTimeout);
   sessionTimeout = setTimeout(
@@ -18,22 +37,27 @@ const setSessionTimeout = duration => {
 };
 
 const clearSession = () => {
-  clearTimeout(sessionTimeout);
+  //clearTimeout(sessionTimeout);
   store.dispatch(actionCreators.update(initialState));
+  deleteTokenEnStore();
 };
+
 
 const onRequestSuccess = response => {
   // const tokens = response.tokens.reduce((prev, item) => ({
   // 	...prev,
   // 	[item.type]: item,
   // // }), {});
-  if (response.statusType == "success")
+  if (response.statusType == "success") {
     store.dispatch(
       actionCreators.update({
         tokens: response.data.tokens,
         user: response.data.user
       })
     );
+    saveTokenEnStore(response.data.tokens);
+
+  }
   //setSessionTimeout(tokens.access.expiresIn);
   return response;
 };
@@ -43,17 +67,6 @@ const onRequestFailed = exception => {
   throw exception;
 };
 
-// export const refreshToken = () => {
-// 	const session = selectors.get();
-
-// 	if (!session.tokens.refresh.value || !session.user.id) {
-// 		return Promise.reject();
-// 	}
-
-// 	return api.refresh(session.tokens.refresh, session.user)
-// 		.then(onRequestSuccess)
-// 		.catch(onRequestFailed);
-// };
 
 export const authenticate = (email, password) =>
   api
@@ -65,31 +78,51 @@ export const logout = () => {
   clearSession();
 };
 
-// export const revoke = () => {
-// 	const session = selectors.get();
-// 	return api.revoke(Object.keys(session.tokens).map(tokenKey => ({
-// 		type: session.tokens[tokenKey].type,
-// 		value: session.tokens[tokenKey].value,
-// 	})))
-// 		.then(clearSession())
-// 		.catch(() => { });
-// };
 
 //TODO traer desde el servidor los datos de expireIn y demas del token.
 export const estaLogueado = () => {
   const session = selectors.get();
-  return session.user != null && session.user.id > 0;
+  if ((session != null && session.user != null && session.user.id)) return true;
+  else {
+    return getTokenEnStore().then(response => {
+      store.dispatch(
+        actionCreators.update({
+          tokens: response,
+        })
+      );
+      if (response != null) {
+        return api.actualizarUsuarioConToken()
+          .then(response => {
+            let token = selectors.get().tokens;
+            if (response.statusType == "success") {
+              store.dispatch(
+                actionCreators.update({
+                  user: response.data,
+                  tokens: token,
+                  tipo: response.data.Cliente ? "Cliente" : "Proveedor"
+                })
+              );
+              return true;
+            }
+          });
+      }
+      return false;
+    }).catch(exception => {
+      throw exception;
+    });
+  }
 };
 export const usuarioLogueado = () => {
   let session = selectors.get();
-  return session.user != null && session.user.id > 0 ? session.user : null;
+  {
+    return (session != null && session.user != null && session.user.id) ? session.user : null;
+  }
 };
 export const avatar = () => {
-  if (usuarioLogueado().Proveedor != null) {
+  if (usuarioLogueado() != null && usuarioLogueado().Proveedor != null) {
     return apiConfig.pathFiles + usuarioLogueado().Proveedor.foto;
-    //return "data:image/png;base64," + usuarioLogueado().Proveedor.foto;
   }
-  if (this.usuarioLogueado().Cliente != null) {
+  if (usuarioLogueado() != null && usuarioLogueado().Cliente != null) {
     return "data:image/png;base64," + usuarioLogueado().avatar;
   } else {
     return require("../../../assets/noFoto.png");
@@ -142,3 +175,26 @@ export const actualizarProveedorEnStore = proveedor => {
   );
   return true;
 };
+
+// export const refreshToken = () => {
+// 	const session = selectors.get();
+
+// 	if (!session.tokens.refresh.value || !session.user.id) {
+// 		return Promise.reject();
+// 	}
+
+// 	return api.refresh(session.tokens.refresh, session.user)
+// 		.then(onRequestSuccess)
+// 		.catch(onRequestFailed);
+// };
+
+
+// export const revoke = () => {
+// 	const session = selectors.get();
+// 	return api.revoke(Object.keys(session.tokens).map(tokenKey => ({
+// 		type: session.tokens[tokenKey].type,
+// 		value: session.tokens[tokenKey].value,
+// 	})))
+// 		.then(clearSession())
+// 		.catch(() => { });
+// };

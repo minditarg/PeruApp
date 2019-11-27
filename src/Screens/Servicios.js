@@ -49,7 +49,7 @@ class Servicios extends Component {
 
 const mapStateToProps = state => {
   return {
-    servicios: session.usuarioLogueado().Proveedor.servicios
+    servicios: session.usuarioLogueado() != null ? session.usuarioLogueado().Proveedor.servicios : null
   };
 };
 export default connect(mapStateToProps)(Servicios);

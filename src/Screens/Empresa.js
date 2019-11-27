@@ -126,7 +126,7 @@ export class Empresa extends Component {
 
   logout() {
     sessionService.logout();
-    this.props.navigation.navigate("Login");
+    this.props.navigation.navigate("Select");
   }
   render() {
     let classesBtn = [stl.btn, stl.primary];
