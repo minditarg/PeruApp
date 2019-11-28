@@ -62,22 +62,19 @@ export class UpdateServicio extends Component {
             descripcion: servicio.descripcion,
             categoria: servicio.subcategoria.categoria.id,
             subcategoria: servicio.subcategoriaId,
-            foto: this.galeriaExterna(servicio)
+            foto: this.galeriaExterna(servicio),
+            subcategorias: this.state.categorias.find(item => item.id === servicio.subcategoria.categoria.id)
+              .subcategorias
           });
-          // this.onChangeCategoria(servicio.subcategoria.categoria.id);
-          // console.log("entre al contructor", servicio.subcategoria.categoria.id);
-          // this.onChangeSubcategoria(servicio.subcategoriaId);
+          //this.onChangeCategoria(servicio.subcategoria.categoria.id);
         });
-
     });
   }
 
   componentDidMount() {
-
     this.getPermissionAsync();
-    this.onChangeCategoria(this.state.categoria);
+    //this.onChangeCategoria(this.state.categoria);
     console.log("componentDidMount 222");
-    this.onChangeSubcategoria(this.state.subcategoria);
   }
   galeriaExterna(servicio) {
     if (!servicio.foto) {
@@ -162,7 +159,7 @@ export class UpdateServicio extends Component {
   }
 
   onChangeCategoria(value) {
-    if (value) {
+    if (value > 0) {
       this.setState({
         categoria: value,
         subcategorias: this.state.categorias.find(item => item.id === value)
@@ -173,17 +170,11 @@ export class UpdateServicio extends Component {
   }
 
   cambiarSubcategorias() {
-    console.log("cambiarSubcategorias");
     subcategoriasItems = this.state.subcategorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
   }
-  onChangeSubcategoria(value) {
-    console.log("onChangeSubcategoria", value);
-    this.setState({
-      subcategoria: value,
-    });
-  }
+
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -197,10 +188,13 @@ export class UpdateServicio extends Component {
     let categoriasItems = this.state.categorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
+    categoriasItems.unshift(<Picker.Item label="Seleccione categoria" value="0" />);
 
     let subcategoriasItems = this.state.subcategorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
+    subcategoriasItems.unshift(<Picker.Item label="Seleccione subcategoria" value="0" />);
+
     let fotos = this.state.foto.map((s, i) => {
       let arrayToOrder = this.state.foto;
       let iconClassArray = [stl.imgActionIcon];
@@ -312,6 +306,7 @@ export class UpdateServicio extends Component {
                       iosIcon={<Icon name="arrow-down" />}
                       style={[stl.textBlack, stl.pickerInput]}
                       name="categoria"
+                      label="Seleccione categoría"
                       value={this.state.categoria}
                       selectedValue={this.state.categoria}
                       onValueChange={this.onChangeCategoria.bind(this)}
@@ -331,7 +326,10 @@ export class UpdateServicio extends Component {
                       style={[stl.textBlack, stl.pickerInput]}
                       name="subcategoria"
                       selectedValue={this.state.subcategoria}
-                      onValueChange={this.onChangeSubcategoria.bind(this)}
+                      onValueChange={subcategoria => {
+                        this.setState({ subcategoria });
+                      }
+                      }
                     >
                       {subcategoriasItems}
                     </Picker>

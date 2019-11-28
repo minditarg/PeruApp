@@ -8,14 +8,12 @@ import * as actionCreators from '../session/actions';
 
 export const listadoCategorias = () => {
     return api.listadoCategorias().then(response => {
-        console.log(response);
         if (response.statusType == "success") {
             return response.data;
         }
     })
 }
 export const crear = (nombre, descripcion, fotos, subcategoriaId) => {
-    console.log(subcategoriaId, "subcategoriaId");
     return api.crear(nombre, descripcion, fotos, subcategoriaId, session.usuarioLogueado().Proveedor.id);
 }
 export const actualizar = (id, nombre, descripcion, fotos, subcategoriaId) => {
@@ -28,7 +26,6 @@ export const eliminar = (servicioId) => {
 
 export const get = (id) => {
     return api.get(id).then(response => {
-        console.log(response);
         if (response.statusType == "success") {
             return response.data;
         }
