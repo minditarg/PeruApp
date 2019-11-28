@@ -291,9 +291,7 @@ export class UpdateServicio extends Component {
                     <Text style={stl.txtError}> El nombre es requerido</Text>
                   )}
                   <View>
-                    <Text style={[stl.textBlack, stl.pickerlbl]}>
-                      Categoría
-                    </Text>
+                    <Text style={[stl.textBlack, stl.pickerlbl]}>Categoría</Text>
                     <Item
                       picker
                       style={stl.picker}

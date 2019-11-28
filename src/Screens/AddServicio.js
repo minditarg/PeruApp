@@ -143,27 +143,23 @@ export class AddServicio extends Component {
       });
   }
 
-  onChangeCategoria(value) {
-    console.log("onChangeCategoria", value);
-    this.setState({
-      categoria: value,
-      subcategorias: this.state.categorias.find(item => item.id === value)
-        .subcategorias
-    });
-    this.cambiarSubcategorias();
+ onChangeCategoria(value) {
+    if (value > 0) {
+      this.setState({
+        categoria: value,
+        subcategorias: this.state.categorias.find(item => item.id === value)
+          .subcategorias
+      });
+      this.cambiarSubcategorias();
+    }
   }
   onChangeSubcategoria(value) {
-    console.log(value);
     this.setState({
       subcategoria: value
     });
   }
 
   cambiarSubcategorias() {
-    console.log(this.state.subcategorias);
-    // this.setState({
-    //   subcategoria: 1
-    // });
     subcategoriasItems = this.state.subcategorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
@@ -179,14 +175,15 @@ export class AddServicio extends Component {
 
   render() {
     let foto = this.state.foto;
-
     let categoriasItems = this.state.categorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
-
+    categoriasItems.unshift(<Picker.Item label="Seleccione categoria" value="null" />);
     let subcategoriasItems = this.state.subcategorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
+    subcategoriasItems.unshift(<Picker.Item label="Seleccione subcategoria" value="null" />);
+
     let fotos = this.state.foto.map((s, i) => {
       let arrayToOrder = this.state.foto;
       let iconClassArray = [stl.imgActionIcon];
@@ -328,7 +325,9 @@ export class AddServicio extends Component {
                         style={[stl.textBlack, stl.pickerInput]}
                         name="subcategoria"
                         selectedValue={this.state.subcategoria}
-                        onValueChange={this.onChangeSubcategoria.bind(this)}
+                        onValueChange={subcategoria => {
+                          this.setState({ subcategoria });
+                        }}
                       >
                         {subcategoriasItems}
                       </Picker>
