@@ -116,10 +116,9 @@ export const stl = StyleSheet.create({
   },
 
   btnImgServ: {
-    width: 90,
-    height: 90,
+    width: 150,
+    height: 150,
     borderRadius: 5,
-    //margin: 5,
     backgroundColor: "#ddd",
     justifyContent: "center",
     alignItems: "center"
@@ -249,9 +248,7 @@ export const stl = StyleSheet.create({
     marginBottom: 5
   },
   touchableImg: {
-    marginBottom: 15,
-    borderColor: "#ddd",
-    borderWidth: 1
+    marginBottom: 15
   },
   loading: {
     position: "absolute",
@@ -281,5 +278,53 @@ export const stl = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "rgba(0,0,0,.5)",
     borderRadius: 5
+  },
+  imgActions: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    display: "flex",
+    flexDirection: "row"
+  },
+  imgAction: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "rgba(255,255,255,.5)",
+    padding: 3
+  },
+  imgActionFirst: {
+    borderRightColor: "#333",
+    borderRightWidth: 1
+  },
+  imgActionIcon: {
+    fontSize: 20,
+    alignSelf: "center",
+    color: "#fff"
+  },
+  imgActionIconFirst: {
+    color: "#ffc107"
+  },
+  firstItem: {
+    backgroundColor: "rgba(0,0,0,0)"
+  },
+  imgDeleteIcon: {
+    color: "#000"
+  },
+  disabled: {
+    backgroundColor: "#eee"
+  },
+  itmPicker: {
+    flex: 1,
+    margin: 0,
+    padding: 0
+  },
+
+  pickerlbl: {
+    marginTop: 20,
+    color: "#888",
+    marginLeft: 20,
+    marginBottom: -30,
+    padding: 0
   }
 });

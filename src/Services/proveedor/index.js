@@ -7,12 +7,13 @@ import * as actionCreators from '../session/actions';
 
 
 const onRequestSuccess = (response) => {
-
-     if (response.statusType == "success") store.dispatch(actionCreators.update({ "user.Proveedor": response.data }));
+     console.log(response);
+     if (response.statusType == "success") session.actualizarProveedorEnStore(response.data);
      return response;
 };
 
 const onRequestFailed = (exception) => {
+     console.log(exception);
      throw exception;
 };
 
@@ -26,4 +27,4 @@ export const crear = (nombre, email, descripcion, direccion, telefono, foto) =>
 export const actualizar = (nombre, email, descripcion, direccion, telefono, foto) =>
      api.actualizar(nombre, email, descripcion, direccion, telefono, foto, session.usuarioLogueado().Proveedor.id)
           .then(onRequestSuccess)
-          .catch(onRequestFailed); 
+          .catch(onRequestFailed);

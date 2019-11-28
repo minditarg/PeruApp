@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { Button, Text, Form, Item, Input, Label } from "native-base";
+import { Button, Text, Form, Item, Input, Label, Spinner } from "native-base";
 import * as usuario from "../Services/usuario";
 import * as session from "../Services/session";
 import * as api from "../Services/api";
@@ -20,13 +20,14 @@ import { stl } from "./styles/styles";
 export class Registrarse extends Component {
   constructor() {
     super();
-    this.state = {
+    this.initialstate = {
       email: "",
       password: "",
       submitted: false,
       isLoading: false,
       error: null
     };
+    this.state = this.initialstate;
   }
   HandleRegistroBtn() {
     this.setState({
@@ -38,14 +39,17 @@ export class Registrarse extends Component {
     usuario
       .crear(this.state.email, this.state.password)
       .then(response => {
-        console.log(response);
         if (response.statusType == "success") {
           session
             .authenticate(this.state.email, this.state.password)
             .then(response => {
               if (response.statusType == "success") {
+                this.setState(this.initialState);
                 this.props.navigation.navigate("RegistrarProveedor");
               } else {
+                this.setState({
+                  isLoading: false
+                });
                 this.setState({ error: response.message });
               }
             })
@@ -61,7 +65,7 @@ export class Registrarse extends Component {
               }
             });
         } else {
-          this.setState({ error: response.message });
+          this.setState({ isLoading: false, error: response.message });
         }
       })
       .catch(exception => {
@@ -169,6 +173,13 @@ export class Registrarse extends Component {
                       </Form>
                     </Col>
                   </Row>
+                  {this.state.isLoading && (
+                    <View style={stl.loading}>
+                      <View style={stl.loadingbk}>
+                        <Spinner color="white" />
+                      </View>
+                    </View>
+                  )}
                 </Grid>
               </TouchableWithoutFeedback>
             </ScrollView>

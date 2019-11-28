@@ -2,25 +2,23 @@ import React, { Component } from "react";
 import { FlatList } from "react-native";
 import { Container, Content, Button, Icon } from "native-base";
 import works from "../../Datos/Trabajos.json";
-import { CardList } from "../Componentes/CardList";
+import { ListTrabajo } from "../Componentes/ListTrabajo";
 import { stl } from "../Screens/styles/styles";
 
 export class Trabajos extends Component {
   render() {
-    console.log(works);
-
     return (
       <Container style={stl.containerList}>
         <Content>
           <FlatList
             style={stl.listaPadding}
             data={works}
-            renderItem={({ item }) => <CardList obj={item} />}
+            renderItem={({ item }) => <ListTrabajo obj={item} />}
             keyExtractor={item => item.id}
           />
         </Content>
         <Button
-          onPress={() => this.props.navigation.navigate("AddTrabajo")}
+          onPress={() => this.props.navigation.navigate("Servicios")}
           style={[stl.btnRounded, stl.primary]}
           block
         >

@@ -32,32 +32,59 @@ import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as sessionService from "../Services/session";
+import apiConfig from "../Services/api/config";
 
-export class AddServicio extends Component {
+export class UpdateServicio extends Component {
   constructor() {
     super();
-    this.initialState = {
-      categorias: [{ id: 0, nombre: "Seleccione categoría" }],
-      subcategorias: [{ id: 0, nombre: "Seleccione subcategoría" }],
+    this.state = {
+      id: "",
+      categorias: [],
+      subcategorias: [],
       submitted: false,
-      isLoading: false,
       nombre: "",
       descripcion: "",
       foto: [],
-      visible: false,
       categoria: undefined,
       subcategoria: undefined
     };
-    this.state = this.initialState;
+    servicioService.listadoCategorias().then(categorias => {
+      console.log("eseteo categorias");
+      this.setState({
+        categorias: categorias
+      });
+      servicioService
+        .get(this.props.navigation.getParam("id"))
+        .then(servicio => {
+          this.setState({
+            id: servicio.id,
+            nombre: servicio.nombre,
+            descripcion: servicio.descripcion,
+            categoria: servicio.subcategoria.categoria.id,
+            subcategoria: servicio.subcategoriaId,
+            foto: this.galeriaExterna(servicio)
+          });
+          // this.onChangeCategoria(servicio.subcategoria.categoria.id);
+          // console.log("entre al contructor", servicio.subcategoria.categoria.id);
+          // this.onChangeSubcategoria(servicio.subcategoriaId);
+        });
+    });
   }
 
   componentDidMount() {
-    servicioService.listadoCategorias().then(response => {
-      this.setState({
-        categorias: response
-      });
-    });
     this.getPermissionAsync();
+    this.onChangeCategoria(this.state.categoria);
+    console.log("componentDidMount 222");
+    this.onChangeSubcategoria(this.state.subcategoria);
+  }
+  galeriaExterna(servicio) {
+    if (!servicio.foto) {
+      return [];
+    }
+    servicio.galeria.unshift({ foto: servicio.foto });
+    return servicio.galeria.map((s, i) => {
+      return { uri: apiConfig.pathFiles + s.foto, name: s.foto };
+    });
   }
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
@@ -69,11 +96,9 @@ export class AddServicio extends Component {
   };
 
   _pickImage = async () => {
-    //this.componentDidMount();
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      base64: true,
       aspect: [1, 1]
     });
     if (!result.cancelled) {
@@ -89,14 +114,14 @@ export class AddServicio extends Component {
     });
     dismissKeyboard();
     servicioService
-      .crear(
+      .actualizar(
+        this.state.id,
         this.state.nombre,
         this.state.descripcion,
         this.state.foto,
         this.state.subcategoria
       )
       .then(response => {
-        console.log("then", response);
         if (response.statusType == "success") {
           this.setState({
             isLoading: false
@@ -108,19 +133,10 @@ export class AddServicio extends Component {
             type: "success"
           });
           sessionService.actualizarUsuario().then(response => {
-            this.setState({
-              submitted: false,
-              isLoading: false,
-              nombre: "",
-              descripcion: "",
-              foto: [],
-              visible: false,
-              categoria: undefined,
-              subcategoria: undefined
-            });
-            this.props.navigation.navigate("Servicios");
+            this.props.navigation.push("Servicios");
           });
         } else {
+          console.log(response);
           this.setState({ isLoading: false, error: response.message });
           Toast.show({
             text: response.message,
@@ -144,28 +160,26 @@ export class AddServicio extends Component {
   }
 
   onChangeCategoria(value) {
-    console.log("onChangeCategoria", value);
-    this.setState({
-      categoria: value,
-      subcategorias: this.state.categorias.find(item => item.id === value)
-        .subcategorias
-    });
-    this.cambiarSubcategorias();
-  }
-  onChangeSubcategoria(value) {
-    console.log(value);
-    this.setState({
-      subcategoria: value
-    });
+    if (value) {
+      this.setState({
+        categoria: value,
+        subcategorias: this.state.categorias.find(item => item.id === value)
+          .subcategorias
+      });
+      this.cambiarSubcategorias();
+    }
   }
 
   cambiarSubcategorias() {
-    console.log(this.state.subcategorias);
-    // this.setState({
-    //   subcategoria: 1
-    // });
+    console.log("cambiarSubcategorias");
     subcategoriasItems = this.state.subcategorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
+    });
+  }
+  onChangeSubcategoria(value) {
+    console.log("onChangeSubcategoria", value);
+    this.setState({
+      subcategoria: value
     });
   }
   getPermissionAsync = async () => {
@@ -178,8 +192,6 @@ export class AddServicio extends Component {
   };
 
   render() {
-    let foto = this.state.foto;
-
     let categoriasItems = this.state.categorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
@@ -263,7 +275,6 @@ export class AddServicio extends Component {
         </View>
       );
     });
-
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         <SafeAreaView style={stl.containerList}>
@@ -295,7 +306,7 @@ export class AddServicio extends Component {
                     <Item
                       picker
                       style={stl.picker}
-                      error={this.state.submitted && !this.state.email}
+                      error={this.state.submitted && !this.state.categoria}
                     >
                       <Picker
                         mode="dropdown"
@@ -315,11 +326,10 @@ export class AddServicio extends Component {
                     <Text style={[stl.textBlack, stl.pickerlbl]}>
                       SubCategoría
                     </Text>
-
                     <Item
                       picker
-                      style={[stl.picker, stl.itmPicker]}
-                      error={this.state.submitted && !this.state.email}
+                      style={stl.picker}
+                      error={this.state.submitted && !this.state.subcategoria}
                     >
                       <Picker
                         mode="dropdown"
@@ -334,7 +344,7 @@ export class AddServicio extends Component {
                       </Picker>
                     </Item>
                   </View>
-                  <View style={stl.areaText}>
+                  <Label style={stl.areaText}>
                     <Label style={stl.textBlack}>Descripción</Label>
                     <Textarea
                       style={[stl.textBlack, stl.txtArea]}
@@ -348,7 +358,7 @@ export class AddServicio extends Component {
                         this.setState({ descripcion });
                       }}
                     />
-                  </View>
+                  </Label>
 
                   <View style={[stl.vista, stl.vistaimgs]}>
                     {fotos}
@@ -378,7 +388,7 @@ export class AddServicio extends Component {
                       style={[stl.btn, stl.primary]}
                       onPress={() => this.HandleRegistroBtn()}
                     >
-                      <Text style={stl.btnText}>Crear Servicio</Text>
+                      <Text style={stl.btnText}>Guardar cambios</Text>
                     </Button>
                   </View>
                   {this.state.isLoading && (

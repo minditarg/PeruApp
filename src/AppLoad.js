@@ -29,9 +29,9 @@ export default class AppLoad extends React.Component {
     });
     this.setState({ isReady: true });
     setTimeout(() => {
-      // this.setState({ cargo: true });
-      if (session.estaLogueado()) {
-        if (session.esUsuarioTipoCliente())
+      let logueado = session.estaLogueado().then(response => {
+        if (response) {
+          if (session.esUsuarioTipoCliente())
             this.props.navigation.navigate("Trabajos");
           if (session.esUsuarioTipoEmpresa())
             this.props.navigation.navigate("Servicios");
@@ -43,9 +43,10 @@ export default class AppLoad extends React.Component {
               this.props.navigation.navigate("RegistrarProveedor");
             }
           }
-
-      }
-      this.props.navigation.navigate("Select");
+        }else{
+          this.props.navigation.navigate("Select");
+        }
+      });
     }, 300);
   }
 

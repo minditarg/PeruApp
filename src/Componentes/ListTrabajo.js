@@ -5,71 +5,17 @@ import { stl } from "../Screens/styles/styles";
 import * as servicioService from "../Services/servicios";
 import * as sessionService from "../Services/session";
 import apiConfig from "../Services/api/config";
-export class CardList extends Component {
+export class ListTrabajo extends Component {
   constructor() {
     super();
   }
-  EliminarServicio(servicioId) {
-    servicioService
-      .eliminar(servicioId)
-      .then(response => {
-        if (response.statusType == "success") {
-          Toast.show({
-            text: response.message,
-            buttonText: "OK",
-            position: "top",
-            type: "success"
-          });
-
-          sessionService.actualizarUsuario().then(response => {
-            this.props.navigation.push("Servicios");
-          });
-        } else {
-          Toast.show({
-            text: response.message,
-            buttonText: "OK",
-            position: "top",
-            type: "danger"
-          });
-        }
-      })
-      .catch(exception => {
-        Toast.show({
-          text: exception,
-          buttonText: "OK",
-          position: "top",
-          type: "danger"
-        });
-        console.log(exception, "exc");
-      });
-  }
-  HandleEliminarBtn(servicio) {
-    Alert.alert(
-      "Eliminar servicio",
-      "¿Estás seguro de eliminar el servicio: " + servicio.nombre + " ?",
-      [
-        {
-          style: "cancel",
-          text: "Cancelar",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: () => this.EliminarServicio(servicio.id)
-        }
-      ],
-      { cancelable: false }
-    );
-  }
+ 
+  
   render() {
     let obj = this.props.obj;
     return (
       <TouchableOpacity
-        onPress={() => {
-          this.props.navigation.navigate("UpdateServicio", { id: obj.id });
-        }}
+        
       >
         <View style={[stl.card, stl.cardHor]}>
           {this.props.Image && (
@@ -99,7 +45,7 @@ export class CardList extends Component {
             <Button
               transparent
               onPress={() => {
-                this.HandleEliminarBtn(obj);
+               
               }}
             >
               <Icon style={stl.iconCam} type="EvilIcons" name="trash" />

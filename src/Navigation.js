@@ -12,13 +12,14 @@ import {
   Registrarse,
   RegistrarProveedor,
   AddServicio,
+  UpdateServicio,
   AddTrabajo,
   Empresa,
   Servicios,
   Trabajos
 } from "../src/Screens/Index";
 import { stl } from "./Screens/styles/styles";
-import { NavHeader } from "../src/Componentes/NavHeader";
+import NavHeader from "../src/Componentes/NavHeader";
 import AppLoad from "./AppLoad";
 
 const TrabajosNav = createStackNavigator(
@@ -28,7 +29,7 @@ const TrabajosNav = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({ navigation }) => <NavHeader navigation={navigation.state} />,
+      header: ({ navigation }) => <NavHeader navigation={navigation} />,
       title: "Trabajos",
       headerStyle: {
         backgroundColor: "#044fb3",
@@ -49,7 +50,7 @@ const EmpresaNav = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({ navigation }) => <NavHeader navigation={navigation.state} />,
+      header: ({ navigation }) => <NavHeader navigation={navigation} />,
       title: "Empresa",
       headerStyle: {
         backgroundColor: "#044fb3",
@@ -66,11 +67,12 @@ const EmpresaNav = createStackNavigator(
 const ServiciosNav = createStackNavigator(
   {
     Servicios: Servicios,
-    AddServicio: AddServicio
+    AddServicio: AddServicio,
+    UpdateServicio: UpdateServicio
   },
   {
     defaultNavigationOptions: {
-      header: ({ navigation }) => <NavHeader navigation={navigation.state} />,
+      header: ({ navigation }) => <NavHeader navigation={navigation} />,
       title: "Servicios",
       headerStyle: stl.headerStyle,
       headerTintColor: "#fff",

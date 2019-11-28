@@ -34,7 +34,7 @@ import { stl } from "./styles/styles";
 class Login extends Component {
   constructor() {
     super();
-    this.state = {
+    this.initialState = {
       email: "",
       password: "",
       submitted: false,
@@ -45,6 +45,8 @@ class Login extends Component {
       error: null,
       passwordInput: ""
     };
+
+    this.state = this.initialState;
   }
 
   Redirigir() {
@@ -73,10 +75,10 @@ class Login extends Component {
   // LOGIN De FACEBBOK
   loginFacebook = async () => {
     let redirectUrl = await Linking.getInitialURL();
-    let authUrl = "https://10.30.30.125:3000/api/auth/facebook";
+    let authUrl = "https://50.63.166.215:5000/api/auth/facebook";
     try {
       let authResult = await WebBrowser.openAuthSessionAsync(
-        "https://10.30.30.125:3000/api/auth/facebook",
+        "https://50.63.166.215:5000/api/auth/facebook",
         redirectUrl
       );
       await this.setState({ authResult: authResult, isPostBack: true });
@@ -148,7 +150,6 @@ class Login extends Component {
       this.Redirigir();
     }
 
-    console.log(this.props.navigation);
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         <SafeAreaView style={stl.container}>

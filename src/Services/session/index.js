@@ -1,39 +1,179 @@
-import store from '../../Store';
-import * as api from './api';
-import * as selectors from './selectors';
-import * as actionCreators from './actions';
-import { initialState } from './reducer';
+import store from "../../Store";
+import * as api from "./api";
+import * as selectors from "./selectors";
+import * as actionCreators from "./actions";
+import { initialState } from "./reducer";
+import apiConfig from "../api/config";
+import { AsyncStorage } from 'react-native';
 
 const SESSION_TIMEOUT_THRESHOLD = 300; // Will refresh the access token 5 minutes before it expires
 
 let sessionTimeout = null;
 
-const setSessionTimeout = (duration) => {
-	clearTimeout(sessionTimeout);
-	sessionTimeout = setTimeout(
-		refreshToken, // eslint-disable-line no-use-before-define
-		(duration - SESSION_TIMEOUT_THRESHOLD) * 1000
-	);
+const deleteTokenEnStore = async () => {
+  try {
+    await AsyncStorage.removeItem('token');
+  } catch (error) {
+  }
+};
+const saveTokenEnStore = async (token) => {
+  try {
+    await AsyncStorage.setItem('token', token);
+  } catch (error) {
+  }
+};
+const getTokenEnStore = async () => {
+  try {
+    return await AsyncStorage.getItem('token');
+  } catch (error) {
+  }
+};
+const setSessionTimeout = duration => {
+  clearTimeout(sessionTimeout);
+  sessionTimeout = setTimeout(
+    refreshToken, // eslint-disable-line no-use-before-define
+    (duration - SESSION_TIMEOUT_THRESHOLD) * 1000
+  );
 };
 
 const clearSession = () => {
-	clearTimeout(sessionTimeout);
-	store.dispatch(actionCreators.update(initialState));
+  //clearTimeout(sessionTimeout);
+  store.dispatch(actionCreators.update(initialState));
+  deleteTokenEnStore();
 };
 
-const onRequestSuccess = (response) => {
-	// const tokens = response.tokens.reduce((prev, item) => ({
-	// 	...prev,
-	// 	[item.type]: item,
-	// // }), {}); 
-	if (response.statusType == "success") store.dispatch(actionCreators.update({ tokens: response.data.tokens, user: response.data.user }));
-	//setSessionTimeout(tokens.access.expiresIn);
-	return response;
+
+const onRequestSuccess = response => {
+  // const tokens = response.tokens.reduce((prev, item) => ({
+  // 	...prev,
+  // 	[item.type]: item,
+  // // }), {});
+  if (response.statusType == "success") {
+    store.dispatch(
+      actionCreators.update({
+        tokens: response.data.tokens,
+        user: response.data.user
+      })
+    );
+    saveTokenEnStore(response.data.tokens);
+
+  }
+  //setSessionTimeout(tokens.access.expiresIn);
+  return response;
 };
 
-const onRequestFailed = (exception) => {
-	clearSession();
-	throw exception;
+const onRequestFailed = exception => {
+  clearSession();
+  throw exception;
+};
+
+
+export const authenticate = (email, password) =>
+  api
+    .authenticate(email, password)
+    .then(onRequestSuccess)
+    .catch(onRequestFailed);
+
+export const logout = () => {
+  clearSession();
+};
+
+
+//TODO traer desde el servidor los datos de expireIn y demas del token.
+export const estaLogueado = () => {
+  const session = selectors.get();
+  if ((session != null && session.user != null && session.user.id)) return true;
+  else {
+    return getTokenEnStore().then(response => {
+      store.dispatch(
+        actionCreators.update({
+          tokens: response,
+        })
+      );
+      if (response != null) {
+        return api.actualizarUsuarioConToken()
+          .then(response => {
+            let token = selectors.get().tokens;
+            if (response.statusType == "success") {
+              store.dispatch(
+                actionCreators.update({
+                  user: response.data,
+                  tokens: token,
+                  tipo: response.data.Cliente ? "Cliente" : "Proveedor"
+                })
+              );
+              return true;
+            }
+          });
+      }
+      return false;
+    }).catch(exception => {
+      throw exception;
+    });
+  }
+};
+export const usuarioLogueado = () => {
+  let session = selectors.get();
+  {
+    return (session != null && session.user != null && session.user.id) ? session.user : null;
+  }
+};
+export const avatar = () => {
+  if (usuarioLogueado() != null && usuarioLogueado().Proveedor != null) {
+    return apiConfig.pathFiles + usuarioLogueado().Proveedor.foto;
+  }
+  if (usuarioLogueado() != null && usuarioLogueado().Cliente != null) {
+    return "data:image/png;base64," + usuarioLogueado().avatar;
+  } else {
+    return require("../../../assets/noFoto.png");
+  }
+};
+
+export const elegirTipoApp = tipo => {
+  store.dispatch(actionCreators.update({ tipo: tipo }));
+};
+export const esAppTipoCliente = () => {
+  return selectors.get().tipo == "Cliente";
+};
+
+export const esUsuarioTipoCliente = () => {
+  return usuarioLogueado() && usuarioLogueado().Cliente != null;
+};
+export const esUsuarioTipoEmpresa = () => {
+  return usuarioLogueado() && usuarioLogueado().Proveedor != null;
+};
+
+export const actualizarUsuario = () => {
+  return api
+    .actualizarUsuario(usuarioLogueado().id)
+    .then(response => {
+      let token = selectors.get().tokens;
+      let tipo = selectors.get().tipo;
+      if (response.statusType == "success") {
+        store.dispatch(
+          actionCreators.update({
+            user: response.data,
+            tokens: token,
+            tipo: tipo
+          })
+        );
+        return response;
+      }
+    })
+    .catch(exception => {
+      throw exception;
+    });
+};
+
+export const actualizarProveedorEnStore = proveedor => {
+  let token = selectors.get().tokens;
+  let tipo = selectors.get().tipo;
+  let usuario = selectors.get().user;
+  usuario.Proveedor = proveedor;
+  store.dispatch(
+    actionCreators.update({ user: usuario, tokens: token, tipo: tipo })
+  );
+  return true;
 };
 
 // export const refreshToken = () => {
@@ -48,14 +188,6 @@ const onRequestFailed = (exception) => {
 // 		.catch(onRequestFailed);
 // };
 
-export const authenticate = (email, password) =>
-	api.authenticate(email, password)
-		.then(onRequestSuccess)
-		.catch(onRequestFailed);
-
-export const logout = () => {
-	clearSession();
-};
 
 // export const revoke = () => {
 // 	const session = selectors.get();
@@ -66,53 +198,3 @@ export const logout = () => {
 // 		.then(clearSession())
 // 		.catch(() => { });
 // };
-
-//TODO traer desde el servidor los datos de expireIn y demas del token.
-export const estaLogueado = () => {
-	const session = selectors.get();
-	return session.user != null && session.user.id > 0;
-}
-export const usuarioLogueado = () => {
-	let session = selectors.get();
-	return session.user != null && session.user.id > 0 ? session.user : null;
-}
-export const avatar = () => {
-	if (usuarioLogueado().Proveedor != null) {
-		return "data:image/png;base64," + usuarioLogueado().Proveedor.foto;
-	}
-	if (this.usuarioLogueado().Cliente != null) {
-		return "data:image/png;base64," + usuarioLogueado().avatar;
-	}
-}
-
-
-export const elegirTipoApp = (tipo) => {
-	store.dispatch(actionCreators.update({ tipo: tipo }));
-};
-export const esAppTipoCliente = () => {
-	return selectors.get().tipo == "Cliente";
-};
-
-
-export const esUsuarioTipoCliente = () => {
-	return usuarioLogueado() && usuarioLogueado().Cliente != null;
-};
-export const esUsuarioTipoEmpresa = () => {
-	return usuarioLogueado() && usuarioLogueado().Proveedor != null;
-};
-
-export const actualizarUsuario = () => {
-	return api.actualizarUsuario(usuarioLogueado().id)
-		.then(response => {
-			let token = selectors.get().tokens;
-			let tipo = selectors.get().tipo;
-			if (response.statusType == "success") {
-				store.dispatch(actionCreators.update({ user: response.data, tokens: token, tipo: tipo }));
-				return response;
-			}
-		}
-		).catch(exception => {
-			throw exception;
-		}
-		);
-}

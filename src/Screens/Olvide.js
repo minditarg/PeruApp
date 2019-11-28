@@ -11,10 +11,39 @@ import {
   KeyboardAvoidingView
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import { Container, Button, Text, Form, Item, Input, Label } from "native-base";
+import {
+  Container,
+  Button,
+  Text,
+  Form,
+  Item,
+  Input,
+  Label,
+  Spinner
+} from "native-base";
 import { stl } from "./styles/styles";
 
 export class Olvide extends Component {
+  constructor() {
+    super();
+    this.initialState = {
+      email: "",
+      submitted: false,
+      isLoading: false,
+      error: null
+    };
+
+    this.state = this.initialState;
+  }
+
+  HandleEnviarAyuda() {
+    this.setState({ isLoading: true });
+    setTimeout(() => {
+      this.setState({ isLoading: false });
+      this.props.navigation.navigate("Login");
+    }, 300);
+  }
+
   render() {
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
@@ -42,9 +71,7 @@ export class Olvide extends Component {
                         <Row size={1} style={stl.center}>
                           <Button
                             style={[stl.btn, stl.primary]}
-                            onPress={() =>
-                              this.props.navigation.navigate("Login")
-                            }
+                            onPress={() => this.HandleEnviarAyuda()}
                           >
                             <Text style={stl.btnText}>Enviar Ayuda</Text>
                           </Button>
@@ -52,6 +79,13 @@ export class Olvide extends Component {
                       </Form>
                     </Col>
                   </Row>
+                  {this.state.isLoading && (
+                    <View style={stl.loading}>
+                      <View style={stl.loadingbk}>
+                        <Spinner color="white" />
+                      </View>
+                    </View>
+                  )}
                 </Grid>
               </TouchableWithoutFeedback>
             </ScrollView>
