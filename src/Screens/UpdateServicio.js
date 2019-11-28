@@ -49,7 +49,6 @@ export class UpdateServicio extends Component {
       subcategoria: undefined
     };
     servicioService.listadoCategorias().then(categorias => {
-      console.log("eseteo categorias");
       this.setState({
         categorias: categorias
       });
@@ -66,15 +65,12 @@ export class UpdateServicio extends Component {
             subcategorias: this.state.categorias.find(item => item.id === servicio.subcategoria.categoria.id)
               .subcategorias
           });
-          //this.onChangeCategoria(servicio.subcategoria.categoria.id);
         });
     });
   }
 
   componentDidMount() {
     this.getPermissionAsync();
-    //this.onChangeCategoria(this.state.categoria);
-    console.log("componentDidMount 222");
   }
   galeriaExterna(servicio) {
     if (!servicio.foto) {
@@ -135,7 +131,6 @@ export class UpdateServicio extends Component {
             this.props.navigation.push("Servicios");
           });
         } else {
-          console.log(response);
           this.setState({ isLoading: false, error: response.message });
           Toast.show({
             text: response.message,
@@ -188,12 +183,12 @@ export class UpdateServicio extends Component {
     let categoriasItems = this.state.categorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
-    categoriasItems.unshift(<Picker.Item label="Seleccione categoria" value="0" />);
+    categoriasItems.unshift(<Picker.Item label="Seleccione categoria" value="null" />);
 
     let subcategoriasItems = this.state.subcategorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
-    subcategoriasItems.unshift(<Picker.Item label="Seleccione subcategoria" value="0" />);
+    subcategoriasItems.unshift(<Picker.Item label="Seleccione subcategoria" value="null" />);
 
     let fotos = this.state.foto.map((s, i) => {
       let arrayToOrder = this.state.foto;
@@ -295,45 +290,53 @@ export class UpdateServicio extends Component {
                   {this.state.submitted && !this.state.nombre && (
                     <Text style={stl.txtError}> El nombre es requerido</Text>
                   )}
-                  <Item
-                    picker
-                    style={stl.picker}
-                    error={this.state.submitted && !this.state.categoria}
-                  >
-                    <Picker
-                      mode="dropdown"
-                      placeholder="Categoria"
-                      iosIcon={<Icon name="arrow-down" />}
-                      style={[stl.textBlack, stl.pickerInput]}
-                      name="categoria"
-                      label="Seleccione categoría"
-                      value={this.state.categoria}
-                      selectedValue={this.state.categoria}
-                      onValueChange={this.onChangeCategoria.bind(this)}
+                  <View>
+                    <Text style={[stl.textBlack, stl.pickerlbl]}>
+                      Categoría
+                    </Text>
+                    <Item
+                      picker
+                      style={stl.picker}
+                      error={this.state.submitted && !this.state.categoria}
                     >
-                      {categoriasItems}
-                    </Picker>
-                  </Item>
-                  <Item
-                    picker
-                    style={stl.picker}
-                    error={this.state.submitted && !this.state.subcategoria}
-                  >
-                    <Picker
-                      mode="dropdown"
-                      placeholder="SubCategoria"
-                      iosIcon={<Icon name="arrow-down" />}
-                      style={[stl.textBlack, stl.pickerInput]}
-                      name="subcategoria"
-                      selectedValue={this.state.subcategoria}
-                      onValueChange={subcategoria => {
-                        this.setState({ subcategoria });
-                      }
-                      }
+                      <Picker
+                        mode="dropdown"
+                        placeholder="Categoría"
+                        iosIcon={<Icon name="arrow-down" />}
+                        style={[stl.textBlack, stl.pickerInput]}
+                        name="categoria"
+                        value={this.state.categoria}
+                        selectedValue={this.state.categoria}
+                        onValueChange={this.onChangeCategoria.bind(this)}
+                      >
+                        {categoriasItems}
+                      </Picker>
+                    </Item>
+                  </View>
+                  <View>
+                    <Text style={[stl.textBlack, stl.pickerlbl]}>
+                      Subcategoría
+                    </Text>
+                    <Item
+                      picker
+                      style={stl.picker}
+                      error={this.state.submitted && !this.state.subcategoria}
                     >
-                      {subcategoriasItems}
-                    </Picker>
-                  </Item>
+                      <Picker
+                        mode="dropdown"
+                        placeholder="Subcategoría"
+                        iosIcon={<Icon name="arrow-down" />}
+                        style={[stl.textBlack, stl.pickerInput]}
+                        name="subcategoria"
+                        selectedValue={this.state.subcategoria}
+                        onValueChange={subcategoria => {
+                          this.setState({ subcategoria });
+                        }}
+                      >
+                        {subcategoriasItems}
+                      </Picker>
+                    </Item>
+                  </View>
                   <View style={stl.areaText}>
                     <Label style={stl.textBlack}>Descripción</Label>
                     <Textarea
@@ -350,6 +353,7 @@ export class UpdateServicio extends Component {
                     />
                   </View>
 
+               
                   <View style={[stl.vista, stl.vistaimgs]}>
                     {fotos}
                     <TouchableOpacity onPress={this._pickImage}>

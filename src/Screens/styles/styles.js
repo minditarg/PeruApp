@@ -119,7 +119,6 @@ export const stl = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 5,
-    //margin: 5,
     backgroundColor: "#ddd",
     justifyContent: "center",
     alignItems: "center"
@@ -250,8 +249,6 @@ export const stl = StyleSheet.create({
   },
   touchableImg: {
     marginBottom: 15
-    //  borderColor: "#ddd",
-    //  borderWidth: 1
   },
   loading: {
     position: "absolute",
@@ -289,13 +286,10 @@ export const stl = StyleSheet.create({
     right: 0,
     display: "flex",
     flexDirection: "row"
-    // backgroundColor: "rgba(255,255,255,.5)"
   },
   imgAction: {
     flex: 1,
     justifyContent: "center",
-    // borderColor: "rgba(0,0,0,0)",
-    // borderWidth: 1,
     backgroundColor: "rgba(255,255,255,.5)",
     padding: 3
   },
@@ -319,5 +313,18 @@ export const stl = StyleSheet.create({
   },
   disabled: {
     backgroundColor: "#eee"
+  },
+  itmPicker: {
+    flex: 1,
+    margin: 0,
+    padding: 0
+  },
+
+  pickerlbl: {
+    marginTop: 20,
+    color: "#888",
+    marginLeft: 20,
+    marginBottom: -30,
+    padding: 0
   }
 });

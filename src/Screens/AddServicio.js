@@ -155,7 +155,7 @@ export class AddServicio extends Component {
   onChangeSubcategoria(value) {
     console.log(value);
     this.setState({
-      subcategoria: value,
+      subcategoria: value
     });
   }
 
@@ -288,42 +288,52 @@ export class AddServicio extends Component {
                   {this.state.submitted && !this.state.nombre && (
                     <Text style={stl.txtError}> El nombre es requerido</Text>
                   )}
-                  <Item
-                    picker
-                    style={stl.picker}
-                    error={this.state.submitted && !this.state.email}
-                  >
-                    <Picker
-                      mode="dropdown"
-                      placeholder="Categoria"
-                      iosIcon={<Icon name="arrow-down" />}
-                      style={[stl.textBlack, stl.pickerInput]}
-                      name="categoria"
-                      value={this.state.categoria}
-                      selectedValue={this.state.categoria}
-                      onValueChange={this.onChangeCategoria.bind(this)}
+                  <View>
+                    <Text style={[stl.textBlack, stl.pickerlbl]}>
+                      Categoría
+                    </Text>
+                    <Item
+                      picker
+                      style={stl.picker}
+                      error={this.state.submitted && !this.state.email}
                     >
-                      {categoriasItems}
-                    </Picker>
-                  </Item>
-                  <Item
-                    picker
-                    style={stl.picker}
-                    error={this.state.submitted && !this.state.email}
-                  >
-                    <Picker
-                      mode="dropdown"
-                      placeholder="SubCategoria"
-                      iosIcon={<Icon name="arrow-down" />}
-                      style={[stl.textBlack, stl.pickerInput]}
-                      name="subcategoria"
-                      selectedValue={this.state.subcategoria}
-                      onValueChange={this.onChangeSubcategoria.bind(this)}
-                    >
-                      {subcategoriasItems}
-                    </Picker>
-                  </Item>
+                      <Picker
+                        mode="dropdown"
+                        placeholder="Categoria"
+                        iosIcon={<Icon name="arrow-down" />}
+                        style={[stl.textBlack, stl.pickerInput]}
+                        name="categoria"
+                        value={this.state.categoria}
+                        selectedValue={this.state.categoria}
+                        onValueChange={this.onChangeCategoria.bind(this)}
+                      >
+                        {categoriasItems}
+                      </Picker>
+                    </Item>
+                  </View>
+                  <View>
+                    <Text style={[stl.textBlack, stl.pickerlbl]}>
+                      SubCategoría
+                    </Text>
 
+                    <Item
+                      picker
+                      style={[stl.picker, stl.itmPicker]}
+                      error={this.state.submitted && !this.state.email}
+                    >
+                      <Picker
+                        mode="dropdown"
+                        placeholder="SubCategoria"
+                        iosIcon={<Icon name="arrow-down" />}
+                        style={[stl.textBlack, stl.pickerInput]}
+                        name="subcategoria"
+                        selectedValue={this.state.subcategoria}
+                        onValueChange={this.onChangeSubcategoria.bind(this)}
+                      >
+                        {subcategoriasItems}
+                      </Picker>
+                    </Item>
+                  </View>
                   <View style={stl.areaText}>
                     <Label style={stl.textBlack}>Descripción</Label>
                     <Textarea
