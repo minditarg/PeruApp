@@ -12,6 +12,13 @@ import { AddTrabajo } from "./AddTrabajo";
 import { Empresa } from "./Empresa";
 import Servicios from "./Servicios";
 import { Trabajos } from "./Trabajos";
+import DetalleTrabajo from "./ClienteScreens/DetalleTrabajo";
+import EmpresaDetail from "./ClienteScreens/EmpresaDetail";
+import FeedServicios from "./ClienteScreens/FeedServicios";
+import ServicioDetail from "./ClienteScreens/ServicioDetail";
+import TipoServicio from "./ClienteScreens/TipoServicio";
+import TrabajosHechos from "./ClienteScreens/TrabajosHechos";
+import ClientePerfil from "./ClienteScreens/ClientePerfil";
 
 export {
   Select,
@@ -25,5 +32,12 @@ export {
   AddTrabajo,
   Empresa,
   Servicios,
-  Trabajos
+  Trabajos,
+  DetalleTrabajo,
+  EmpresaDetail,
+  FeedServicios,
+  ServicioDetail,
+  TipoServicio,
+  TrabajosHechos,
+  ClientePerfil
 };

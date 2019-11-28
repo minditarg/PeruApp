@@ -326,5 +326,14 @@ export const stl = StyleSheet.create({
     marginLeft: 20,
     marginBottom: -30,
     padding: 0
+  },
+  Premium: {
+    backgroundColor: "red"
+  },
+  Supervisado: {
+    backgroundColor: "green"
+  },
+  Standar: {
+    backgroundColor: "blue"
   }
 });

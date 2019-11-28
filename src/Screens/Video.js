@@ -9,11 +9,17 @@ class Video extends Component {
   constructor() {
     super();
   }
-onListenMessage(){
+  onListenMessage() {}
+  handleNextBtn() {
+    if (session.esAppTipoCliente()) {
+      console.log("asdf");
+      this.props.navigation.navigate("Cliente");
+    } else {
+      console.log("asdfdfasd");
 
-
-}
-
+      this.props.navigation.navigate("Login");
+    }
+  }
 
   render() {
     return (
@@ -24,8 +30,8 @@ onListenMessage(){
               cacheEnabled={true}
               javaScriptEnabled={true}
               allowsInlineMediaPlayback={true}
-               domStorageEnabled
-               onMessage={(msg)=>console.log(msg)}
+              domStorageEnabled
+              onMessage={msg => console.log(msg)}
               mediaPlaybackRequiresUserAction={
                 Platform.OS !== "android" || Platform.Version >= 17
                   ? false
@@ -39,10 +45,9 @@ onListenMessage(){
                         "https://www.youtube.com/embed/7qOqCtg6HWo?&controls=0&autoplay=1&frameborder='0'&allow='autoplay;'&allowfullscreen"
                     }
                   : {
-                     uri:
+                      uri:
                         "https://www.youtube.com/embed/1TEn9uxH07w?&controls=0&autoplay=1&frameborder='0'&allow='autoplay;'&allowfullscreen"
-                    
-                  })
+                    })
               }}
             />
           </Row>
@@ -50,7 +55,7 @@ onListenMessage(){
         <Button
           style={stl.btnSaltar}
           block
-          onPress={() => this.props.navigation.navigate("Login")}
+          onPress={() => this.handleNextBtn()}
         >
           <Text>>> Saltar</Text>
         </Button>
