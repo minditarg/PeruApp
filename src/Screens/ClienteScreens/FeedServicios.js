@@ -10,9 +10,7 @@ class FeedServicios extends Component {
   render() {
     return (
       <Container style={stl.containerList}>
-        <Content>
-          <Text style={stl.btnText}>Pagina feed Servicios</Text>
-        </Content>
+        <Content></Content>
       </Container>
     );
   }

@@ -58,7 +58,7 @@ class NavHeader extends React.Component {
               transparent
               onPress={() => this.props.navigation.navigate("Empresa")}
             >
-              <Thumbnail style={stl.btnAvatar} source={icon} />
+              {/* <Thumbnail style={stl.btnAvatar} source={icon} />*/}
             </Button>
           </Right>
         </Header>

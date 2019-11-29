@@ -18,7 +18,7 @@ export class Trabajos extends Component {
           />
         </Content>
         <Button
-          onPress={() => this.props.navigation.navigate("Servicios")}
+          onPress={() => this.props.navigation.navigate("AddTrabajo")}
           style={[stl.btnRounded, stl.primary]}
           block
         >
