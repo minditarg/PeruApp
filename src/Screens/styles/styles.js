@@ -335,5 +335,66 @@ export const stl = StyleSheet.create({
   },
   Standar: {
     backgroundColor: "blue"
+  },
+
+  selectLabelTextStyle: {
+    fontFamily: "Roboto",
+    color: "#000",
+    textAlign: "left",
+    width: "99%",
+    padding: 10,
+    flexDirection: "row"
+  },
+  placeHolderTextStyle: {
+    fontFamily: "Roboto",
+    color: "#D3D3D3",
+    padding: 10,
+    textAlign: "left",
+    width: "99%",
+    flexDirection: "row"
+  },
+  dropDownImageStyle: {
+    fontFamily: "Roboto",
+    marginLeft: 10,
+    width: 10,
+    height: 10,
+    alignSelf: "center"
+  },
+  listTextViewStyle: {
+    fontFamily: "Roboto",
+    color: "#000",
+    marginVertical: 10,
+    flex: 0.9,
+    marginLeft: 20,
+    marginHorizontal: 10,
+    textAlign: "left",
+    color: "#444"
+  },
+  pickerStyle: {
+    marginLeft: 23,
+    fontFamily: "Roboto",
+    paddingRight: 25,
+    marginRight: 10,
+    marginBottom: 2,
+    borderBottomColor: "#aaa",
+    borderBottomWidth: 1,
+    backgroundColor: "rgba(255,255,255,1)",
+
+    borderRadius: 0,
+    flexDirection: "row"
+  },
+  LabelSelect2: {
+    marginBottom: 10
+  },
+  searchBarContainerStyle: {
+    marginBottom: 10,
+    flexDirection: "row",
+    height: 40,
+    borderRadius: 0,
+    fontFamily: "Roboto",
+    borderBottomWidth: 1,
+    borderColor: "#aaa",
+    marginLeft: 10,
+    marginRight: 10
   }
 });

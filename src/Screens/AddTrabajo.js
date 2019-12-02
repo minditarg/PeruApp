@@ -20,9 +20,8 @@ import {
   Textarea,
   Label
 } from "native-base";
+import Picler from "rn-modal-picker";
 import { stl } from "../Screens/styles/styles";
-
-import RNPicker from "rn-modal-picker";
 
 export class AddTrabajo extends Component {
   constructor() {
@@ -144,12 +143,14 @@ export class AddTrabajo extends Component {
                       }}
                     />
                   </View>
-                  <View>
-                    <Text style={[stl.textBlack, stl.pickerlbl]}>
+                  <View style={stl.pickerSelect2}>
+                    <Text
+                      style={[stl.textBlack, stl.pickerlbl, stl.LabelSelect2]}
+                    >
                       El cliente fue:
                     </Text>
 
-                    <RNPicker
+                    <Picler
                       dataSource={this.state.dataSource}
                       dummyDataSource={this.state.dataSource}
                       defaultValue={false}
@@ -160,10 +161,17 @@ export class AddTrabajo extends Component {
                       searchBarPlaceHolder={"Search....."}
                       showPickerTitle={true}
                       searchBarContainerStyle={
-                        this.props.searchBarContainerStyle
+                        stl.searchBarContainerStyle
+                        //  this.props.searchBarContainerStyle
                       }
+                      pickerStyle={stl.pickerStyle}
+                      pickerItemTextStyle={stl.listTextViewStyle}
                       selectedLabel={this.state.selectedText}
                       placeHolderLabel={this.state.placeHolderText}
+                      selectLabelTextStyle={stl.selectLabelTextStyle}
+                      placeHolderTextStyle={stl.placeHolderTextStyle}
+                      dropDownImageStyle={stl.dropDownImageStyle}
+                      //dropDownImage={require("./res/ic_drop_down.png")}
                       selectedValue={(index, item) =>
                         this._selectedValue(index, item)
                       }
