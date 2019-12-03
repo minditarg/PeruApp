@@ -395,5 +395,53 @@ export const stl = StyleSheet.create({
     borderColor: "#aaa",
     marginLeft: 10,
     marginRight: 10
+  },
+  SearchBar: {
+    backgroundColor: "white",
+    height: 60,
+    margin: -10,
+
+    marginBottom: 10
+  },
+  filter: {
+    width: 110,
+    color: "#444",
+    paddingTop: 10,
+    textAlign: "center",
+    paddingBottom: 10
+  },
+
+  pickerStyle2: {
+    color: "#333",
+    width: 110
+  },
+
+  selectLabelTextStyle2: {
+    paddingTop: 10,
+
+    textAlign: "center"
+  },
+  dropDownImageStyle2: {
+    display: "none"
+  },
+  EmptyFilter: {
+    width: 60,
+    color: "#444",
+    paddingTop: 20,
+    textAlign: "center",
+    alignItems: "center",
+    alignContent: "center"
+  },
+  EmptyFilterIcon: {
+    color: "#444",
+    fontSize: 35
+  },
+  labelSeccion: {
+    marginLeft: -10
+  },
+  tituloSeccion: {
+    padding: 10,
+    fontWeight: "bold",
+    paddingLeft: 20
   }
 });
