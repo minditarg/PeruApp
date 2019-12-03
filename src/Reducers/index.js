@@ -9,11 +9,12 @@ import LoadingData from "./LoadingData";
 
 import { reducer as sessionReducer } from '../Services/session/reducer';
 
+import { reducer as trabajosReducer } from '../Services/trabajos/reducer';
 export default combineReducers({
   User,
   session: sessionReducer,
   Servicios,
-  Trabajos,
+  trabajos: trabajosReducer,
   AppChose,
   LoadingData
 });

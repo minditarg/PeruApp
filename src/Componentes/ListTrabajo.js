@@ -8,11 +8,13 @@ import apiConfig from "../Services/api/config";
 export class ListTrabajo extends Component {
   constructor() {
     super();
+    console.log("eee");
   }
  
   
   render() {
     let obj = this.props.obj;
+    console.log(obj, "ListTrabajoListTrabajoListTrabajoListTrabajoListTrabajoListTrabajo");
     return (
       <TouchableOpacity
         
@@ -31,9 +33,9 @@ export class ListTrabajo extends Component {
             </Left>
           )}
           <Body style={stl.cardBody}>
-            <Text style={stl.cardTitulo}>{obj.nombre}</Text>
-            <Text style={stl.cardSubtitulo}>{obj.descripcion}</Text>
-            <View style={stl.puntaje}>
+            <Text style={stl.cardTitulo}>{obj.Servicio.nombre}</Text>
+            <Text style={stl.cardSubtitulo}>{obj.Servicio.descripcion}</Text>
+            <View style={stl.puntajeDelProveedor}>
               <Icon style={stl.iconstar} type="Ionicons" name="star" />
               <Icon style={stl.iconstar} type="Ionicons" name="star" />
               <Icon style={stl.iconstar} type="Ionicons" name="star-half" />

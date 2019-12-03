@@ -7,7 +7,6 @@ import * as actionCreators from '../session/actions';
 
 
 const onRequestSuccess = (response) => {
-     console.log(response);
      if (response.statusType == "success") session.actualizarProveedorEnStore(response.data);
      return response;
 };

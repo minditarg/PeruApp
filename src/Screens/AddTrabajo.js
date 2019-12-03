@@ -22,79 +22,110 @@ import {
 } from "native-base";
 import RNModal from "rn-modal-picker";
 import { stl } from "../Screens/styles/styles";
+import { connect } from "react-redux";
+import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
+import * as sessionService from "../Services/session";
+import * as servicioService from "../Services/servicios";
+import * as trabajosService from "../Services/trabajos";
+import * as clientesService from "../Services/clientes";
+import { ThemeColors } from "react-navigation";
 
 export class AddTrabajo extends Component {
   constructor() {
     super();
     this.state = {
-      titulo: "",
       submitted: false,
-      image: null,
-      selected2: undefined,
-      dataSource: [
-        {
-          id: 1,
-          name: "Afghanistan"
-        },
-        {
-          id: 2,
-          name: "Bahrain"
-        },
-        {
-          id: 3,
-          name: "Canada"
-        },
-        {
-          id: 4,
-          name: "Denmark"
-        },
-        {
-          id: 5,
-          name: "Egypt"
-        },
-        {
-          id: 6,
-          name: "France"
-        },
-        {
-          id: 7,
-          name: "Greece"
-        },
-        {
-          id: 8,
-          name: "Hong Kong"
-        },
-        {
-          id: 9,
-          name: "India"
-        },
-        {
-          id: 10,
-          name: "Japan"
-        },
-        {
-          id: 11,
-          name: "Kenya"
-        },
-        {
-          id: 12,
-          name: "Liberia"
-        }
-      ],
-      placeHolderText: "Please Select Country",
-      selectedText: ""
+      isLoading: false,
+      puntaje:0,
+      descripcion: "",
+      servicioId: undefined,
+      listadoServicios: sessionService.usuarioLogueado().Proveedor.servicios,
+      listadoClientes: [],
+      clienteId: undefined,
+      clienteSeleccionadoText: ""
     };
   }
-
-  _selectedValue(index, item) {
-    this.setState({ selectedText: item.name });
-  }
-  onValueChange2(value: string) {
-    this.setState({
-      selected2: value
+  componentDidMount() {
+    clientesService.listado().then(response => {
+      this.setState({
+        listadoClientes: response.map((s, i) => {
+          return { id: s.id, name: s.Usuario.nombre };
+        })
+      });
     });
   }
+
+  HandleRegistroBtn() {
+    this.setState({
+      isLoading: true,
+      submitted: true,
+      error: ""
+    });
+    dismissKeyboard();
+    trabajosService
+      .crear(
+        this.state.clienteId,
+        this.state.servicioId,
+        this.state.puntaje,
+        this.state.descripcion
+      )
+      .then(response => {
+        console.log("then", response);
+        if (response.statusType == "success") {
+          this.setState({
+            isLoading: false
+          });
+          Toast.show({
+            text: response.message,
+            buttonText: "OK",
+            position: "top",
+            type: "success"
+          });
+          sessionService.actualizarUsuario().then(response => {
+            this.setState({
+              submitted: false,
+              isLoading: false,
+              puntaje:0,
+              descripcion: "",
+              servicioId: undefined,
+              listadoServicios: sessionService.usuarioLogueado().Proveedor.servicios,
+              listadoClientes: [],
+              clienteId: undefined,
+              clienteSeleccionadoText: ""
+            });
+            this.props.navigation.navigate("Trabajos");
+          });
+        } else {
+          this.setState({ isLoading: false, error: response.message });
+          Toast.show({
+            text: response.message,
+            buttonText: "OK",
+            position: "top",
+            type: "danger"
+          });
+        }
+      })
+      .catch(exception => {
+        const error = exception;
+        this.setState({
+          isLoading: false,
+          ...(error ? { error } : {})
+        });
+
+        if (!error) {
+          throw exception;
+        }
+      });
+  }
+
+
   render() {
+    let serviciosItems = this.state.listadoServicios.map((s, i) => {
+      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
+    });
+    serviciosItems.unshift(<Picker.Item label="Seleccione un servicio" value="null" />);
+
+
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         <SafeAreaView style={stl.containerList}>
@@ -113,18 +144,14 @@ export class AddTrabajo extends Component {
                     >
                       <Picker
                         mode="dropdown"
-                        placeholder="Categoria"
+                        placeholder="Seleccione el servicio ofrecido"
                         iosIcon={<Icon name="arrow-down" />}
                         style={[stl.textBlack, stl.pickerInput]}
-                        name="categoria"
-                        selectedValue={this.state.selected2}
-                        onValueChange={this.onValueChange2.bind(this)}
+                        name="servicio"
+                        selectedValue={this.state.servicioId}
+                        onValueChange={servicioSeleccionado => { this.setState({ servicioId: servicioSeleccionado }) }}
                       >
-                        <Picker.Item label="titulo servicio" value="key0" />
-                        <Picker.Item label="titulo servicio 2" value="key1" />
-                        <Picker.Item label="titulo servicio 3" value="key2" />
-                        <Picker.Item label=" titulo servicio 4" value="key3" />
-                        <Picker.Item label="titulo servicio 5" value="key4" />
+                        {serviciosItems}
                       </Picker>
                     </Item>
                   </View>
@@ -151,8 +178,8 @@ export class AddTrabajo extends Component {
                     </Text>
 
                     <RNModal
-                      dataSource={this.state.dataSource}
-                      dummyDataSource={this.state.dataSource}
+                      dataSource={this.state.listadoClientes}
+                      dummyDataSource={this.state.listadoClientes}
                       defaultValue={false}
                       pickerTitle={"¿Quien fue el cliente?"}
                       showSearchBar={true}
@@ -163,13 +190,13 @@ export class AddTrabajo extends Component {
                       searchBarContainerStyle={stl.searchBarContainerStyle}
                       pickerStyle={stl.pickerStyle}
                       pickerItemTextStyle={stl.listTextViewStyle}
-                      selectedLabel={this.state.selectedText}
-                      placeHolderLabel={this.state.placeHolderText}
+                      selectedLabel={this.state.clienteSeleccionadoText}
+                      placeHolderLabel={"Por favor, seleccione un cliente"}
                       selectLabelTextStyle={stl.selectLabelTextStyle}
                       placeHolderTextStyle={stl.placeHolderTextStyle}
                       dropDownImageStyle={stl.dropDownImageStyle}
-                      selectedValue={(index, item) =>
-                        this._selectedValue(index, item)
+                      selectedValue={(index, seleccionado) => { 
+                        this.setState({ clienteSeleccionadoText: seleccionado.name, clienteId: seleccionado.id }) }
                       }
                     />
                   </View>
@@ -184,23 +211,21 @@ export class AddTrabajo extends Component {
                     >
                       <Picker
                         mode="dropdown"
-                        placeholder="Categoria"
+                        placeholder="Seleccione el puntaje"
                         iosIcon={<Icon name="arrow-down" />}
                         style={[stl.textBlack, stl.pickerInput]}
-                        name="categoria"
-                        selectedValue={this.state.selected2}
-                        onValueChange={this.onValueChange2.bind(this)}
+                        name="puntaje"
+                        selectedValue={this.state.puntaje}
+                        onValueChange={( puntaje) =>
+                          this.setState({ puntaje })
+                        }
                       >
-                        <Picker.Item label="1 Pesimo" value="key1" />
-                        <Picker.Item label="2 Muy malo" value="key2" />
-                        <Picker.Item label="3 Malo" value="key3" />
-                        <Picker.Item label="4 Regular" value="key4" />
-                        <Picker.Item label="5 " value="key5" />
-                        <Picker.Item label="6 " value="key6" />
-                        <Picker.Item label="7 Bien" value="key7" />
-                        <Picker.Item label="8 Muy bien" value="key8" />
-                        <Picker.Item label="9 Sobresaliente" value="key9" />
-                        <Picker.Item label="10 Excelente" value="key10" />
+                         <Picker.Item label="Por favor, seleccione el puntaje" value="0" />
+                        <Picker.Item label="1 Muy malo" value="1" />
+                        <Picker.Item label="2 Malo" value="2" />
+                        <Picker.Item label="3 Regular" value="3" />
+                        <Picker.Item label="4 Bueno" value="4" />
+                        <Picker.Item label="5 Excelente " value="5" />
                       </Picker>
                     </Item>
                   </View>
@@ -230,3 +255,10 @@ export class AddTrabajo extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    listadoServicios: sessionService.usuarioLogueado() != null ? sessionService.usuarioLogueado().Proveedor.servicios : null
+  };
+};
+export default connect(mapStateToProps)(AddTrabajo);
