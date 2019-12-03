@@ -354,7 +354,6 @@ export const stl = StyleSheet.create({
     flexDirection: "row"
   },
   dropDownImageStyle: {
-    fontFamily: "Roboto",
     marginLeft: 10,
     width: 10,
     height: 10,

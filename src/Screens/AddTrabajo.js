@@ -20,7 +20,7 @@ import {
   Textarea,
   Label
 } from "native-base";
-import Picler from "rn-modal-picker";
+import RNModal from "rn-modal-picker";
 import { stl } from "../Screens/styles/styles";
 
 export class AddTrabajo extends Component {
@@ -150,20 +150,17 @@ export class AddTrabajo extends Component {
                       El cliente fue:
                     </Text>
 
-                    <Picler
+                    <RNModal
                       dataSource={this.state.dataSource}
                       dummyDataSource={this.state.dataSource}
                       defaultValue={false}
-                      pickerTitle={"Country Picker"}
+                      pickerTitle={"¿Quien fue el cliente?"}
                       showSearchBar={true}
                       disablePicker={false}
                       changeAnimation={"none"}
-                      searchBarPlaceHolder={"Search....."}
+                      searchBarPlaceHolder={"Buscar....."}
                       showPickerTitle={true}
-                      searchBarContainerStyle={
-                        stl.searchBarContainerStyle
-                        //  this.props.searchBarContainerStyle
-                      }
+                      searchBarContainerStyle={stl.searchBarContainerStyle}
                       pickerStyle={stl.pickerStyle}
                       pickerItemTextStyle={stl.listTextViewStyle}
                       selectedLabel={this.state.selectedText}
@@ -171,7 +168,6 @@ export class AddTrabajo extends Component {
                       selectLabelTextStyle={stl.selectLabelTextStyle}
                       placeHolderTextStyle={stl.placeHolderTextStyle}
                       dropDownImageStyle={stl.dropDownImageStyle}
-                      //dropDownImage={require("./res/ic_drop_down.png")}
                       selectedValue={(index, item) =>
                         this._selectedValue(index, item)
                       }
@@ -195,17 +191,16 @@ export class AddTrabajo extends Component {
                         selectedValue={this.state.selected2}
                         onValueChange={this.onValueChange2.bind(this)}
                       >
-                        <Picker.Item label="0" value="key0" />
-                        <Picker.Item label="1" value="key1" />
-                        <Picker.Item label="2" value="key2" />
-                        <Picker.Item label="3" value="key3" />
-                        <Picker.Item label="4" value="key4" />
-                        <Picker.Item label="5" value="key5" />
-                        <Picker.Item label="6" value="key6" />
-                        <Picker.Item label="7" value="key7" />
-                        <Picker.Item label="8" value="key8" />
-                        <Picker.Item label="9" value="key9" />
-                        <Picker.Item label="10" value="key10" />
+                        <Picker.Item label="1 Pesimo" value="key1" />
+                        <Picker.Item label="2 Muy malo" value="key2" />
+                        <Picker.Item label="3 Malo" value="key3" />
+                        <Picker.Item label="4 Regular" value="key4" />
+                        <Picker.Item label="5 " value="key5" />
+                        <Picker.Item label="6 " value="key6" />
+                        <Picker.Item label="7 Bien" value="key7" />
+                        <Picker.Item label="8 Muy bien" value="key8" />
+                        <Picker.Item label="9 Sobresaliente" value="key9" />
+                        <Picker.Item label="10 Excelente" value="key10" />
                       </Picker>
                     </Item>
                   </View>
