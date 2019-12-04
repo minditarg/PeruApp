@@ -327,16 +327,39 @@ export const stl = StyleSheet.create({
     marginBottom: -30,
     padding: 0
   },
+  BotonesTipoServicio: {
+    flexDirection: "column",
+    flex: 1,
+    paddingBottom: 60,
+    paddingHorizontal: "10%",
+    alignContent: "center",
+    justifyContent: "space-around"
+  },
+  SelectCatText: {
+    textAlign: "center",
+    padding: 10,
+    justifyContent: "center",
+    alignContent: "center",
+    flex: 0.3
+  },
+  TextPregunta: {
+    textAlign: "center",
+    fontSize: 25,
+    color: "#444"
+  },
   Premium: {
-    backgroundColor: "red"
+    backgroundColor: "#24e263"
   },
   Supervisado: {
-    backgroundColor: "green"
+    backgroundColor: "#e28c24"
   },
   Standar: {
-    backgroundColor: "blue"
+    backgroundColor: "#2392e5"
   },
-
+  btnTextTipoServicio: {
+    fontWeight: "bold",
+    fontSize: 18
+  },
   selectLabelTextStyle: {
     fontFamily: "Roboto",
     color: "#000",
@@ -443,5 +466,41 @@ export const stl = StyleSheet.create({
     padding: 10,
     fontWeight: "bold",
     paddingLeft: 20
+  },
+  CardEmpresa: {
+    paddingLeft: 10,
+    paddingVertical: 5,
+    flex: 1,
+    borderRadius: 3,
+    shadowColor: "#ffff",
+    backgroundColor: "#fff",
+    marginVertical: 3,
+    borderColor: "white",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.01,
+    shadowRadius: 1.41,
+
+    elevation: 1
+  },
+  imgEmpresa: {
+    flex: 1,
+    aspectRatio: 1
+  },
+  imgEmp: {
+    height: 100,
+    width: 100
+    // aspectRatio: 1
+  },
+  tituloEmpresa: {},
+  txtEmpresa: {},
+  TelEmpresa: {},
+  DescEmpresa: {
+    margin: 5,
+    // backgroundColor: "red",
+    paddingLeft: 10,
+    flex: 3
   }
 });

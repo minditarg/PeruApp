@@ -84,6 +84,7 @@ export class CardList extends Component {
               />
             </Left>
           )}
+
           <Body style={stl.cardBody}>
             <Text style={stl.cardTitulo}>{obj.nombre}</Text>
             <Text style={stl.cardSubtitulo}>{obj.descripcion}</Text>
@@ -95,15 +96,18 @@ export class CardList extends Component {
               <Icon style={stl.iconstar} type="Ionicons" name="star-outline" />
             </View>
           </Body>
+
           <Right style={stl.cardRight}>
-            <Button
-              transparent
-              onPress={() => {
-                this.HandleEliminarBtn(obj);
-              }}
-            >
-              <Icon style={stl.iconCam} type="EvilIcons" name="trash" />
-            </Button>
+            {this.props.trash && (
+              <Button
+                transparent
+                onPress={() => {
+                  this.HandleEliminarBtn(obj);
+                }}
+              >
+                <Icon style={stl.iconCam} type="EvilIcons" name="trash" />
+              </Button>
+            )}
           </Right>
         </View>
       </TouchableOpacity>

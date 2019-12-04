@@ -161,7 +161,12 @@ class FeedServicios extends Component {
             style={stl.listaPadding}
             data={works}
             renderItem={({ item }) => (
-              <CardList navigation={this.props.navigation} Image obj={item} />
+              <CardList
+                navigation={this.props.navigation}
+                trash={false}
+                Image
+                obj={item}
+              />
             )}
             keyExtractor={item => item.id.toString()}
           />

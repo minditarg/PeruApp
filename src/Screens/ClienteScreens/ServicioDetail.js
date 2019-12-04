@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Keyboard,
+  FlatList,
   KeyboardAvoidingView
 } from "react-native";
 import { Col, Row } from "react-native-easy-grid";
@@ -18,12 +19,16 @@ import {
   Textarea,
   Input,
   Label,
+  Container,
   Icon,
   Content,
   Spinner,
   Toast
 } from "native-base";
 import { stl } from "../styles/styles";
+import { CardList } from "../../Componentes/CardList";
+
+import works from "../../../Datos/Trabajos.json";
 
 class ServicioDetail extends Component {
   constructor() {
@@ -32,100 +37,56 @@ class ServicioDetail extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
-        <SafeAreaView style={stl.containerList}>
-          <ScrollView ref="_scrollView" style={stl.scrollView}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <Content style={stl.card}>
-                <View style={stl.EmpresaDetail}>
-                  <Row>
-                    <Col>
-                      <Image
-                        source={require("../../../assets/noFoto.png")}
-                      ></Image>
-                    </Col>
-                    <Col>
-                      <Text>Nomre de la Empresa</Text>
-                      <Text>
-                        "Lorem ipsum dolor sit amet, "Lorem ipsum dolor sit
-                        amet, "Lorem ipsum dolor sit amet,
-                      </Text>
+      <Container style={stl.containerList}>
+        <Content>
+          <View stye={stl.CardEmpresa}>
+            <Row>
+              <Col style={stl.imgEmpresa}>
+                <Image
+                  style={stl.imgEmp}
+                  source={require("../../../assets/noFoto.png")}
+                />
+              </Col>
+              <Col style={stl.DescEmpresa}>
+                <Text style={stl.tituloEmpresa}>Nombresadf Empresa</Text>
+                <Text style={stl.txtEmpresa}>
+                  descripcion de la empresa larga larga larga mas y mas y
+                  todavia mas larga que lo anterior
+                </Text>
+                <Text style={stl.TelEmpresa}>2215603558 </Text>
+              </Col>
+            </Row>
+          </View>
 
-                      <View>
-                        <Text> 2215603558 </Text>
-                      </View>
-                    </Col>
-                  </Row>
-                </View>
-                <View style={stl.EmpresaDetail}>
-                  <Row>
-                    <Col>
-                      <Text>Nomre del Servicio</Text>
-                      <Text>"Descripcion del servicio,</Text>
-                      <View style={stl.puntaje}>
-                        <Icon
-                          style={stl.iconstar}
-                          type="Ionicons"
-                          name="star"
-                        />
-                        <Icon
-                          style={stl.iconstar}
-                          type="Ionicons"
-                          name="star"
-                        />
-                        <Icon
-                          style={stl.iconstar}
-                          type="Ionicons"
-                          name="star-half"
-                        />
-                        <Icon
-                          style={stl.iconstar}
-                          type="Ionicons"
-                          name="star-outline"
-                        />
-                        <Icon
-                          style={stl.iconstar}
-                          type="Ionicons"
-                          name="star-outline"
-                        />
-                      </View>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Image
-                        source={require("../../../assets/noFoto.png")}
-                      ></Image>
-                      <Image
-                        source={require("../../../assets/noFoto.png")}
-                      ></Image>
-                      <Image
-                        source={require("../../../assets/noFoto.png")}
-                      ></Image>
-                      <Image
-                        source={require("../../../assets/noFoto.png")}
-                      ></Image>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Button
-                        onPress={() =>
-                          this.props.navigation.navigate("EmpresaDetail")
-                        }
-                        style={[stl.btnSelect, stl.Premium]}
-                        block
-                      >
-                        <Text style={stl.btnText}>PREMIUM</Text>
-                      </Button>
-                    </Col>
-                  </Row>
-                </View>
-              </Content>
-            </TouchableWithoutFeedback>
-          </ScrollView>
-        </SafeAreaView>
-      </KeyboardAvoidingView>
+          <Row>
+            <Col>
+              <Text style={stl.btnText}>Nombre Servicio</Text>
+              <Text style={stl.btnText}>
+                descripcion de la empresa larga larga larga mas y mas y todavia
+                mas larga que lo anterior
+              </Text>
+              <Text style={stl.btnText}>Estrellitas </Text>
+            </Col>
+          </Row>
+          <Row>
+            <ScrollView horizontal>
+              <Image source={require("../../../assets/noFoto.png")} />
+              <Image source={require("../../../assets/noFoto.png")} />
+              <Image source={require("../../../assets/noFoto.png")} />
+              <Image source={require("../../../assets/noFoto.png")} />
+            </ScrollView>
+          </Row>
+          <Row>
+            <Button
+              style={[stl.btnSelect, stl.primary]}
+              block
+              onPress={() => this.Elegir("Cliente")}
+            >
+              <Text style={stl.btnText}>Quiero contratar un servicio</Text>
+            </Button>
+          </Row>
+        </Content>
+      </Container>
     );
   }
 }

@@ -96,15 +96,15 @@ const PerfilNav = createStackNavigator(
   }
 );
 
-/* BottomTabs Empresa  */
+/* BottomTabs Cliente  */
 const ClientTabNavigator = createBottomTabNavigator(
   {
-    ClientTrabajos: ClienteTrabajos,
-    ClientServicios: ClienteServicios,
+    Trabajos: ClienteTrabajos,
+    Servicios: ClienteServicios,
     Perfil: PerfilNav
   },
   {
-    initialRouteName: "ClientServicios",
+    initialRouteName: "Servicios",
     tabBarOptions: {
       showLabel: false,
       activeTintColor: "#fff",

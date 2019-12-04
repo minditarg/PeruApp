@@ -34,7 +34,7 @@ class TrabajosHechos extends Component {
             renderItem={({ item }) => (
               <CardList navigation={this.props.navigation} Image obj={item} />
             )}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={item => "#" + item.id.toString()}
           />
         </Content>
       </Container>
