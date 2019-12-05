@@ -7,40 +7,33 @@ import { stl } from "../Screens/styles/styles";
 import * as trabajosService from "../Services/trabajos";
 import { connect } from "react-redux";
 
-export class Trabajos extends Component {
+ class Trabajos extends Component {
   constructor() {
     super();
-    // trabajosService.listadoPorProveedor().then(resp => {
-    //   // this.state = {
-    //   //   trabajos: resp
-    //   // }; 
-    //   console.log(resp, "ressss");
-    // })
-    
+    this.state = { listo: false }
+    trabajosService.listadoPorProveedor();
   }
 
-  // componentDidUpdate() {
-  //   this.state = {
-  //     trabajos: trabajosService.listadoPorProveedor()
-  //   };
-  //   console.log(this.state.trabajos,"seeee");
-  // }
 
+  componentDidMount() {
 
+  }
   render() {
     return (
       <Container style={stl.containerList}>
         <Content>
-          <FlatList
-            style={stl.listaPadding}
-            data={this.props.trabajosss}
-            renderItem={({ item }) => (
-              <ListTrabajo navigation={this.props.navigation} Image obj={item} />
-            )}
-            keyExtractor={item => item.id.toString()}
 
-        
-          />
+
+            <FlatList
+              style={stl.listaPadding}
+              data={this.props.trabajos}
+              renderItem={({ item }) => (
+                <ListTrabajo navigation={this.props.navigation} Image obj={item} />
+              )}
+              keyExtractor={item => item.id.toString()}
+            />
+
+
         </Content>
         <Button
           onPress={() => this.props.navigation.navigate("AddTrabajo")}
@@ -53,9 +46,11 @@ export class Trabajos extends Component {
     );
   }
 }
+
 const mapStateToProps = state => {
-    return {
-      trabajosss: trabajosService.getListadoPorProveedor()
-    };
+  return {
+    trabajos: trabajosService.getListadoPorProveedor().trabajos
+  };
 };
 export default connect(mapStateToProps)(Trabajos);
+

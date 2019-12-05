@@ -11,7 +11,7 @@ import { UpdateServicio } from "./UpdateServicio";
 import { AddTrabajo } from "./AddTrabajo";
 import { Empresa } from "./Empresa";
 import Servicios from "./Servicios";
-import { Trabajos } from "./Trabajos";
+import  Trabajos  from "./Trabajos";
 import DetalleTrabajo from "./ClienteScreens/DetalleTrabajo";
 import EmpresaDetail from "./ClienteScreens/EmpresaDetail";
 import FeedServicios from "./ClienteScreens/FeedServicios";

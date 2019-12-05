@@ -9,16 +9,16 @@ class Servicios extends Component {
   constructor() {
     super();
     //this.componentDidUpdate();
-    this.state = {
-      servicios: session.usuarioLogueado().Proveedor.servicios
-    };
+    // this.state = {
+    //   servicios: session.usuarioLogueado().Proveedor.servicios
+    // };
   }
 
-  componentDidMount() {
-    this.state = {
-      servicios: session.usuarioLogueado().Proveedor.servicios
-    };
-  }
+  // componentDidMount() {
+  //   this.state = {
+  //     servicios: session.usuarioLogueado().Proveedor.servicios
+  //   };
+  // }
 
   render() {
     return (

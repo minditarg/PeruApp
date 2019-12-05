@@ -1,16 +1,15 @@
 import * as actionTypes from './actionTypes';
 
 export const initialState = {
-	trabajos: {
-		
-	},
+	trabajos: {},
 };
 
 export const reducer = (state = initialState, action) => {
-	switch (action.type) {
+	switch (action.type) { 
 		case actionTypes.ACTUALIZAR:
 			return {
-				...action.trabajos,
+				...state,
+				trabajos: action.data,
 			};
 		default:
 			return state;

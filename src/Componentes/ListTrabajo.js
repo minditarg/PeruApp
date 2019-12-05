@@ -14,7 +14,6 @@ export class ListTrabajo extends Component {
   
   render() {
     let obj = this.props.obj;
-    console.log(obj, "ListTrabajoListTrabajoListTrabajoListTrabajoListTrabajoListTrabajo");
     return (
       <TouchableOpacity
         

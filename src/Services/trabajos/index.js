@@ -9,7 +9,7 @@ export const listadoPorProveedor = () => {
     let idProveedor = sessionService.usuarioLogueado().Proveedor.id; 
     return api.listadoPorProveedor(idProveedor).then(response => {
         if (response.statusType == "success") {
-            store.dispatch(actionCreators.actualizar({ trabajos: response.data}));
+            store.dispatch(actionCreators.actualizar(response.data));
         }
         return response;
     }).catch(exception => {
@@ -20,7 +20,7 @@ export const listadoPorProveedor = () => {
 
 
 export const getListadoPorProveedor = () => {
-    return selectors.get().trabajos;
+    return selectors.get();
 }
 
 export const crear = (clienteId,servicioId,puntajeDelProveedor,descripcionDelProveedor) => {

@@ -6,7 +6,6 @@ import { initialState } from "./reducer";
 import apiConfig from "../api/config";
 import { AsyncStorage } from 'react-native';
 
-import * as trabajosService from '../trabajos';
 
 const SESSION_TIMEOUT_THRESHOLD = 300; // Will refresh the access token 5 minutes before it expires
 
@@ -58,7 +57,6 @@ const onRequestSuccess = response => {
       })
     );
     saveTokenEnStore(response.data.tokens);
-    trabajosService.listadoPorProveedor();
   }
   //setSessionTimeout(tokens.access.expiresIn);
   return response;

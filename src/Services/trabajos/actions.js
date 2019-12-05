@@ -1,6 +1,10 @@
 import * as actionTypes from './actionTypes';
 
-export const actualizar = trabajos => ({
+export const actualizar = trabajos =>  ({
 	type: actionTypes.ACTUALIZAR,
-	trabajos,
+	data: trabajos
 });
+
+export const loading = () => {
+    return {type: actionTypes.FETCHING_DATA}
+}
