@@ -172,6 +172,25 @@ export const stl = StyleSheet.create({
 
     elevation: 1
   },
+
+  cardFluid: {
+    paddingLeft: 10,
+    // paddingVertical: 5,
+    // flex: 1,
+    borderRadius: 3,
+    shadowColor: "#ffff",
+    backgroundColor: "#fff",
+    marginVertical: 3,
+    borderColor: "white",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.01,
+    shadowRadius: 1.41,
+
+    elevation: 1
+  },
   cardHor: {
     flexDirection: "row"
   },
@@ -468,22 +487,8 @@ export const stl = StyleSheet.create({
     paddingLeft: 20
   },
   CardEmpresa: {
-    paddingLeft: 10,
-    paddingVertical: 5,
-    flex: 1,
-    borderRadius: 3,
-    shadowColor: "#ffff",
-    backgroundColor: "#fff",
-    marginVertical: 3,
-    borderColor: "white",
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.01,
-    shadowRadius: 1.41,
-
-    elevation: 1
+    borderRadius: 25,
+    backgroundColor: "red"
   },
   imgEmpresa: {
     flex: 1,
@@ -491,16 +496,34 @@ export const stl = StyleSheet.create({
   },
   imgEmp: {
     height: 100,
-    width: 100
-    // aspectRatio: 1
+    width: 100,
+    margin: 5
   },
   tituloEmpresa: {},
-  txtEmpresa: {},
-  TelEmpresa: {},
+  txtEmpresa: { padding: 15 },
+  TelEmpresa: {
+    fontWeight: "bold",
+    color: darkBlue,
+    textAlign: "right",
+    paddingHorizontal: 15,
+    paddingVertical: 7
+  },
   DescEmpresa: {
     margin: 5,
-    // backgroundColor: "red",
     paddingLeft: 10,
     flex: 3
+  },
+  modal: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,.8)"
+  },
+
+  imgModal: {
+    alignSelf: "center"
   }
 });
