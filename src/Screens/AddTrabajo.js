@@ -15,6 +15,7 @@ import {
   Picker,
   Icon,
   Form,
+  Toast,
   Item,
   Input,
   Textarea,
@@ -33,10 +34,11 @@ import { ThemeColors } from "react-navigation";
 export class AddTrabajo extends Component {
   constructor() {
     super();
-    this.state = {
+
+    this.initialState = {
       submitted: false,
       isLoading: false,
-      puntaje:0,
+      puntaje: 0,
       descripcion: "",
       servicioId: undefined,
       listadoServicios: sessionService.usuarioLogueado().Proveedor.servicios,
@@ -44,6 +46,7 @@ export class AddTrabajo extends Component {
       clienteId: undefined,
       clienteSeleccionadoText: ""
     };
+    this.state = this.initialState;
   }
   componentDidMount() {
     clientesService.listado().then(response => {
@@ -75,25 +78,22 @@ export class AddTrabajo extends Component {
           this.setState({
             isLoading: false
           });
-          Toast.show({
-            text: response.message,
-            buttonText: "OK",
-            position: "top",
-            type: "success"
-          });
-          sessionService.actualizarUsuario().then(response => {
-            this.setState({
-              submitted: false,
-              isLoading: false,
-              puntaje:0,
-              descripcion: "",
-              servicioId: undefined,
-              listadoServicios: sessionService.usuarioLogueado().Proveedor.servicios,
-              listadoClientes: [],
-              clienteId: undefined,
-              clienteSeleccionadoText: ""
+          // Toast.show({
+          //   text: response.message,
+          //   buttonText: "OK",
+          //   position: "top",
+          //   type: "success"
+          // });
+          trabajosService.listadoPorProveedor().then(response => {
+            this.state = this.initialState;
+            this.props.navigation.navigate("Trabajos", {
+              toast: {
+                text: response.message,
+                buttonText: "OK",
+                position: "top",
+                type: "success"
+              }
             });
-            this.props.navigation.navigate("Trabajos");
           });
         } else {
           this.setState({ isLoading: false, error: response.message });
@@ -140,7 +140,7 @@ export class AddTrabajo extends Component {
                     <Item
                       picker
                       style={stl.picker}
-                      error={this.state.submitted && !this.state.email}
+                      error={this.state.submitted && !this.state.servicioId}
                     >
                       <Picker
                         mode="dropdown"
@@ -195,8 +195,9 @@ export class AddTrabajo extends Component {
                       selectLabelTextStyle={stl.selectLabelTextStyle}
                       placeHolderTextStyle={stl.placeHolderTextStyle}
                       dropDownImageStyle={stl.dropDownImageStyle}
-                      selectedValue={(index, seleccionado) => { 
-                        this.setState({ clienteSeleccionadoText: seleccionado.name, clienteId: seleccionado.id }) }
+                      selectedValue={(index, seleccionado) => {
+                        this.setState({ clienteSeleccionadoText: seleccionado.name, clienteId: seleccionado.id })
+                      }
                       }
                     />
                   </View>
@@ -207,7 +208,7 @@ export class AddTrabajo extends Component {
                     <Item
                       picker
                       style={stl.picker}
-                      error={this.state.submitted && !this.state.email}
+                      error={this.state.submitted && !this.state.puntaje}
                     >
                       <Picker
                         mode="dropdown"
@@ -216,11 +217,11 @@ export class AddTrabajo extends Component {
                         style={[stl.textBlack, stl.pickerInput]}
                         name="puntaje"
                         selectedValue={this.state.puntaje}
-                        onValueChange={( puntaje) =>
+                        onValueChange={(puntaje) =>
                           this.setState({ puntaje })
                         }
                       >
-                         <Picker.Item label="Por favor, seleccione el puntaje" value="0" />
+                        <Picker.Item label="Por favor, seleccione el puntaje" value="0" />
                         <Picker.Item label="1 Muy malo" value="1" />
                         <Picker.Item label="2 Malo" value="2" />
                         <Picker.Item label="3 Regular" value="3" />
@@ -229,6 +230,7 @@ export class AddTrabajo extends Component {
                       </Picker>
                     </Item>
                   </View>
+                  <Text style={stl.txtError}> {this.state.error}</Text>
                   <View style={stl.btnsRow}>
                     <Button
                       style={stl.btn}
