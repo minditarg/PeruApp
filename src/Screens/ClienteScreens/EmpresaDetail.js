@@ -10,7 +10,7 @@ import {
   FlatList,
   KeyboardAvoidingView
 } from "react-native";
-import { Col, Row } from "react-native-easy-grid";
+import { Col, Row, Grid } from "react-native-easy-grid";
 import {
   Button,
   Text,
@@ -35,30 +35,78 @@ class EmpresaDetail extends Component {
     super();
   }
 
+  makeCall = () => {
+    let phoneNumber = "";
+
+    if (Platform.OS === "android") {
+      phoneNumber = "tel:${1234567890}";
+    } else {
+      phoneNumber = "telprompt:${1234567890}";
+    }
+
+    Linking.openURL(phoneNumber);
+  };
+  openModal = () => {
+    this.setState({ modal: true });
+  };
+  closeModal = () => {
+    this.setState({ modal: false });
+  };
+  sendMail = () => {
+    Linking.openURL(
+      "mailto:support@example.com?subject=SendMail&body=Description"
+    );
+  };
+
+  sendWhatsapp = () => {
+    Linking.openURL(
+      "whatsapp://send?text=" + "soregato" + "&phone=91" + "123456789"
+    );
+  };
   render() {
     return (
       <Container style={stl.containerList}>
         <Content>
-          <View stye={stl.CardEmpresa}>
-            <Row>
-              <Col>
-                <Image source={require("../../../assets/noFoto.png")} />
-              </Col>
-              <Col>
-                <Text style={stl.btnText}>Nombre Empresa</Text>
-                <Text style={stl.btnText}>
-                  descripcion de la empresa larga larga larga mas y mas y
-                  todavia mas larga que lo anterior
-                </Text>
-                <Text style={stl.btnText}>2215603558 </Text>
-              </Col>
-            </Row>
+          <View style={stl.cardFluid}>
+            <View style={stl.vista}>
+              <Grid>
+                <Row>
+                  <Text style={stl.tituloSeccionCard}>Nombresadf Empresa</Text>
+                </Row>
+                <Row>
+                  <Col style={[stl.imgEmpresa, { width: "30%" }]}>
+                    <Image
+                      style={stl.imgEmp}
+                      source={require("../../../assets/noFoto.png")}
+                    />
+                  </Col>
+                  <Col style={{ width: "70%" }}>
+                    <Text style={stl.txtEmpresa}>
+                      descripcion de la empresa larga larga larga mas y mas y
+                      todavia mas larga que lo anterior
+                    </Text>
+                  </Col>
+                </Row>
+                <Row style={stl.MarginTop15}>
+                  <Col>
+                    <TouchableOpacity onPress={this.sendMail}>
+                      <Text style={stl.MailEmpresa}>mail@empresa.com </Text>
+                    </TouchableOpacity>
+                  </Col>
+                  <Col>
+                    <TouchableOpacity onPress={this.sendWhatsapp}>
+                      <Text style={stl.TelEmpresa}>2215603558 </Text>
+                    </TouchableOpacity>
+                  </Col>
+                </Row>
+              </Grid>
+            </View>
           </View>
-
           <View style={stl.labelSeccion}>
             <Text style={stl.tituloSeccion}>Servicios ofrecidos</Text>
           </View>
           <FlatList
+            style={stl.listaPadding}
             data={works}
             renderItem={({ item }) => (
               <CardList navigation={this.props.navigation} Image obj={item} />
@@ -66,6 +114,16 @@ class EmpresaDetail extends Component {
             keyExtractor={item => item.id.toString()}
           />
         </Content>
+        <Button
+          onPress={this.makeCall}
+          style={[stl.btnRounded, stl.primary]}
+          block
+        >
+          <Image
+            source={require("../../../assets/whapp.png")}
+            style={stl.btnFloatImg}
+          />
+        </Button>
       </Container>
     );
   }

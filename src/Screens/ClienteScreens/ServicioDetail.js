@@ -77,31 +77,100 @@ class ServicioDetail extends Component {
     return (
       <Container style={stl.containerList}>
         <Content>
-          <View style={stl.labelSeccion}>
-            <Text style={stl.tituloSeccion}> Servicio</Text>
+          <View style={stl.cardFluid}>
+            <View style={stl.vista}>
+              <Grid>
+                <Row>
+                  <Text style={stl.tituloSeccionCard}>Nombresadf Empresa</Text>
+                </Row>
+                <Row>
+                  <Col style={[stl.imgEmpresa, { width: "30%" }]}>
+                    <Image
+                      style={stl.imgEmp}
+                      source={require("../../../assets/noFoto.png")}
+                    />
+                  </Col>
+                  <Col style={{ width: "70%" }}>
+                    <Text style={stl.txtEmpresa}>
+                      descripcion de la empresa larga larga larga mas y mas y
+                      todavia mas larga que lo anterior
+                    </Text>
+                  </Col>
+                </Row>
+                <Row style={stl.MarginTop15}>
+                  <Col>
+                    <TouchableOpacity onPress={this.sendMail}>
+                      <Text style={stl.MailEmpresa}>mail@empresa.com </Text>
+                    </TouchableOpacity>
+                  </Col>
+                  <Col>
+                    <TouchableOpacity onPress={this.sendWhatsapp}>
+                      <Text style={stl.TelEmpresa}>2215603558 </Text>
+                    </TouchableOpacity>
+                  </Col>
+                </Row>
+              </Grid>
+            </View>
           </View>
           <View style={stl.cardFluid}>
             <View style={stl.vista}>
               <Grid>
                 <Row>
                   <Col>
-                    <Text style={stl.tituloSeccion}>Titulo del servicio</Text>
+                    <Text style={stl.tituloSeccionCard}>
+                      Titulo del servicio
+                    </Text>
                     <Text style={stl.txtEmpresa}>
                       descripcion del servicio larga larga larga mas y mas y
                       todavia mas larga que lo anterior
                     </Text>
-                    <TouchableOpacity onPress={this.sendMail}>
-                      <Text style={stl.TelEmpresa}>mail@empresa.com </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.sendWhatsapp}>
-                      <Text style={stl.TelEmpresa}>2215603558 </Text>
-                    </TouchableOpacity>
                   </Col>
                 </Row>
-                <View style={stl.labelSeccion}>
-                  <Text style={stl.tituloSeccion}> Fotos del servicio</Text>
-                </View>
-                <Row>
+
+                <Text style={[stl.tituloSeccionCard, stl.MarginTop15]}>
+                  Fotos del servicio
+                </Text>
+
+                <Row style={stl.MarginTop15}>
+                  <ScrollView horizontal>
+                    <TouchableOpacity onPress={this.openModal}>
+                      <Image
+                        style={stl.imgEmp}
+                        source={require("../../../assets/noFoto.png")}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.openModal}>
+                      <Image
+                        style={stl.imgEmp}
+                        source={require("../../../assets/noFoto.png")}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.openModal}>
+                      <Image
+                        style={stl.imgEmp}
+                        source={require("../../../assets/noFoto.png")}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.openModal}>
+                      <Image
+                        style={stl.imgEmp}
+                        source={require("../../../assets/noFoto.png")}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.openModal}>
+                      <Image
+                        style={stl.imgEmp}
+                        source={require("../../../assets/noFoto.png")}
+                      />
+                    </TouchableOpacity>
+                  </ScrollView>
+                </Row>
+
+                <Text style={[stl.tituloSeccionCard, stl.MarginTop15]}>
+                  Videos del servicio
+                </Text>
+
+                <Row style={stl.MarginTop15}>
                   <ScrollView horizontal>
                     <TouchableOpacity onPress={this.openModal}>
                       <Image
@@ -138,46 +207,25 @@ class ServicioDetail extends Component {
               </Grid>
             </View>
           </View>
-          <View style={stl.labelSeccion}>
-            <Text style={stl.tituloSeccion}> Empresa</Text>
-          </View>
-          <View style={stl.cardFluid}>
-            <View style={stl.vista}>
-              <Grid>
-                <Row>
-                  <Col style={stl.imgEmpresa}>
-                    <Image
-                      style={stl.imgEmp}
-                      source={require("../../../assets/noFoto.png")}
-                    />
-                  </Col>
-                  <Col style={stl.DescEmpresa}>
-                    <Text style={stl.tituloEmpresa}>Nombresadf Empresa</Text>
-                    <Text style={stl.txtEmpresa}>
-                      descripcion de la empresa larga larga larga mas y mas y
-                      todavia mas larga que lo anterior
-                    </Text>
-
-                    <TouchableOpacity onPress={this.makeCall}>
-                      <Text style={stl.TelEmpresa}>2215603558 </Text>
-                    </TouchableOpacity>
-                  </Col>
-                </Row>
-                <Row>
-                  <Button
-                    style={[stl.btn, stl.primary]}
-                    onPress={() => this.logout()}
-                  >
-                    <Text style={stl.btnText}>
-                      Otros servicios que ofrecemos
-                    </Text>
-                  </Button>
-                </Row>
-              </Grid>
-            </View>
-          </View>
+          <Row style={{ justifyContent: "center" }}>
+            <Button
+              style={[stl.btn, stl.primary]}
+              onPress={() => this.logout()}
+            >
+              <Text style={stl.btnText}>Otros servicios que ofrecemos</Text>
+            </Button>
+          </Row>
         </Content>
-
+        <Button
+          onPress={this.makeCall}
+          style={[stl.btnRounded, stl.primary]}
+          block
+        >
+          <Image
+            source={require("../../../assets/whapp.png")}
+            style={stl.btnFloatImg}
+          />
+        </Button>
         {this.state.modal && (
           <TouchableOpacity style={stl.modal} onPress={this.closeModal}>
             <View>

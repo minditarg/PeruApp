@@ -25,7 +25,7 @@ export const stl = StyleSheet.create({
     height: 80
   },
   vista: {
-    paddingTop: 30,
+    paddingTop: 10,
     paddingBottom: 30
   },
   btn: {
@@ -486,13 +486,19 @@ export const stl = StyleSheet.create({
     fontWeight: "bold",
     paddingLeft: 20
   },
+  tituloSeccionCard: {
+    paddingHorizontal: 10,
+    paddingVertical: 0,
+    fontWeight: "bold"
+  },
   CardEmpresa: {
     borderRadius: 25,
     backgroundColor: "red"
   },
   imgEmpresa: {
     flex: 1,
-    aspectRatio: 1
+    aspectRatio: 1,
+    paddingTop: 10
   },
   imgEmp: {
     height: 100,
@@ -500,7 +506,10 @@ export const stl = StyleSheet.create({
     margin: 5
   },
   tituloEmpresa: {},
-  txtEmpresa: { padding: 15 },
+  MarginTop15: {
+    marginTop: 15
+  },
+  txtEmpresa: { paddingHorizontal: 15, paddingTop: 15 },
   TelEmpresa: {
     fontWeight: "bold",
     color: darkBlue,
@@ -508,8 +517,22 @@ export const stl = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 7
   },
+  btnFloatImg: {
+    width: 60,
+    height: 60
+  },
+  MailEmpresa: {
+    fontWeight: "bold",
+    color: darkBlue,
+    paddingHorizontal: 15,
+    paddingVertical: 7
+  },
   DescEmpresa: {
     margin: 5,
+    paddingLeft: 10,
+    flex: 3
+  },
+  DescEmpresaCard: {
     paddingLeft: 10,
     flex: 3
   },
