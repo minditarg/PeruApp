@@ -46,7 +46,7 @@ export class UpdateServicio extends Component {
       descripcion: "",
       foto: [],
       categoria: undefined,
-      subcategoria: undefined
+      subcategoria: ""
     };
     servicioService.listadoCategorias().then(categorias => {
       this.setState({
@@ -131,7 +131,7 @@ export class UpdateServicio extends Component {
             this.props.navigation.push("Servicios");
           });
         } else {
-          this.setState({ isLoading: false, error: response.message });
+          this.setState({ isLoading: false, error: `${response.message}: ${response.error}`});
           Toast.show({
             text: response.message,
             buttonText: "OK",
@@ -188,7 +188,7 @@ export class UpdateServicio extends Component {
     let subcategoriasItems = this.state.subcategorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
-    subcategoriasItems.unshift(<Picker.Item label="Seleccione subcategoria" value="null" />);
+    subcategoriasItems.unshift(<Picker.Item label="Seleccione subcategoria" value="" />);
 
     let fotos = this.state.foto.map((s, i) => {
       let arrayToOrder = this.state.foto;
@@ -288,7 +288,7 @@ export class UpdateServicio extends Component {
                     />
                   </Item>
                   {this.state.submitted && !this.state.nombre && (
-                    <Text style={stl.txtError}> El nombre es requerido</Text>
+                    <Text style={stl.txtError}> El título es requerido</Text>
                   )}
                   <View>
                     <Text style={[stl.textBlack, stl.pickerlbl]}>Categoría</Text>
@@ -310,6 +310,9 @@ export class UpdateServicio extends Component {
                         {categoriasItems}
                       </Picker>
                     </Item>
+                    {this.state.submitted && !this.state.categoria && (
+                    <Text style={stl.txtError}> La categoría es requerida</Text>
+                  )}
                   </View>
                   <View>
                     <Text style={[stl.textBlack, stl.pickerlbl]}>
@@ -334,6 +337,9 @@ export class UpdateServicio extends Component {
                         {subcategoriasItems}
                       </Picker>
                     </Item>
+                    {this.state.submitted && !this.state.subcategoria && (
+                    <Text style={stl.txtError}> La subcategoría es requerida</Text>
+                  )}
                   </View>
                   <View style={stl.areaText}>
                     <Label style={stl.textBlack}>Descripción</Label>

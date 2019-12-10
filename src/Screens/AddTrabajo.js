@@ -38,7 +38,7 @@ export class AddTrabajo extends Component {
     this.initialState = {
       submitted: false,
       isLoading: false,
-      puntaje: 0,
+      puntaje: "",
       descripcion: "",
       servicioId: undefined,
       listadoServicios: sessionService.usuarioLogueado().Proveedor.servicios,
@@ -96,7 +96,7 @@ export class AddTrabajo extends Component {
             });
           });
         } else {
-          this.setState({ isLoading: false, error: response.message });
+          this.setState({ isLoading: false, error: `${response.message}: ${response.error}`});
           Toast.show({
             text: response.message,
             buttonText: "OK",
@@ -120,7 +120,7 @@ export class AddTrabajo extends Component {
 
 
   render() {
-    let serviciosItems = this.state.listadoServicios.map((s, i) => {
+    serviciosItems = this.state.listadoServicios.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
     serviciosItems.unshift(<Picker.Item label="Seleccione un servicio" value="null" />);
@@ -154,6 +154,9 @@ export class AddTrabajo extends Component {
                         {serviciosItems}
                       </Picker>
                     </Item>
+                    {this.state.submitted && !this.state.servicioId && (
+                    <Text style={stl.txtError}> El servicio es requerido</Text>
+                  )}
                   </View>
                   <View style={stl.areaText}>
                     <Label style={stl.textBlack}>Descripción del trabajo</Label>
@@ -200,6 +203,9 @@ export class AddTrabajo extends Component {
                       }
                       }
                     />
+                     {this.state.submitted && !this.state.clienteId && (
+                    <Text style={stl.txtError}> El cliente es requerido</Text>
+                  )}
                   </View>
                   <View>
                     <Text style={[stl.textBlack, stl.pickerlbl]}>
@@ -229,7 +235,11 @@ export class AddTrabajo extends Component {
                         <Picker.Item label="5 Excelente " value="5" />
                       </Picker>
                     </Item>
+                    {this.state.submitted && !this.state.puntaje && (
+                    <Text style={stl.txtError}> El puntaje es requerido</Text>
+                  )}
                   </View>
+
                   <Text style={stl.txtError}> {this.state.error}</Text>
                   <View style={stl.btnsRow}>
                     <Button
