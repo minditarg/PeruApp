@@ -46,7 +46,7 @@ export class AddServicio extends Component {
       foto: [],
       visible: false,
       categoria: undefined,
-      subcategoria: undefined
+      subcategoria: ""
     };
     this.state = this.initialState;
   }
@@ -108,20 +108,11 @@ export class AddServicio extends Component {
             type: "success"
           });
           sessionService.actualizarUsuario().then(response => {
-            this.setState({
-              submitted: false,
-              isLoading: false,
-              nombre: "",
-              descripcion: "",
-              foto: [],
-              visible: false,
-              categoria: undefined,
-              subcategoria: undefined
-            });
+            this.state = this.initialState;
             this.props.navigation.navigate("Servicios");
           });
         } else {
-          this.setState({ isLoading: false, error: response.message });
+          this.setState({ isLoading: false, error: `${response.message}: ${response.error}`});
           Toast.show({
             text: response.message,
             buttonText: "OK",
@@ -182,7 +173,7 @@ export class AddServicio extends Component {
     let subcategoriasItems = this.state.subcategorias.map((s, i) => {
       return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
     });
-    subcategoriasItems.unshift(<Picker.Item label="Seleccione subcategoria" value="null" />);
+    //subcategoriasItems.unshift(<Picker.Item label="Seleccione subcategoria" value="null" />);
 
     let fotos = this.state.foto.map((s, i) => {
       let arrayToOrder = this.state.foto;
@@ -283,7 +274,7 @@ export class AddServicio extends Component {
                     />
                   </Item>
                   {this.state.submitted && !this.state.nombre && (
-                    <Text style={stl.txtError}> El nombre es requerido</Text>
+                    <Text style={stl.txtError}> El título es requerido</Text>
                   )}
                   <View>
                     <Text style={[stl.textBlack, stl.pickerlbl]}>
@@ -292,7 +283,7 @@ export class AddServicio extends Component {
                     <Item
                       picker
                       style={stl.picker}
-                      error={this.state.submitted && !this.state.email}
+                      error={this.state.submitted && !this.state.categoria}
                     >
                       <Picker
                         mode="dropdown"
@@ -307,20 +298,23 @@ export class AddServicio extends Component {
                         {categoriasItems}
                       </Picker>
                     </Item>
+                    {this.state.submitted && !this.state.categoria && (
+                    <Text style={stl.txtError}> La categoría es requerida</Text>
+                  )}
                   </View>
                   <View>
                     <Text style={[stl.textBlack, stl.pickerlbl]}>
-                      SubCategoría
+                      Subcategoría
                     </Text>
 
                     <Item
                       picker
                       style={[stl.picker, stl.itmPicker]}
-                      error={this.state.submitted && !this.state.email}
+                      error={this.state.submitted && !this.state.subcategoria}
                     >
                       <Picker
                         mode="dropdown"
-                        placeholder="SubCategoria"
+                        placeholder="Subcategoria"
                         iosIcon={<Icon name="arrow-down" />}
                         style={[stl.textBlack, stl.pickerInput]}
                         name="subcategoria"
@@ -332,6 +326,9 @@ export class AddServicio extends Component {
                         {subcategoriasItems}
                       </Picker>
                     </Item>
+                    {this.state.submitted && !this.state.subcategoria && (
+                    <Text style={stl.txtError}> La subcategoría es requerida</Text>
+                  )}
                   </View>
                   <View style={stl.areaText}>
                     <Label style={stl.textBlack}>Descripción</Label>
@@ -341,7 +338,7 @@ export class AddServicio extends Component {
                       rowSpan={5}
                       name="descripcion"
                       bordered
-                      placeholder="Descripcion"
+                      placeholder="Descripción"
                       value={this.state.descripcion}
                       onChangeText={descripcion => {
                         this.setState({ descripcion });
