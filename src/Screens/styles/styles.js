@@ -548,5 +548,8 @@ export const stl = StyleSheet.create({
 
   imgModal: {
     alignSelf: "center"
+  },
+  pointEnCard: {
+    paddingLeft: 10
   }
 });

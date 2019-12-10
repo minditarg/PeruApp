@@ -74,6 +74,27 @@ class EmpresaDetail extends Component {
                   <Text style={stl.tituloSeccionCard}>Nombresadf Empresa</Text>
                 </Row>
                 <Row>
+                  <View style={[stl.puntaje, stl.pointEnCard]}>
+                    <Icon style={stl.iconstar} type="Ionicons" name="star" />
+                    <Icon style={stl.iconstar} type="Ionicons" name="star" />
+                    <Icon
+                      style={stl.iconstar}
+                      type="Ionicons"
+                      name="star-half"
+                    />
+                    <Icon
+                      style={stl.iconstar}
+                      type="Ionicons"
+                      name="star-outline"
+                    />
+                    <Icon
+                      style={stl.iconstar}
+                      type="Ionicons"
+                      name="star-outline"
+                    />
+                  </View>
+                </Row>
+                <Row>
                   <Col style={[stl.imgEmpresa, { width: "30%" }]}>
                     <Image
                       style={stl.imgEmp}
