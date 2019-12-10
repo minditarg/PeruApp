@@ -39,6 +39,10 @@ class ClientePerfil extends Component {
   }
 
   render() {
+    let classesBtn = [stl.btn, stl.primary];
+    if (!this.state.hasChange) {
+      classesBtn.push(stl.disabled);
+    }
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         <SafeAreaView style={stl.containerList}>
@@ -131,6 +135,7 @@ class ClientePerfil extends Component {
 
                     <Button
                       block
+                      style={classesBtn}
                       disabled={!this.state.hasChange}
                       onPress={() => this.HandleGuardarBtn()}
                     >
