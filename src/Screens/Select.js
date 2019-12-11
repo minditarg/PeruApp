@@ -14,8 +14,8 @@ class Select extends Component {
 
   Elegir(tipo) {
     session.elegirTipoApp(tipo);
-    this.props.navigation.navigate("Cliente");
-    // this.props.navigation.navigate("Video");
+    // this.props.navigation.navigate("Cliente");
+    this.props.navigation.navigate("Video");
   }
 
   render() {

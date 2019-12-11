@@ -9,6 +9,7 @@ import {
   Left,
   Right,
   Body,
+  Text,
   Thumbnail,
   View
 } from "native-base";
@@ -54,12 +55,22 @@ class NavHeader extends React.Component {
             </Title>
           </Body>
           <Right>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.navigate("Empresa")}
-            >
-              {/* <Thumbnail style={stl.btnAvatar} source={icon} />*/}
-            </Button>
+            {this.props.usuario && (
+              <Button
+                transparent
+                onPress={() => this.props.navigation.navigate("Empresa")}
+              >
+                <Thumbnail style={stl.btnAvatar} source={icon} />
+              </Button>
+            )}
+            {!this.props.usuario && (
+              <Button
+                style={stl.primary}
+                onPress={() => this.props.navigation.navigate("Login")}
+              >
+                <Text>Login</Text>
+              </Button>
+            )}
           </Right>
         </Header>
       </ImageBackground>
@@ -69,7 +80,8 @@ class NavHeader extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    avatar: session.avatar()
+    avatar: session.avatar(),
+    usuario: session.usuarioLogueado()
   };
 };
 export default connect(mapStateToProps)(NavHeader);
