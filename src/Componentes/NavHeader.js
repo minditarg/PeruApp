@@ -27,9 +27,6 @@ class NavHeader extends React.Component {
   }
 
   render() {
-    console.log("gato");
-    console.log(this.props.usuario);
-    console.log("gato");
     let icon =
       this.props.avatar != null
         ? { uri: this.props.avatar }

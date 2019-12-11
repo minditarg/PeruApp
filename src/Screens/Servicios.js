@@ -18,7 +18,12 @@ class Servicios extends Component {
             style={stl.listaPadding}
             data={this.props.servicios}
             renderItem={({ item }) => (
-              <CardList navigation={this.props.navigation} Image obj={item} />
+              <CardList
+                trash={true}
+                navigation={this.props.navigation}
+                Image
+                obj={item}
+              />
             )}
             keyExtractor={item => item.id.toString()}
           />
@@ -39,7 +44,10 @@ class Servicios extends Component {
 
 const mapStateToProps = state => {
   return {
-    servicios: session.usuarioLogueado() != null ? session.usuarioLogueado().Proveedor.servicios : null
+    servicios:
+      session.usuarioLogueado() != null
+        ? session.usuarioLogueado().Proveedor.servicios
+        : null
   };
 };
 export default connect(mapStateToProps)(Servicios);

@@ -62,8 +62,9 @@ export class UpdateServicio extends Component {
             categoria: servicio.subcategoria.categoria.id,
             subcategoria: servicio.subcategoriaId,
             foto: this.galeriaExterna(servicio),
-            subcategorias: this.state.categorias.find(item => item.id === servicio.subcategoria.categoria.id)
-              .subcategorias
+            subcategorias: this.state.categorias.find(
+              item => item.id === servicio.subcategoria.categoria.id
+            ).subcategorias
           });
         });
     });
@@ -131,7 +132,10 @@ export class UpdateServicio extends Component {
             this.props.navigation.push("Servicios");
           });
         } else {
-          this.setState({ isLoading: false, error: `${response.message}: ${response.error}`});
+          this.setState({
+            isLoading: false,
+            error: `${response.message}: ${response.error}`
+          });
           Toast.show({
             text: response.message,
             buttonText: "OK",
@@ -166,7 +170,13 @@ export class UpdateServicio extends Component {
 
   cambiarSubcategorias() {
     subcategoriasItems = this.state.subcategorias.map((s, i) => {
-      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
+      return (
+        <Picker.Item
+          keyExtractor={item => item.id.toString()}
+          value={s.id}
+          label={s.nombre}
+        />
+      );
     });
   }
 
@@ -181,14 +191,22 @@ export class UpdateServicio extends Component {
 
   render() {
     let categoriasItems = this.state.categorias.map((s, i) => {
-      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
+      return (
+        <Picker.Item key={s.id.toString()} value={s.id} label={s.nombre} />
+      );
     });
-    categoriasItems.unshift(<Picker.Item label="Seleccione categoria" value="null" />);
+    categoriasItems.unshift(
+      <Picker.Item key={"emptytwo"} label="Seleccione categoria" value="null" />
+    );
 
     let subcategoriasItems = this.state.subcategorias.map((s, i) => {
-      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
+      return (
+        <Picker.Item key={s.id.toString()} value={s.id} label={s.nombre} />
+      );
     });
-    subcategoriasItems.unshift(<Picker.Item label="Seleccione subcategoria" value="" />);
+    subcategoriasItems.unshift(
+      <Picker.Item key={"empty"} label="Seleccione subcategoria" value="" />
+    );
 
     let fotos = this.state.foto.map((s, i) => {
       let arrayToOrder = this.state.foto;
@@ -291,7 +309,9 @@ export class UpdateServicio extends Component {
                     <Text style={stl.txtError}> El título es requerido</Text>
                   )}
                   <View>
-                    <Text style={[stl.textBlack, stl.pickerlbl]}>Categoría</Text>
+                    <Text style={[stl.textBlack, stl.pickerlbl]}>
+                      Categoría
+                    </Text>
                     <Item
                       picker
                       style={stl.picker}
@@ -311,8 +331,10 @@ export class UpdateServicio extends Component {
                       </Picker>
                     </Item>
                     {this.state.submitted && !this.state.categoria && (
-                    <Text style={stl.txtError}> La categoría es requerida</Text>
-                  )}
+                      <Text style={stl.txtError}>
+                        La categoría es requerida
+                      </Text>
+                    )}
                   </View>
                   <View>
                     <Text style={[stl.textBlack, stl.pickerlbl]}>
@@ -338,8 +360,10 @@ export class UpdateServicio extends Component {
                       </Picker>
                     </Item>
                     {this.state.submitted && !this.state.subcategoria && (
-                    <Text style={stl.txtError}> La subcategoría es requerida</Text>
-                  )}
+                      <Text style={stl.txtError}>
+                        La subcategoría es requerida
+                      </Text>
+                    )}
                   </View>
                   <View style={stl.areaText}>
                     <Label style={stl.textBlack}>Descripción</Label>
@@ -357,7 +381,6 @@ export class UpdateServicio extends Component {
                     />
                   </View>
 
-               
                   <View style={[stl.vista, stl.vistaimgs]}>
                     {fotos}
                     <TouchableOpacity onPress={this._pickImage}>

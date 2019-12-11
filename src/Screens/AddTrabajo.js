@@ -96,7 +96,10 @@ export class AddTrabajo extends Component {
             });
           });
         } else {
-          this.setState({ isLoading: false, error: `${response.message}: ${response.error}`});
+          this.setState({
+            isLoading: false,
+            error: `${response.message}: ${response.error}`
+          });
           Toast.show({
             text: response.message,
             buttonText: "OK",
@@ -118,13 +121,15 @@ export class AddTrabajo extends Component {
       });
   }
 
-
   render() {
     serviciosItems = this.state.listadoServicios.map((s, i) => {
-      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
+      return (
+        <Picker.Item key={s.id.toString()} value={s.id} label={s.nombre} />
+      );
     });
-    serviciosItems.unshift(<Picker.Item label="Seleccione un servicio" value="null" />);
-
+    serviciosItems.unshift(
+      <Picker.Item key={"empty"} label="Seleccione un servicio" value="null" />
+    );
 
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
@@ -149,14 +154,19 @@ export class AddTrabajo extends Component {
                         style={[stl.textBlack, stl.pickerInput]}
                         name="servicio"
                         selectedValue={this.state.servicioId}
-                        onValueChange={servicioSeleccionado => { this.setState({ servicioId: servicioSeleccionado }) }}
+                        onValueChange={servicioSeleccionado => {
+                          this.setState({ servicioId: servicioSeleccionado });
+                        }}
                       >
                         {serviciosItems}
                       </Picker>
                     </Item>
                     {this.state.submitted && !this.state.servicioId && (
-                    <Text style={stl.txtError}> El servicio es requerido</Text>
-                  )}
+                      <Text style={stl.txtError}>
+                        {" "}
+                        El servicio es requerido
+                      </Text>
+                    )}
                   </View>
                   <View style={stl.areaText}>
                     <Label style={stl.textBlack}>Descripción del trabajo</Label>
@@ -199,13 +209,15 @@ export class AddTrabajo extends Component {
                       placeHolderTextStyle={stl.placeHolderTextStyle}
                       dropDownImageStyle={stl.dropDownImageStyle}
                       selectedValue={(index, seleccionado) => {
-                        this.setState({ clienteSeleccionadoText: seleccionado.name, clienteId: seleccionado.id })
-                      }
-                      }
+                        this.setState({
+                          clienteSeleccionadoText: seleccionado.name,
+                          clienteId: seleccionado.id
+                        });
+                      }}
                     />
-                     {this.state.submitted && !this.state.clienteId && (
-                    <Text style={stl.txtError}> El cliente es requerido</Text>
-                  )}
+                    {this.state.submitted && !this.state.clienteId && (
+                      <Text style={stl.txtError}> El cliente es requerido</Text>
+                    )}
                   </View>
                   <View>
                     <Text style={[stl.textBlack, stl.pickerlbl]}>
@@ -223,11 +235,12 @@ export class AddTrabajo extends Component {
                         style={[stl.textBlack, stl.pickerInput]}
                         name="puntaje"
                         selectedValue={this.state.puntaje}
-                        onValueChange={(puntaje) =>
-                          this.setState({ puntaje })
-                        }
+                        onValueChange={puntaje => this.setState({ puntaje })}
                       >
-                        <Picker.Item label="Por favor, seleccione el puntaje" value="0" />
+                        <Picker.Item
+                          label="Por favor, seleccione el puntaje"
+                          value="0"
+                        />
                         <Picker.Item label="1 Muy malo" value="1" />
                         <Picker.Item label="2 Malo" value="2" />
                         <Picker.Item label="3 Regular" value="3" />
@@ -236,8 +249,8 @@ export class AddTrabajo extends Component {
                       </Picker>
                     </Item>
                     {this.state.submitted && !this.state.puntaje && (
-                    <Text style={stl.txtError}> El puntaje es requerido</Text>
-                  )}
+                      <Text style={stl.txtError}> El puntaje es requerido</Text>
+                    )}
                   </View>
 
                   <Text style={stl.txtError}> {this.state.error}</Text>
@@ -270,7 +283,10 @@ export class AddTrabajo extends Component {
 
 const mapStateToProps = state => {
   return {
-    listadoServicios: sessionService.usuarioLogueado() != null ? sessionService.usuarioLogueado().Proveedor.servicios : null
+    listadoServicios:
+      sessionService.usuarioLogueado() != null
+        ? sessionService.usuarioLogueado().Proveedor.servicios
+        : null
   };
 };
 export default connect(mapStateToProps)(AddTrabajo);
