@@ -6,10 +6,14 @@ const endPoints = {
     crear: '/servicio',
     actualizar: '/servicio/',
     eliminar: '/servicio/',
+    
+    buscar: '/servicio/buscar/',
 };
 
 
 export const get = (id) => fetchApi(endPoints.get + id, {}, 'get');
+
+export const buscar = (categoriaId, subcategoriaId, localidadId) => fetchApi(endPoints.buscar, {categoriaId, subcategoriaId, localidadId}, 'get');
 
 export const listadoCategorias = () => fetchApi(endPoints.listadoCategorias, {}, 'get');
 

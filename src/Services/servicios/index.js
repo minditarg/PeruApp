@@ -3,12 +3,14 @@ import * as api from './api';
 import * as session from '../session';
 import store from '../../Store';
 
-import * as actionCreators from '../session/actions';
+import * as selectors from "./selectors";
+import * as actionCreators from './actions';
 
 
 export const listadoCategorias = () => {
     return api.listadoCategorias().then(response => {
         if (response.statusType == "success") {
+            store.dispatch(actionCreators.actualizarCategorias(response.data));
             return response.data;
         }
     })
@@ -30,4 +32,14 @@ export const get = (id) => {
             return response.data;
         }
     })
+}
+export const  buscar = (categoriaId, subcategoriaId, localidadId) => {
+    return api.buscar(categoriaId, subcategoriaId, localidadId).then(response => {
+        if (response.statusType == "success") {
+            store.dispatch(actionCreators.actualizarServicios(response.data));
+        }
+    })
+}
+export const getStore= () => {
+    return selectors.get();
 }
