@@ -7,58 +7,48 @@ import { stl } from "../styles/styles";
 import { CardList } from "../../Componentes/CardList";
 import RNModal from "rn-modal-picker";
 import * as servicioService from "../../Services/servicios";
+import * as commonService from "../../Services/common";
 import { connect } from "react-redux";
 
 class FeedServicios extends Component {
   constructor() {
     super();
     servicioService.buscar();
-    servicioService.listadoCategorias();
+    commonService.listadoCategorias();
+    commonService.listadoLocalidades();
     this.state = {
-      subcategorias:[],
-      localidadSeleccionadaText: "",
+      subcategorias: [],
+      localidadSeleccionadaText: "Localidad",
       localidadId: "",
-      subcategoriaSeleccionadaText: "ee",
+      subcategoriaSeleccionadaText: "Subacategoría",
       subcategoriaId: "",
-      categoriaSeleccionadaText: "ee",
+      categoriaSeleccionadaText: "Categoría",
       categoriaId: "",
-      
-      dataSource: [
-        {
-          id: 1,
-          name: "Afghanistane"
-        },
-        {
-          id: 2,
-          name: "Bahrain"
-        },
-      ],
     };
   }
 
   componentDidMount() {
-    // this.setState({
-    //   servicios: [],
-    // })
   }
 
   _cambioCategoria(nombre, id) {
-    this.setState({ categoriaSeleccionadaText: nombre, categoriaId: id });
-    this.setState({subcategorias : this.props.categorias.find(item => item.id === id).subcategorias});
-    console.log(this.state.categoriaId, "eeeeeee");
-    servicioService.buscar(this.state.categoriaId, this.state.subcategoriaId, this.state.localidadId);
+    this.setState({ categoriaSeleccionadaText: nombre, categoriaId: id, subcategoriaId: '', subcategoriaSeleccionadaText: 'Subcategoría' });
+    this.setState({ subcategorias: this.props.categorias.find(item => item.id === id).subcategorias });
+    servicioService.buscar(id, '', this.state.localidadId);
   }
-  // buscarServicios() {
-  //   servicioService.buscar(categoriaId, subcategoriaId, localidadId).then(response => {
-  //     this.setState({ serviciosEncontrados: response });
-  //   })
-  // }
+
   _cambioSubcategoria(nombre, id) {
     this.setState({ subcategoriaSeleccionadaText: nombre, subcategoriaId: id });
+    servicioService.buscar(this.state.categoriaId, id, this.state.localidadId);
   }
   _cambioLocalidad(nombre, id) {
     this.setState({ localidadSeleccionadaText: nombre, localidadId: id });
+    servicioService.buscar(this.state.categoriaId, this.state.subcategoriaId, id);
   }
+  HandleLimpiarBuscadorBtn() {
+    servicioService.buscar();
+    this.setState({ subcategoriaId: '', subcategoriaSeleccionadaText: 'Subcategoría', categoriaId: '', categoriaSeleccionadaText: 'Categoría', localidadId: '', localidadSeleccionadaText: 'Categoría' });
+  }
+
   render() {
     return (
       <Container style={stl.containerList}>
@@ -68,15 +58,15 @@ class FeedServicios extends Component {
               style={stl.EmptyFilter}
               transparent
               onPress={() => {
-                this.HandleEliminarBtn(obj);
+                this.HandleLimpiarBuscadorBtn();
               }}
             >
               <Icon style={stl.EmptyFilterIcon} type="EvilIcons" name="trash" />
             </Button>
             <View style={[stl.filter, stl.filterCat]}>
               <RNModal
-                dataSource={this.props.categorias.map((s, i) => { return { id: s.id, name: s.nombre}  })}
-                dummyDataSource={this.props.categorias}
+                dataSource={this.props.categorias.map((s, i) => { return { id: parseInt(s.id), name: s.nombre } })}
+                keyExtractor={item => item.id.toString()}
                 defaultValue={false}
                 pickerTitle={"¿Que categoría buscás?"}
                 showSearchBar={true}
@@ -88,19 +78,20 @@ class FeedServicios extends Component {
                 pickerStyle={stl.pickerStyle2}
                 pickerItemTextStyle={stl.listTextViewStyle}
                 selectedLabel={this.state.categoriaSeleccionadaText}
-                placeHolderLabel={"Categoria"}
+                placeHolderLabel={"Categoría"}
                 selectLabelTextStyle={stl.selectLabelTextStyle2}
                 placeHolderTextStyle={stl.selectLabelTextStyle2}
                 dropDownImageStyle={stl.dropDownImageStyle2}
-                selectedValue={(index, seleccionado) =>
-                  this._cambioCategoria(seleccionado.name, seleccionado.id)
+                selectedValue={(index, seleccionado) => {
+                  return this._cambioCategoria(seleccionado.name, seleccionado.id)
+                }
                 }
               />
             </View>
             <View style={[stl.filter, stl.filterCat]}>
               <RNModal
-                dataSource={this.state.subcategorias.map((s, i) => { return { id: s.id, name: s.nombre}  })}
-                dummyDataSource={this.state.subcategorias.map((s, i) => { return { id: s.id, name: s.nombre}  })}
+                dataSource={this.state.subcategorias.map((s, i) => { return { id: s.id, name: s.nombre } })}
+                dummyDataSource={this.state.subcategorias.map((s, i) => { return { id: s.id, name: s.nombre } })}
                 defaultValue={false}
                 pickerTitle={"¿Que subcategoría buscás?"}
                 showSearchBar={true}
@@ -121,10 +112,10 @@ class FeedServicios extends Component {
                 }}
               />
             </View>
-            {/* <View style={[stl.filter, stl.filterCat]}>
+            <View style={[stl.filter, stl.filterCat]}>
               <RNModal
-                dataSource={this.state.dataSource}
-                dummyDataSource={this.state.dataSource}
+                dataSource={this.props.localidades.map((s, i) => { return { id: s.id, name: s.nombre } })}
+                dataSource={this.props.localidades.map((s, i) => { return { id: s.id, name: s.nombre } })}
                 defaultValue={false}
                 pickerTitle={"¿Que localidad?"}
                 showSearchBar={true}
@@ -135,7 +126,7 @@ class FeedServicios extends Component {
                 searchBarContainerStyle={stl.searchBarContainerStyle}
                 pickerStyle={stl.pickerStyle2}
                 pickerItemTextStyle={stl.listTextViewStyle}
-                selectedLabel={this.state.selectedText}
+                selectedLabel={this.state.localidadSeleccionadaText}
                 placeHolderLabel={"Localidad"}
                 selectLabelTextStyle={stl.selectLabelTextStyle2}
                 placeHolderTextStyle={stl.selectLabelTextStyle2}
@@ -144,7 +135,7 @@ class FeedServicios extends Component {
                   this._cambioLocalidad(seleccionado.name, seleccionado.id)
                 }}
               />
-            </View> */}
+            </View>
           </ScrollView>
         </View>
         <Content>
@@ -160,7 +151,7 @@ class FeedServicios extends Component {
                 keyExtractor={item => item.id.toString()}
               />
             )}
-           
+
           />
         </Content>
       </Container>
@@ -172,7 +163,8 @@ class FeedServicios extends Component {
 const mapStateToProps = state => {
   return {
     serviciosEncontrados: servicioService.getStore().servicios,
-    categorias: servicioService.getStore().categorias
+    categorias: commonService.getStore().categorias,
+    localidades: commonService.getStore().localidades
   };
 };
 export default connect(mapStateToProps)(FeedServicios);
