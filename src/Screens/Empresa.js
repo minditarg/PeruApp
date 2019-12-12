@@ -9,6 +9,8 @@ import {
   Keyboard,
   KeyboardAvoidingView
 } from "react-native";
+import RNModal from "rn-modal-picker";
+
 import { Col } from "react-native-easy-grid";
 import {
   Button,
@@ -21,7 +23,9 @@ import {
   Icon,
   Content,
   Spinner,
-  Toast
+  CheckBox,
+  Toast,
+  ListItem
 } from "native-base";
 import { stl } from "./styles/styles";
 import * as sessionService from "../Services/session";
@@ -38,6 +42,12 @@ export class Empresa extends Component {
     let usuarioLogueado = sessionService.usuarioLogueado();
 
     this.initialState = {
+      listadoLocalidades: [
+        { id: "1", name: "Laprida" },
+        { id: "2", name: "Berisso" }
+      ],
+      localidadId: null,
+      localidadSeleccionadoText: "Laprida",
       nombre: usuarioLogueado.Proveedor.nombre,
       email: usuarioLogueado.Proveedor.email,
       descripcion: usuarioLogueado.Proveedor.descripcion,
@@ -47,6 +57,7 @@ export class Empresa extends Component {
       fotoNueva: null,
       submitted: false,
       isLoading: false,
+      cambiarPass: false,
       error: null,
       hasChange: false
     };
@@ -60,6 +71,7 @@ export class Empresa extends Component {
     this.initialState = {
       nombre: this.state.nombre,
       email: this.state.email,
+
       descripcion: this.state.descripcion,
       direccion: this.state.direccion,
       telefono: this.state.telefono,
@@ -263,6 +275,39 @@ export class Empresa extends Component {
                       }}
                     />
                   </Item>
+                  <View style={stl.pickerSelect2}>
+                    <Text
+                      style={[stl.textBlack, stl.pickerlbl, stl.LabelSelect2]}
+                    >
+                      Localidad:
+                    </Text>
+
+                    <RNModal
+                      dataSource={this.state.listadoLocalidades}
+                      dummyDataSource={this.state.listadoLocalidades}
+                      defaultValue={false}
+                      pickerTitle={"Localidad"}
+                      showSearchBar={true}
+                      disablePicker={false}
+                      changeAnimation={"none"}
+                      searchBarPlaceHolder={"Buscar....."}
+                      showPickerTitle={true}
+                      searchBarContainerStyle={stl.searchBarContainerStyle}
+                      pickerStyle={stl.pickerStyle}
+                      pickerItemTextStyle={stl.listTextViewStyle}
+                      selectedLabel={this.state.localidadSeleccionadoText}
+                      placeHolderLabel={"Seleccione localidad"}
+                      selectLabelTextStyle={stl.selectLabelTextStyle}
+                      placeHolderTextStyle={stl.placeHolderTextStyle}
+                      dropDownImageStyle={stl.dropDownImageStyle}
+                      selectedValue={(index, seleccionado) => {
+                        this.setState({
+                          localidadSeleccionadoText: seleccionado.name,
+                          localidadId: seleccionado.id
+                        });
+                      }}
+                    />
+                  </View>
                   <Item floatingLabel>
                     <Label style={stl.textBlack}>Descripción</Label>
                     <Input
@@ -284,6 +329,68 @@ export class Empresa extends Component {
                     />
                   </Item>
                   <Text style={stl.txtError}> {this.state.error}</Text>
+
+                  <ListItem
+                    onPress={() => {
+                      this.setState({
+                        cambiarPass: !this.state.cambiarPass
+                      });
+                      console.log(this.state.cambiarPass);
+                    }}
+                  >
+                    <CheckBox
+                      onPress={() => {
+                        this.setState({
+                          cambiarPass: !this.state.cambiarPass
+                        });
+                        console.log(this.state.cambiarPass);
+                      }}
+                      checked={this.state.cambiarPass}
+                      color="#235be5"
+                    />
+                    <Text style={stl.checboxLabel}>Cambiar contraseña</Text>
+                  </ListItem>
+                  {this.state.cambiarPass && (
+                    <View style={stl.PassChangeForm}>
+                      <Item floatingLabel>
+                        <Label style={stl.textBlack}>Nueva Contraseña</Label>
+                        <Input
+                          onSubmitEditing={event => {
+                            this._passConfirm._root.focus();
+                          }}
+                          getRef={c => (this._passNew = c)}
+                          secureTextEntry={true}
+                          style={stl.textBlack}
+                          name="NewPass"
+                          value={this.state.NewPass}
+                          onSubmitEditing={() => {
+                            Keyboard.dismiss;
+                          }}
+                          onChangeText={direccion => {
+                            this.setState({ direccion, hasChange: true });
+                          }}
+                        />
+                      </Item>
+                      <Item floatingLabel>
+                        <Label style={stl.textBlack}>
+                          Confirmar Contraseña
+                        </Label>
+                        <Input
+                          getRef={c => (this._passConfirm = c)}
+                          secureTextEntry={true}
+                          style={stl.textBlack}
+                          name="ConfirmPass"
+                          value={this.state.ConfirmPass}
+                          onSubmitEditing={() => {
+                            Keyboard.dismiss;
+                          }}
+                          onChangeText={direccion => {
+                            this.setState({ direccion, hasChange: true });
+                          }}
+                        />
+                      </Item>
+                    </View>
+                  )}
                   <View style={stl.btnsRow}>
                     <Button
                       style={stl.btn}

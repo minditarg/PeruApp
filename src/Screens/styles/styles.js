@@ -551,5 +551,12 @@ export const stl = StyleSheet.create({
   },
   pointEnCard: {
     paddingLeft: 10
+  },
+  PassChangeForm: {
+    backgroundColor: "#eee",
+    marginLeft: 15
+  },
+  checboxLabel: {
+    marginLeft: 5
   }
 });
