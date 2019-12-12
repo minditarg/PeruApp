@@ -5,7 +5,3 @@ export const actualizarServicios = servicios =>  ({
 	data: servicios
 });
 
-export const actualizarCategorias = categorias =>  ({
-	type: actionTypes.ACTUALIZAR_CATEGORIAS,
-	data: categorias
-});

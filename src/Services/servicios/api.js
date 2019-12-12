@@ -1,21 +1,17 @@
 import { fetchApi } from '../api';
 
 const endPoints = {
-    listadoCategorias: '/categorias',
     get: '/servicio/',
     crear: '/servicio',
     actualizar: '/servicio/',
     eliminar: '/servicio/',
-    
     buscar: '/servicio/buscar/',
 };
 
 
 export const get = (id) => fetchApi(endPoints.get + id, {}, 'get');
 
-export const buscar = (categoriaId, subcategoriaId, localidadId) => fetchApi(endPoints.buscar, {categoriaId, subcategoriaId, localidadId}, 'get');
-
-export const listadoCategorias = () => fetchApi(endPoints.listadoCategorias, {}, 'get');
+export const buscar = (categoriaId, subcategoriaId, localidadId) => fetchApi(endPoints.buscar, {categoriaId:categoriaId, subcategoriaId:subcategoriaId, localidadId:localidadId}, 'post');
 
 export const crear = (nombre, descripcion, fotos, subcategoriaId, proveedorId) => {
 
