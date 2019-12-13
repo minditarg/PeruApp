@@ -45,7 +45,9 @@ export class Registrarse extends Component {
             .then(response => {
               if (response.statusType == "success") {
                 this.setState(this.initialState);
-                this.props.navigation.navigate("RegistrarProveedor");
+                response.data.esCliente ?
+                  this.props.navigation.navigate("FeedServicios") :
+                  this.props.navigation.navigate("RegistrarProveedor")
               } else {
                 this.setState({
                   isLoading: false
