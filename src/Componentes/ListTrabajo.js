@@ -82,29 +82,31 @@ export class ListTrabajo extends Component {
           )}
           <Body style={stl.cardBody}>
             <Text style={stl.cardTitulo}>{obj.Servicio.nombre}</Text>
+
             {this.props.escliente &&
               <Text style={stl.cardSubtitulo}>{obj.Servicio.Proveedor.nombre}  <Text > puntaje recibido {obj.puntajeDelProveedor}</Text></Text>
             }
             {!this.props.escliente &&
               <Text style={stl.cardSubtitulo}>{obj.Cliente.Usuario.nombre} {!obj.puntajeDelCliente && <Text > (aún sin puntuar)</Text>}</Text>
             }
+
             {!obj.puntajeDelCliente && (
               <Calificacion promedio={5}></Calificacion>
             )}
-          {!obj.puntajeDelCliente && 
-            <Right style={stl.cardRight}>
-              {this.props.trash &&
-                <Button
-                  transparent
-                  onPress={() => {
-                    this.HandleEliminarBtn(obj);
-                  }}
-                >
-                  <Icon style={stl.iconCam} type="EvilIcons" name="trash" />
-                </Button>
-              }
-            </Right>
-          }
+            {!obj.puntajeDelCliente && (
+              <Right style={stl.cardRight}>
+                {this.props.trash && (
+                  <Button
+                    transparent
+                    onPress={() => {
+                      this.HandleEliminarBtn(obj);
+                    }}
+                  >
+                    <Icon style={stl.iconCam} type="EvilIcons" name="trash" />
+                  </Button>
+                )}
+              </Right>
+            )}
           </Body>
         </View>
       </TouchableOpacity>
