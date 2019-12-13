@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, Image, TouchableOpacity, Alert } from "react-native";
 import { Text, Left, Body, Right, Button, Icon, Toast } from "native-base";
+import { Calificacion } from "./Calificacion";
 import { stl } from "../Screens/styles/styles";
 import * as servicioService from "../Services/servicios";
 import * as sessionService from "../Services/session";
@@ -65,9 +66,7 @@ export class ListTrabajo extends Component {
   render() {
     let obj = this.props.obj;
     return (
-      <TouchableOpacity
-
-      >
+      <TouchableOpacity>
         <View style={[stl.card, stl.cardHor]}>
           {this.props.Image && (
             <Left style={stl.cardLeft}>
@@ -89,17 +88,10 @@ export class ListTrabajo extends Component {
             {!this.props.escliente &&
               <Text style={stl.cardSubtitulo}>{obj.Cliente.Usuario.nombre} {!obj.puntajeDelCliente && <Text > (aún sin puntuar)</Text>}</Text>
             }
-            {obj.puntajeDelCliente &&
-              <View style={stl.puntaje}>
-                <Icon style={stl.iconstar} type="Ionicons" name="star" />
-                <Icon style={stl.iconstar} type="Ionicons" name="star" />
-                <Icon style={stl.iconstar} type="Ionicons" name="star-half" />
-                <Icon style={stl.iconstar} type="Ionicons" name="star-outline" />
-                <Icon style={stl.iconstar} type="Ionicons" name="star-outline" />
-              </View>
-            }
-          </Body>
-          {!obj.puntajeDelCliente &&
+            {!obj.puntajeDelCliente && (
+              <Calificacion promedio={5}></Calificacion>
+            )}
+          {!obj.puntajeDelCliente && 
             <Right style={stl.cardRight}>
               {this.props.trash &&
                 <Button
@@ -112,8 +104,8 @@ export class ListTrabajo extends Component {
                 </Button>
               }
             </Right>
-
           }
+          </Body>
         </View>
       </TouchableOpacity>
     );
