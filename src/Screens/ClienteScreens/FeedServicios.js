@@ -63,7 +63,8 @@ class FeedServicios extends Component {
       categoriaId: "",
       categoriaSeleccionadaText: "Categoría",
       localidadId: "",
-      localidadSeleccionadaText: "Localidad"
+      localidadSeleccionadaText: "Localidad",
+      subcategorias: []
     });
   }
 

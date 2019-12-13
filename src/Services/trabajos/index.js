@@ -22,8 +22,9 @@ export const listadoPorProveedor = () => {
 export const listadoPorClienteCalificados = () => {
     let idCliente = sessionService.usuarioLogueado().Cliente.id; 
     return api.listadoPorClienteCalificados(idCliente).then(response => {
+        console.log(response, "resposnee");
         if (response.statusType == "success") {
-            store.dispatch(actionCreators.actualizar(response.data));
+            store.dispatch(actionCreators.actualizarCalificados(response.data));
         }
     }).catch(exception => {
         console.log(exception);
@@ -33,8 +34,9 @@ export const listadoPorClienteCalificados = () => {
 export const listadoPorClienteSinCalificar = () => {
     let idCliente = sessionService.usuarioLogueado().Cliente.id; 
     return api.listadoPorClienteSinCalificar(idCliente).then(response => {
+        console.log(response, "resposnee");
         if (response.statusType == "success") {
-            store.dispatch(actionCreators.actualizar(response.data));
+            store.dispatch(actionCreators.actualizarSinCalificar(response.data));
         }
     }).catch(exception => {
         console.log(exception);

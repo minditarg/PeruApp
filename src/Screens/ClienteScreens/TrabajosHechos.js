@@ -4,12 +4,15 @@ import works from "../../../Datos/Trabajos.json";
 
 import { Container, Content, Button, Icon, Text } from "native-base";
 import { stl } from "../styles/styles";
-import { CardList } from "../../Componentes/CardList";
+import { ListTrabajo } from "../../Componentes/ListTrabajo";
 import RNModal from "rn-modal-picker";
-
+import * as trabajosService from "../../Services/trabajos";
+import { connect } from "react-redux";
 class TrabajosHechos extends Component {
   constructor() {
     super();
+    trabajosService.listadoPorClienteCalificados();
+    trabajosService.listadoPorClienteSinCalificar();
   }
 
   render() {
@@ -20,9 +23,9 @@ class TrabajosHechos extends Component {
             <Text style={stl.tituloSeccion}> Sin Calificar</Text>
           </View>
           <FlatList
-            data={works}
+            data={this.props.sinCalificar}
             renderItem={({ item }) => (
-              <CardList navigation={this.props.navigation} Image obj={item} />
+              <ListTrabajo navigation={this.props.navigation}  trash={false} Image obj={item} />
             )}
             keyExtractor={item => item.id.toString()}
           />
@@ -30,9 +33,9 @@ class TrabajosHechos extends Component {
             <Text style={stl.tituloSeccion}>Calificados</Text>
           </View>
           <FlatList
-            data={works}
+            data={this.props.calificados}
             renderItem={({ item }) => (
-              <CardList navigation={this.props.navigation} Image obj={item} />
+              <ListTrabajo navigation={this.props.navigation} trash={false} escliente={true} Image obj={item} />
             )}
             keyExtractor={item => "#" + item.id.toString()}
           />
@@ -41,4 +44,10 @@ class TrabajosHechos extends Component {
     );
   }
 }
-export default TrabajosHechos;
+const mapStateToProps = state => {
+  return {
+    calificados: trabajosService.getStore().trabajosCalificados,
+    sinCalificar: trabajosService.getStore().trabajosSinCalificar
+  };
+};
+export default connect(mapStateToProps)(TrabajosHechos);

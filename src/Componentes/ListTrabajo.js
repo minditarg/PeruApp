@@ -64,7 +64,6 @@ export class ListTrabajo extends Component {
 
   render() {
     let obj = this.props.obj;
-    console.log(obj);
     return (
       <TouchableOpacity
 
@@ -84,7 +83,12 @@ export class ListTrabajo extends Component {
           )}
           <Body style={stl.cardBody}>
             <Text style={stl.cardTitulo}>{obj.Servicio.nombre}</Text>
-            <Text style={stl.cardSubtitulo}>{obj.Cliente.Usuario.nombre} {!obj.puntajeDelCliente && <Text > (aún sin puntuar)</Text>}</Text>
+            {this.props.escliente &&
+              <Text style={stl.cardSubtitulo}>{obj.Proveedor.Usuario.nombre}  <Text > puntaje recibido {obj.puntajeDelProveedor}</Text></Text>
+            }
+            {!this.props.escliente &&
+              <Text style={stl.cardSubtitulo}>{obj.Cliente.Usuario.nombre} {!obj.puntajeDelCliente && <Text > (aún sin puntuar)</Text>}</Text>
+            }
             {obj.puntajeDelCliente &&
               <View style={stl.puntaje}>
                 <Icon style={stl.iconstar} type="Ionicons" name="star" />
@@ -97,15 +101,18 @@ export class ListTrabajo extends Component {
           </Body>
           {!obj.puntajeDelCliente &&
             <Right style={stl.cardRight}>
-              <Button
-                transparent
-                onPress={() => {
-                  this.HandleEliminarBtn(obj);
-                }}
-              >
-                <Icon style={stl.iconCam} type="EvilIcons" name="trash" />
-              </Button>
+              {this.props.trash &&
+                <Button
+                  transparent
+                  onPress={() => {
+                    this.HandleEliminarBtn(obj);
+                  }}
+                >
+                  <Icon style={stl.iconCam} type="EvilIcons" name="trash" />
+                </Button>
+              }
             </Right>
+
           }
         </View>
       </TouchableOpacity>
