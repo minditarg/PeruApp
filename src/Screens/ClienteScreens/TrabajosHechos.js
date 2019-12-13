@@ -25,7 +25,7 @@ class TrabajosHechos extends Component {
           <FlatList
             data={this.props.sinCalificar}
             renderItem={({ item }) => (
-              <ListTrabajo navigation={this.props.navigation}  trash={false} Image obj={item} />
+              <ListTrabajo navigation={this.props.navigation}  escliente={true}   trash={false} Image obj={item} />
             )}
             keyExtractor={item => item.id.toString()}
           />

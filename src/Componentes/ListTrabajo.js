@@ -83,7 +83,7 @@ export class ListTrabajo extends Component {
           <Body style={stl.cardBody}>
             <Text style={stl.cardTitulo}>{obj.Servicio.nombre}</Text>
             {this.props.escliente &&
-              <Text style={stl.cardSubtitulo}>{obj.Proveedor.Usuario.nombre}  <Text > puntaje recibido {obj.puntajeDelProveedor}</Text></Text>
+              <Text style={stl.cardSubtitulo}>{obj.Servicio.Proveedor.nombre}  <Text > puntaje recibido {obj.puntajeDelProveedor}</Text></Text>
             }
             {!this.props.escliente &&
               <Text style={stl.cardSubtitulo}>{obj.Cliente.Usuario.nombre} {!obj.puntajeDelCliente && <Text > (aún sin puntuar)</Text>}</Text>
