@@ -2,8 +2,8 @@ import { fetchApi } from '../api';
 
 const endPoints = {
     listadoPorProveedor: '/trabajo/listadoPorProveedor/',
-    listadoPorClienteSinCalificar: 'trabajo/listadoPorClienteSinCalificar',
-    listadoPorClienteCalificados: 'trabajo/listadoPorClienteCalificados',
+    listadoPorClienteSinCalificar: '/trabajo/listadoPorClienteSinCalificar/',
+    listadoPorClienteCalificados: '/trabajo/listadoPorClienteCalificados/',
     get: '/trabajo/',
     crear: '/trabajo',
     eliminar: '/trabajo/',

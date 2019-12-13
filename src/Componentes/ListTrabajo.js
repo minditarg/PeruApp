@@ -65,7 +65,6 @@ export class ListTrabajo extends Component {
 
   render() {
     let obj = this.props.obj;
-    console.log(obj);
     return (
       <TouchableOpacity>
         <View style={[stl.card, stl.cardHor]}>
@@ -83,26 +82,36 @@ export class ListTrabajo extends Component {
           )}
           <Body style={stl.cardBody}>
             <Text style={stl.cardTitulo}>{obj.Servicio.nombre}</Text>
-            <Text style={stl.cardSubtitulo}>
-              {obj.Cliente.Usuario.nombre}{" "}
-              {!obj.puntajeDelCliente && <Text> (aún sin puntuar)</Text>}
-            </Text>
-            {obj.puntajeDelCliente && (
+            {this.props.escliente && (
+              <Text style={stl.cardSubtitulo}>
+                {obj.Proveedor.Usuario.nombre}{" "}
+                <Text> puntaje recibido {obj.puntajeDelProveedor}</Text>
+              </Text>
+            )}
+            {!this.props.escliente && (
+              <Text style={stl.cardSubtitulo}>
+                {obj.Cliente.Usuario.nombre}{" "}
+                {!obj.puntajeDelCliente && <Text> (aún sin puntuar)</Text>}
+              </Text>
+            )}
+            {!obj.puntajeDelCliente && (
               <Calificacion promedio={5}></Calificacion>
             )}
+            {!obj.puntajeDelCliente && (
+              <Right style={stl.cardRight}>
+                {this.props.trash && (
+                  <Button
+                    transparent
+                    onPress={() => {
+                      this.HandleEliminarBtn(obj);
+                    }}
+                  >
+                    <Icon style={stl.iconCam} type="EvilIcons" name="trash" />
+                  </Button>
+                )}
+              </Right>
+            )}
           </Body>
-          {!obj.puntajeDelCliente && (
-            <Right style={stl.cardRight}>
-              <Button
-                transparent
-                onPress={() => {
-                  this.HandleEliminarBtn(obj);
-                }}
-              >
-                <Icon style={stl.iconCam} type="EvilIcons" name="trash" />
-              </Button>
-            </Right>
-          )}
         </View>
       </TouchableOpacity>
     );

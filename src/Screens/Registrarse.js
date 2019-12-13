@@ -40,13 +40,12 @@ export class Registrarse extends Component {
       .crear(this.state.email, this.state.password)
       .then(response => {
         if (response.statusType == "success") {
-          let esCliente= response.data.esCliente;
           session
             .authenticate(this.state.email, this.state.password)
             .then(response => {
               if (response.statusType == "success") {
                 this.setState(this.initialState);
-                esCliente ?
+                session.esUsuarioTipoCliente() ?
                   this.props.navigation.navigate("FeedServicios") :
                   this.props.navigation.navigate("RegistrarProveedor")
               } else {

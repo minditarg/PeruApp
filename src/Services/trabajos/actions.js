@@ -5,6 +5,13 @@ export const actualizar = trabajos =>  ({
 	data: trabajos
 });
 
-export const loading = () => {
-    return {type: actionTypes.FETCHING_DATA}
-}
+
+export const actualizarCalificados = trabajos =>  ({
+	type: actionTypes.ACTUALIZAR_CALIFICADOS,
+	data: trabajos
+});
+
+export const actualizarSinCalificar = trabajos =>  ({
+	type: actionTypes.ACTUALIZAR_SIN_CALIFICAR,
+	data: trabajos
+});
