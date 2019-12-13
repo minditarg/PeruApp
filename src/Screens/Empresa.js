@@ -47,6 +47,8 @@ export class Empresa extends Component {
         { id: "2", name: "Berisso" }
       ],
       localidadId: null,
+      pass: "",
+      confPass: "",
       localidadSeleccionadoText: "Laprida",
       nombre: usuarioLogueado.Proveedor.nombre,
       email: usuarioLogueado.Proveedor.email,
@@ -74,6 +76,7 @@ export class Empresa extends Component {
 
       descripcion: this.state.descripcion,
       direccion: this.state.direccion,
+
       telefono: this.state.telefono,
       foto: this.state.foto,
       fotoNueva: null,
@@ -259,22 +262,7 @@ export class Empresa extends Component {
                       }}
                     />
                   </Item>
-                  <Item floatingLabel>
-                    <Label style={stl.textBlack}>Dirección</Label>
-                    <Input
-                      onSubmitEditing={event => {
-                        this._descripcion._root.focus();
-                      }}
-                      getRef={c => (this._dire = c)}
-                      style={stl.textBlack}
-                      name="direccion"
-                      autoCompleteType="street-address"
-                      value={this.state.direccion}
-                      onChangeText={direccion => {
-                        this.setState({ direccion, hasChange: true });
-                      }}
-                    />
-                  </Item>
+
                   <View style={stl.pickerSelect2}>
                     <Text
                       style={[stl.textBlack, stl.pickerlbl, stl.LabelSelect2]}
@@ -303,11 +291,28 @@ export class Empresa extends Component {
                       selectedValue={(index, seleccionado) => {
                         this.setState({
                           localidadSeleccionadoText: seleccionado.name,
-                          localidadId: seleccionado.id
+                          localidadId: seleccionado.id,
+                          hasChange: true
                         });
                       }}
                     />
                   </View>
+                  <Item floatingLabel>
+                    <Label style={stl.textBlack}>Dirección</Label>
+                    <Input
+                      onSubmitEditing={event => {
+                        this._descripcion._root.focus();
+                      }}
+                      getRef={c => (this._dire = c)}
+                      style={stl.textBlack}
+                      name="direccion"
+                      autoCompleteType="street-address"
+                      value={this.state.direccion}
+                      onChangeText={direccion => {
+                        this.setState({ direccion, hasChange: true });
+                      }}
+                    />
+                  </Item>
                   <Item floatingLabel>
                     <Label style={stl.textBlack}>Descripción</Label>
                     <Input
@@ -366,8 +371,8 @@ export class Empresa extends Component {
                           onSubmitEditing={() => {
                             Keyboard.dismiss;
                           }}
-                          onChangeText={direccion => {
-                            this.setState({ direccion, hasChange: true });
+                          onChangeText={pass => {
+                            this.setState({ pass, hasChange: true });
                           }}
                         />
                       </Item>
@@ -384,8 +389,8 @@ export class Empresa extends Component {
                           onSubmitEditing={() => {
                             Keyboard.dismiss;
                           }}
-                          onChangeText={direccion => {
-                            this.setState({ direccion, hasChange: true });
+                          onChangeText={confPass => {
+                            this.setState({ confPass, hasChange: true });
                           }}
                         />
                       </Item>

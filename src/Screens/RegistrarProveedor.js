@@ -29,6 +29,7 @@ import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
+import RNModal from "rn-modal-picker";
 
 import { stl } from "./styles/styles";
 import { TextInput } from "react-native-gesture-handler";
@@ -38,6 +39,11 @@ export class RegistrarProveedor extends Component {
     super();
 
     this.initialState = {
+      listadoLocalidades: [
+        { id: "1", name: "Laprida" },
+        { id: "2", name: "Berisso" }
+      ],
+      localidadId: null,
       nombre: "",
       email: "",
       descripcion: "",
@@ -201,7 +207,49 @@ export class RegistrarProveedor extends Component {
                             }}
                           />
                         </Item>
+                        <View style={stl.pickerSelect2}>
+                          <Text
+                            style={[
+                              stl.pickerlbl,
+                              stl.textwhite,
+                              stl.LabelSelect2
+                            ]}
+                          >
+                            Localidad:
+                          </Text>
 
+                          <RNModal
+                            dataSource={this.state.listadoLocalidades}
+                            dummyDataSource={this.state.listadoLocalidades}
+                            defaultValue={false}
+                            pickerTitle={"Localidad"}
+                            showSearchBar={true}
+                            disablePicker={false}
+                            changeAnimation={"none"}
+                            searchBarPlaceHolder={"Buscar....."}
+                            showPickerTitle={true}
+                            searchBarContainerStyle={
+                              stl.searchBarContainerStyle
+                            }
+                            pickerStyle={stl.pickerStyle}
+                            pickerItemTextStyle={stl.listTextViewStyle}
+                            selectedLabel={this.state.localidadSeleccionadoText}
+                            placeHolderLabel={"Seleccione localidad"}
+                            selectLabelTextStyle={[
+                              stl.selectLabelTextStyle,
+                              stl.textwhite
+                            ]}
+                            placeHolderTextStyle={stl.placeHolderTextStyle}
+                            dropDownImageStyle={stl.dropDownImageStyle}
+                            selectedValue={(index, seleccionado) => {
+                              this.setState({
+                                localidadSeleccionadoText: seleccionado.name,
+                                localidadId: seleccionado.id,
+                                hasChange: true
+                              });
+                            }}
+                          />
+                        </View>
                         <Item floatingLabel>
                           <Label style={stl.textwhite}>Dirección</Label>
                           <Input

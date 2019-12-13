@@ -419,7 +419,7 @@ export const stl = StyleSheet.create({
     marginBottom: 2,
     borderBottomColor: "#aaa",
     borderBottomWidth: 1,
-    backgroundColor: "rgba(255,255,255,1)",
+    // backgroundColor: "rgba(255,255,255,1)",
 
     borderRadius: 0,
     flexDirection: "row"
