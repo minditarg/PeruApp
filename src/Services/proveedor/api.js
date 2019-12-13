@@ -14,6 +14,7 @@ export const actualizar = (
   email,
   descripcion,
   direccion,
+  localidadId,
   telefono,
   fotoNueva,
   proveedorId
@@ -23,6 +24,7 @@ export const actualizar = (
   formData.append("email", email);
   formData.append("descripcion", descripcion);
   formData.append("direccion", direccion);
+  formData.append("localidadId", localidadId);
   formData.append("telefono", telefono);
 
   if (fotoNueva != null) {
@@ -42,6 +44,7 @@ export const crear = (
   email,
   descripcion,
   direccion,
+  localidadId,
   telefono,
   foto,
   usuarioId
@@ -51,6 +54,7 @@ export const crear = (
   formData.append("email", email);
   formData.append("descripcion", descripcion);
   formData.append("direccion", direccion);
+  formData.append("localidadId", localidadId);
   formData.append("telefono", telefono);
   formData.append("usuarioId", usuarioId);
 

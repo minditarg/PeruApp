@@ -30,26 +30,29 @@ import {
 import { stl } from "./styles/styles";
 import * as sessionService from "../Services/session";
 import apiConfig from "../Services/api/config";
-import * as proveedorService from "../Services/proveedor";
+
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 
-export class Empresa extends Component {
+import * as proveedorService from "../Services/proveedor";
+import * as commonService from "../Services/common";
+import { connect } from "react-redux";
+
+class Empresa extends Component {
   constructor() {
     super();
     let usuarioLogueado = sessionService.usuarioLogueado();
-
+    commonService.listadoLocalidades();
+    let localidad = usuarioLogueado.Proveedor.localidad
+      ? usuarioLogueado.Proveedor.localidad
+      : { id: "", nombre: "" };
     this.initialState = {
-      listadoLocalidades: [
-        { id: "1", name: "Laprida" },
-        { id: "2", name: "Berisso" }
-      ],
-      localidadId: null,
+      localidadId: localidad.id,
       pass: "",
       confPass: "",
-      localidadSeleccionadoText: "Laprida",
+      localidadSeleccionadoText: localidad.nombre,
       nombre: usuarioLogueado.Proveedor.nombre,
       email: usuarioLogueado.Proveedor.email,
       descripcion: usuarioLogueado.Proveedor.descripcion,
@@ -64,6 +67,7 @@ export class Empresa extends Component {
       hasChange: false
     };
     this.state = this.initialState;
+    console.log(this.state);
   }
   componentDidMount() {
     this.getPermissionAsync();
@@ -117,12 +121,13 @@ export class Empresa extends Component {
       isLoading: true
     });
     dismissKeyboard();
-    proveedorService
+    this.props.provService
       .actualizar(
         this.state.nombre,
         this.state.email,
         this.state.descripcion,
         this.state.direccion,
+        this.state.localidadId,
         this.state.telefono,
         this.state.fotoNueva
       )
@@ -156,9 +161,15 @@ export class Empresa extends Component {
         }
       });
   }
-
+  _cambioLocalidad(nombre, id) {
+    this.setState({
+      localidadSeleccionadoText: nombre,
+      localidadId: id,
+      hasChange: true
+    });
+  }
   logout() {
-    sessionService.logout();
+    this.props.session.logout();
     this.props.navigation.navigate("Select");
   }
   render() {
@@ -271,9 +282,13 @@ export class Empresa extends Component {
                     </Text>
 
                     <RNModal
-                      dataSource={this.state.listadoLocalidades}
-                      dummyDataSource={this.state.listadoLocalidades}
-                      defaultValue={false}
+                      dataSource={this.props.localidades.map((s, i) => {
+                        return { id: s.id, name: s.nombre };
+                      })}
+                      dummyDataSource={this.props.localidades.map((s, i) => {
+                        return { id: s.id, name: s.nombre };
+                      })}
+                      defaultValue={true}
                       pickerTitle={"Localidad"}
                       showSearchBar={true}
                       disablePicker={false}
@@ -289,11 +304,10 @@ export class Empresa extends Component {
                       placeHolderTextStyle={stl.placeHolderTextStyle}
                       dropDownImageStyle={stl.dropDownImageStyle}
                       selectedValue={(index, seleccionado) => {
-                        this.setState({
-                          localidadSeleccionadoText: seleccionado.name,
-                          localidadId: seleccionado.id,
-                          hasChange: true
-                        });
+                        this._cambioLocalidad(
+                          seleccionado.name,
+                          seleccionado.id
+                        );
                       }}
                     />
                   </View>
@@ -430,3 +444,11 @@ export class Empresa extends Component {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    session: sessionService,
+    provService: proveedorService,
+    localidades: commonService.getStore().localidades
+  };
+};
+export default connect(mapStateToProps)(Empresa);

@@ -23,17 +23,24 @@ class FeedServicios extends Component {
       subcategoriaSeleccionadaText: "Subacategoría",
       subcategoriaId: "",
       categoriaSeleccionadaText: "Categoría",
-      categoriaId: "",
+      categoriaId: ""
     };
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   _cambioCategoria(nombre, id) {
-    this.setState({ categoriaSeleccionadaText: nombre, categoriaId: id, subcategoriaId: '', subcategoriaSeleccionadaText: 'Subcategoría' });
-    this.setState({ subcategorias: this.props.categorias.find(item => item.id === id).subcategorias });
-    servicioService.buscar(id, '', this.state.localidadId);
+    this.setState({
+      categoriaSeleccionadaText: nombre,
+      categoriaId: id,
+      subcategoriaId: "",
+      subcategoriaSeleccionadaText: "Subcategoría"
+    });
+    this.setState({
+      subcategorias: this.props.categorias.find(item => item.id === id)
+        .subcategorias
+    });
+    servicioService.buscar(id, "", this.state.localidadId);
   }
 
   _cambioSubcategoria(nombre, id) {
@@ -42,11 +49,22 @@ class FeedServicios extends Component {
   }
   _cambioLocalidad(nombre, id) {
     this.setState({ localidadSeleccionadaText: nombre, localidadId: id });
-    servicioService.buscar(this.state.categoriaId, this.state.subcategoriaId, id);
+    servicioService.buscar(
+      this.state.categoriaId,
+      this.state.subcategoriaId,
+      id
+    );
   }
   HandleLimpiarBuscadorBtn() {
     servicioService.buscar();
-    this.setState({ subcategoriaId: '', subcategoriaSeleccionadaText: 'Subcategoría', categoriaId: '', categoriaSeleccionadaText: 'Categoría', localidadId: '', localidadSeleccionadaText: 'Localidad' });
+    this.setState({
+      subcategoriaId: "",
+      subcategoriaSeleccionadaText: "Subcategoría",
+      categoriaId: "",
+      categoriaSeleccionadaText: "Categoría",
+      localidadId: "",
+      localidadSeleccionadaText: "Localidad"
+    });
   }
 
   render() {
@@ -65,7 +83,9 @@ class FeedServicios extends Component {
             </Button>
             <View style={[stl.filter, stl.filterCat]}>
               <RNModal
-                dataSource={this.props.categorias.map((s, i) => { return { id: parseInt(s.id), name: s.nombre } })}
+                dataSource={this.props.categorias.map((s, i) => {
+                  return { id: parseInt(s.id), name: s.nombre };
+                })}
                 keyExtractor={item => item.id.toString()}
                 defaultValue={false}
                 pickerTitle={"¿Que categoría buscás?"}
@@ -83,15 +103,21 @@ class FeedServicios extends Component {
                 placeHolderTextStyle={stl.selectLabelTextStyle2}
                 dropDownImageStyle={stl.dropDownImageStyle2}
                 selectedValue={(index, seleccionado) => {
-                  return this._cambioCategoria(seleccionado.name, seleccionado.id)
-                }
-                }
+                  return this._cambioCategoria(
+                    seleccionado.name,
+                    seleccionado.id
+                  );
+                }}
               />
             </View>
             <View style={[stl.filter, stl.filterCat]}>
               <RNModal
-                dataSource={this.state.subcategorias.map((s, i) => { return { id: s.id, name: s.nombre } })}
-                dummyDataSource={this.state.subcategorias.map((s, i) => { return { id: s.id, name: s.nombre } })}
+                dataSource={this.state.subcategorias.map((s, i) => {
+                  return { id: s.id, name: s.nombre };
+                })}
+                dummyDataSource={this.state.subcategorias.map((s, i) => {
+                  return { id: s.id, name: s.nombre };
+                })}
                 defaultValue={false}
                 pickerTitle={"¿Que subcategoría buscás?"}
                 showSearchBar={true}
@@ -108,14 +134,18 @@ class FeedServicios extends Component {
                 placeHolderTextStyle={stl.selectLabelTextStyle2}
                 dropDownImageStyle={stl.dropDownImageStyle2}
                 selectedValue={(index, seleccionado) => {
-                  this._cambioSubcategoria(seleccionado.name, seleccionado.id)
+                  this._cambioSubcategoria(seleccionado.name, seleccionado.id);
                 }}
               />
             </View>
             <View style={[stl.filter, stl.filterCat]}>
               <RNModal
-                dataSource={this.props.localidades.map((s, i) => { return { id: s.id, name: s.nombre } })}
-                dataSource={this.props.localidades.map((s, i) => { return { id: s.id, name: s.nombre } })}
+                dataSource={this.props.localidades.map((s, i) => {
+                  return { id: s.id, name: s.nombre };
+                })}
+                dummyDataSource={this.props.localidades.map((s, i) => {
+                  return { id: s.id, name: s.nombre };
+                })}
                 defaultValue={false}
                 pickerTitle={"¿Que localidad?"}
                 showSearchBar={true}
@@ -132,7 +162,7 @@ class FeedServicios extends Component {
                 placeHolderTextStyle={stl.selectLabelTextStyle2}
                 dropDownImageStyle={stl.dropDownImageStyle2}
                 selectedValue={(index, seleccionado) => {
-                  this._cambioLocalidad(seleccionado.name, seleccionado.id)
+                  this._cambioLocalidad(seleccionado.name, seleccionado.id);
                 }}
               />
             </View>
@@ -151,14 +181,12 @@ class FeedServicios extends Component {
                 keyExtractor={item => item.id.toString()}
               />
             )}
-
           />
         </Content>
       </Container>
     );
   }
 }
-
 
 const mapStateToProps = state => {
   return {
@@ -168,5 +196,3 @@ const mapStateToProps = state => {
   };
 };
 export default connect(mapStateToProps)(FeedServicios);
-
-

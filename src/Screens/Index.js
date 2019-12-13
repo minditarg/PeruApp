@@ -4,14 +4,14 @@ import Login from "./Login";
 
 import { Olvide } from "./Olvide";
 import { Registrarse } from "./Registrarse";
-import { RegistrarProveedor } from "./RegistrarProveedor";
+import RegistrarProveedor from "./RegistrarProveedor";
 import { AddServicio } from "./AddServicio";
 import { UpdateServicio } from "./UpdateServicio";
 
 import { AddTrabajo } from "./AddTrabajo";
-import { Empresa } from "./Empresa";
+import Empresa from "./Empresa";
 import Servicios from "./Servicios";
-import  Trabajos  from "./Trabajos";
+import Trabajos from "./Trabajos";
 import DetalleTrabajo from "./ClienteScreens/DetalleTrabajo";
 import EmpresaDetail from "./ClienteScreens/EmpresaDetail";
 import FeedServicios from "./ClienteScreens/FeedServicios";
