@@ -1,7 +1,7 @@
 import * as actionTypes from './actionTypes';
 
 export const initialState = {
-	trabajos: {},
+	trabajos: []
 };
 
 export const reducer = (state = initialState, action) => {

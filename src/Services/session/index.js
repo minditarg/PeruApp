@@ -99,7 +99,7 @@ export const estaLogueado = () => {
                 actionCreators.update({
                   user: response.data,
                   tokens: token,
-                  tipo: response.data.Cliente ? "Cliente" : "Proveedor"
+                  tipo: response.data.esCliente ? "Cliente" : "Proveedor"
                 })
               );
               return true;
@@ -119,10 +119,10 @@ export const usuarioLogueado = () => {
   }
 };
 export const avatar = () => {
-  if (usuarioLogueado() != null && usuarioLogueado().Proveedor != null) {
+  if (esUsuarioTipoEmpresa()) {
     return apiConfig.pathFiles + usuarioLogueado().Proveedor.foto;
   }
-  if (usuarioLogueado() != null && usuarioLogueado().Cliente != null) {
+  if (esUsuarioTipoCliente()) {
     return "data:image/png;base64," + usuarioLogueado().avatar;
   } else {
     return require("../../../assets/noFoto.png");
@@ -137,10 +137,10 @@ export const esAppTipoCliente = () => {
 };
 
 export const esUsuarioTipoCliente = () => {
-  return usuarioLogueado() && usuarioLogueado().Cliente != null;
+  return usuarioLogueado() && usuarioLogueado().esCliente;
 };
 export const esUsuarioTipoEmpresa = () => {
-  return usuarioLogueado() && usuarioLogueado().Proveedor != null;
+  return usuarioLogueado() && !usuarioLogueado().esCliente ;
 };
 
 export const actualizarUsuario = () => {

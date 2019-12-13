@@ -107,8 +107,8 @@ class Login extends Component {
         if (response.statusType == "success") {
           this.setState(this.initialState);
           if (session.esUsuarioTipoCliente())
-            this.props.navigation.navigate("Trabajos");
-          if (session.esUsuarioTipoEmpresa())
+            this.props.navigation.navigate("FeedServicios");
+          else if (session.esUsuarioTipoEmpresa())
             this.props.navigation.navigate("Servicios");
           else {
             //se pudo registrar pero no completo los datos particulares

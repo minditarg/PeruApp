@@ -5,5 +5,5 @@ const endPoints = {
 };
 
 
-export const crear = (email, password) =>
-    fetchApi(endPoints.crear, { email: email, password: password}, 'post');
+export const crear = (email, password, esCliente) =>
+    fetchApi(endPoints.crear, { email: email, password: password, esCliente: esCliente}, 'post');

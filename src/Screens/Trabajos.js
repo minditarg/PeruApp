@@ -45,7 +45,7 @@ class Trabajos extends Component {
 
 const mapStateToProps = state => {
   return {
-    trabajos: trabajosService.getListadoPorProveedor().trabajos
+    trabajos: trabajosService.getStore().trabajos
   };
 };
 export default connect(mapStateToProps)(Trabajos);

@@ -19,7 +19,30 @@ export const listadoPorProveedor = () => {
 }
 
 
-export const getListadoPorProveedor = () => {
+export const listadoPorClienteCalificados = () => {
+    let idCliente = sessionService.usuarioLogueado().Cliente.id; 
+    return api.listadoPorClienteCalificados(idCliente).then(response => {
+        if (response.statusType == "success") {
+            store.dispatch(actionCreators.actualizar(response.data));
+        }
+    }).catch(exception => {
+        console.log(exception);
+        throw exception;
+    });
+}
+export const listadoPorClienteSinCalificar = () => {
+    let idCliente = sessionService.usuarioLogueado().Cliente.id; 
+    return api.listadoPorClienteSinCalificar(idCliente).then(response => {
+        if (response.statusType == "success") {
+            store.dispatch(actionCreators.actualizar(response.data));
+        }
+    }).catch(exception => {
+        console.log(exception);
+        throw exception;
+    });
+}
+
+export const getStore = () => {
     return selectors.get();
 }
 

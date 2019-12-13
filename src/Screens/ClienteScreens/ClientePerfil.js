@@ -24,7 +24,7 @@ import {
   Spinner,
   Toast
 } from "native-base";
-
+import * as sessionService from "../../Services/session";
 class ClientePerfil extends Component {
   constructor() {
     super();
@@ -37,7 +37,10 @@ class ClientePerfil extends Component {
     };
     this.state = this.initialState;
   }
-
+  logout() {
+    sessionService.logout();
+    this.props.navigation.navigate("Select");
+  }
   render() {
     let classesBtn = [stl.btn, stl.primary];
     if (!this.state.hasChange) {
