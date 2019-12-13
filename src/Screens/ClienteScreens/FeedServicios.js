@@ -46,7 +46,7 @@ class FeedServicios extends Component {
   }
   HandleLimpiarBuscadorBtn() {
     servicioService.buscar();
-    this.setState({ subcategoriaId: '', subcategoriaSeleccionadaText: 'Subcategoría', categoriaId: '', categoriaSeleccionadaText: 'Categoría', localidadId: '', localidadSeleccionadaText: 'Categoría' });
+    this.setState({ subcategoriaId: '', subcategoriaSeleccionadaText: 'Subcategoría', categoriaId: '', categoriaSeleccionadaText: 'Categoría', localidadId: '', localidadSeleccionadaText: 'Localidad' });
   }
 
   render() {
