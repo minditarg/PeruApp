@@ -31,6 +31,7 @@ import * as Permissions from "expo-permissions";
 import RNModal from "rn-modal-picker";
 
 import * as servicioService from "../Services/servicios";
+import * as sessionService from "../Services/session";
 
 import * as proveedor from "../Services/proveedor";
 import * as commonService from "../Services/common";
@@ -93,6 +94,10 @@ class RegistrarProveedor extends Component {
     );
   }
 
+  _handleCancelar() {
+    sessionService.logout();
+    this.props.navigation.navigate("Login");
+  }
   HandleRegistroBtn() {
     this.setState({
       isLoading: true,
@@ -100,6 +105,7 @@ class RegistrarProveedor extends Component {
       error: ""
     });
     dismissKeyboard();
+
     this.props.prov
       .crear(
         this.state.nombre,

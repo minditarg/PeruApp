@@ -87,7 +87,7 @@ export class ListTrabajo extends Component {
               {obj.Cliente.Usuario.nombre}{" "}
               {!obj.puntajeDelCliente && <Text> (aún sin puntuar)</Text>}
             </Text>
-            {!obj.puntajeDelCliente && (
+            {obj.puntajeDelCliente && (
               <Calificacion promedio={5}></Calificacion>
             )}
           </Body>
