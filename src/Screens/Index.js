@@ -19,7 +19,7 @@ import ServicioDetail from "./ClienteScreens/ServicioDetail";
 import TipoServicio from "./ClienteScreens/TipoServicio";
 import TrabajosHechos from "./ClienteScreens/TrabajosHechos";
 import ClientePerfil from "./ClienteScreens/ClientePerfil";
-
+import VideoPlayer from "./ClienteScreens/VideoPlayer";
 export {
   Select,
   Video,
@@ -34,6 +34,7 @@ export {
   Servicios,
   Trabajos,
   DetalleTrabajo,
+  VideoPlayer,
   EmpresaDetail,
   FeedServicios,
   ServicioDetail,

@@ -23,7 +23,8 @@ import {
   ServicioDetail,
   TipoServicio,
   TrabajosHechos,
-  ClientePerfil
+  ClientePerfil,
+  VideoPlayer
 } from "../src/Screens/Index";
 import { stl } from "./Screens/styles/styles";
 import NavHeader from "../src/Componentes/NavHeader";
@@ -55,6 +56,7 @@ const ClienteServicios = createStackNavigator(
   {
     TipoServicio: TipoServicio,
     FeedServicios: FeedServicios,
+    VideoPlayer: VideoPlayer,
     ServicioDetail: ServicioDetail,
     EmpresaDetail: EmpresaDetail
   },

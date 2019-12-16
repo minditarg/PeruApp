@@ -40,7 +40,22 @@ class ServicioDetail extends Component {
   constructor() {
     super();
     this.state = {
-      modal: false
+      modal: false,
+      videosId: [
+        {
+          id: 1,
+          code: "KI2lsdXJQ40"
+        },
+        {
+          id: 2,
+          code: "9Fv5cuYZFC0"
+        },
+
+        {
+          id: 3,
+          code: "IvUU8joBb1Q"
+        }
+      ]
     };
   }
 
@@ -74,6 +89,21 @@ class ServicioDetail extends Component {
   };
 
   render() {
+    let videos = this.state.videosId.map((s, i) => {
+      let link = "https://i.ytimg.com/vi/" + s.code + "/hqdefault.jpg";
+      return (
+        <TouchableOpacity
+          key={s.id.toString()}
+          onPress={() => {
+            this.props.navigation.navigate("VideoPlayer", {
+              videoCode: s.code
+            });
+          }}
+        >
+          <Image style={stl.imgEmp} source={{ uri: link }} />
+        </TouchableOpacity>
+      );
+    });
     return (
       <Container style={stl.containerList}>
         <Content>
@@ -192,38 +222,7 @@ class ServicioDetail extends Component {
                 </Text>
 
                 <Row style={stl.MarginTop15}>
-                  <ScrollView horizontal>
-                    <TouchableOpacity onPress={this.openModal}>
-                      <Image
-                        style={stl.imgEmp}
-                        source={require("../../../assets/noFoto.png")}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.openModal}>
-                      <Image
-                        style={stl.imgEmp}
-                        source={require("../../../assets/noFoto.png")}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.openModal}>
-                      <Image
-                        style={stl.imgEmp}
-                        source={require("../../../assets/noFoto.png")}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.openModal}>
-                      <Image
-                        style={stl.imgEmp}
-                        source={require("../../../assets/noFoto.png")}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.openModal}>
-                      <Image
-                        style={stl.imgEmp}
-                        source={require("../../../assets/noFoto.png")}
-                      />
-                    </TouchableOpacity>
-                  </ScrollView>
+                  <ScrollView horizontal>{videos}</ScrollView>
                 </Row>
               </Grid>
             </View>

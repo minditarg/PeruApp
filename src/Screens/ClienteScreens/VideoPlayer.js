@@ -3,25 +3,26 @@ import { WebView, Platform } from "react-native";
 import { Row, Grid } from "react-native-easy-grid";
 import { Container, Button, Text } from "native-base";
 import { connect } from "react-redux";
-import { stl } from "./styles/styles";
-import * as session from "../Services/session";
-class Video extends Component {
+import { stl } from "../styles/styles";
+
+class VideoPlayer extends Component {
   constructor() {
     super();
   }
   onListenMessage() {}
   handleNextBtn() {
-    if (session.esAppTipoCliente()) {
-      console.log("asdf");
-      this.props.navigation.navigate("Cliente");
-    } else {
-      console.log("asdfdfasd");
-
-      this.props.navigation.navigate("Login");
-    }
+    this.props.navigation.pop();
   }
 
   render() {
+    let videoCode = this.props.navigation.getParam("videoCode", "NO-ID");
+
+    let link =
+      "https://www.youtube.com/embed/" +
+      videoCode +
+      "?&controls=0&rel=0&autoplay=1&frameborder='0'&allow='autoplay;'&allowfullscreen";
+    console.log(videoCode);
+    console.log(link);
     return (
       <Container style={stl.container}>
         <Grid>
@@ -39,17 +40,7 @@ class Video extends Component {
                   : undefined
               }
               userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
-              source={{
-                ...(session.esAppTipoCliente()
-                  ? {
-                      uri:
-                        "https://www.youtube.com/embed/7qOqCtg6HWo?&controls=0&rel=0&autoplay=1&frameborder='0'&allow='autoplay;'&allowfullscreen"
-                    }
-                  : {
-                      uri:
-                        "https://www.youtube.com/embed/1TEn9uxH07w?&controls=0&rel=0&autoplay=1&frameborder='0'&allow='autoplay;'&allowfullscreen"
-                    })
-              }}
+              source={{ uri: link }}
             />
           </Row>
         </Grid>
@@ -58,11 +49,11 @@ class Video extends Component {
           block
           onPress={() => this.handleNextBtn()}
         >
-          <Text>>> Saltar</Text>
+          <Text>X Salir</Text>
         </Button>
       </Container>
     );
   }
 }
 
-export default Video;
+export default VideoPlayer;
