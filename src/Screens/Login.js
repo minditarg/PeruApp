@@ -87,6 +87,21 @@ class Login extends Component {
     }
   };
 
+    // LOGIN De FACEBBOK
+    loginGoogle = async () => {
+      let redirectUrl = await Linking.getInitialURL();
+      let authUrl = "http://192.168.56.1:3001/api/auth/google";
+      try {
+        let authResult = await WebBrowser.openAuthSessionAsync(
+          "http://192.168.56.1:3001/api/auth/google",
+          redirectUrl
+        );
+        await this.setState({ authResult: authResult, isPostBack: true });
+      } catch (err) {
+        console.log("ERROR logiGoogle:", err);
+      }
+    };
+
   HandleRegistroBtn() {
     this.props.navigation.navigate("Registrarse");
   }
@@ -257,13 +272,7 @@ class Login extends Component {
                             block
                             light
                             style={[stl.btn, stl.Google]}
-                            onPress={() =>
-                              Toast.show({
-                                text: "Wrong password!",
-                                buttonText: "Okay",
-                                position: "top"
-                              })
-                            }
+                            onPress={this.loginGoogle}
                           >
                             <Image
                               source={require("../../assets/google.png")}
