@@ -65,8 +65,13 @@ export class ListTrabajo extends Component {
 
   render() {
     let obj = this.props.obj;
+    console.log(obj);
     return (
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          { this.props.escliente && this.props.esTrabajoSinCalificar && this.props.navigation.push("PuntuarTrabajo", { id: obj.id }); }
+        }}
+      >
         <View style={[stl.card, stl.cardHor]}>
           {this.props.Image && (
             <Left style={stl.cardLeft}>

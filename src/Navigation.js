@@ -24,6 +24,7 @@ import {
   TipoServicio,
   TrabajosHechos,
   ClientePerfil,
+  PuntuarTrabajo,
   VideoPlayer
 } from "../src/Screens/Index";
 import { stl } from "./Screens/styles/styles";
@@ -33,7 +34,8 @@ import AppLoad from "./AppLoad";
 const ClienteTrabajos = createStackNavigator(
   {
     TrabajosHechos: TrabajosHechos,
-    DetalleTrabajo: DetalleTrabajo
+    DetalleTrabajo: DetalleTrabajo,
+    PuntuarTrabajo: PuntuarTrabajo
   },
   {
     defaultNavigationOptions: {

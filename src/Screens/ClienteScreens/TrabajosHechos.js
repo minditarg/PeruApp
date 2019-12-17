@@ -15,6 +15,11 @@ class TrabajosHechos extends Component {
     trabajosService.listadoPorClienteSinCalificar();
   }
 
+  componentDidUpdate() { console.log("componentDidUpdate");
+    // trabajosService.listadoPorClienteCalificados();
+    // trabajosService.listadoPorClienteSinCalificar();
+  }
+
   render() {
     return (
       <Container style={stl.containerList}>
@@ -25,7 +30,7 @@ class TrabajosHechos extends Component {
           <FlatList
             data={this.props.sinCalificar}
             renderItem={({ item }) => (
-              <ListTrabajo navigation={this.props.navigation}  escliente={true}   trash={false} Image obj={item} />
+              <ListTrabajo navigation={this.props.navigation} esTrabajoSinCalificar={true}  escliente={true}   trash={false} Image obj={item} />
             )}
             keyExtractor={item => item.id.toString()}
           />
@@ -35,7 +40,7 @@ class TrabajosHechos extends Component {
           <FlatList
             data={this.props.calificados}
             renderItem={({ item }) => (
-              <ListTrabajo navigation={this.props.navigation} trash={false} escliente={true} Image obj={item} />
+              <ListTrabajo navigation={this.props.navigation} trash={false} esTrabajoSinCalificar={false} escliente={true} Image obj={item} />
             )}
             keyExtractor={item => "#" + item.id.toString()}
           />

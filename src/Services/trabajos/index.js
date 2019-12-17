@@ -20,7 +20,9 @@ export const listadoPorProveedor = () => {
 
 
 export const listadoPorClienteCalificados = () => {
+    console.log(sessionService.usuarioLogueado());
     let idCliente = sessionService.usuarioLogueado().Cliente.id; 
+    
     return api.listadoPorClienteCalificados(idCliente).then(response => {
         console.log(response, "resposnee");
         if (response.statusType == "success") {
@@ -62,4 +64,8 @@ export const get = (id) => {
             return response.data;
         }
     })
+}
+
+export const puntuarTrabajo = (trabajoId,puntajeDelCliente,descripcionDelCliente) => {
+    return api.puntuarTrabajo(trabajoId,puntajeDelCliente,descripcionDelCliente)
 }

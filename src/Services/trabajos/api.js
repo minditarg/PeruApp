@@ -7,6 +7,7 @@ const endPoints = {
     get: '/trabajo/',
     crear: '/trabajo',
     eliminar: '/trabajo/',
+    puntuarTrabajo:'/trabajo/puntuarTrabajo'
 };
 
 
@@ -24,3 +25,8 @@ export const crear = (clienteId,servicioId,puntajeDelProveedor,descripcionDelPro
 }
 
 export const eliminar = (id) => fetchApi(endPoints.eliminar + id, {}, 'delete');
+
+
+export const puntuarTrabajo = (trabajoId,puntajeDelCliente,descripcionDelCliente) => {
+    return fetchApi(endPoints.puntuarTrabajo, {trabajoId,puntajeDelCliente,descripcionDelCliente}, 'post');
+}
