@@ -19,6 +19,9 @@ class Servicios extends Component {
             data={this.props.servicios}
             renderItem={({ item }) => (
               <CardList
+                onPress={() => {
+                  this.props.navigation.push("UpdateServicio", { id: item.id });
+                }}
                 trash={true}
                 navigation={this.props.navigation}
                 Image

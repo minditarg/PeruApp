@@ -27,6 +27,7 @@ import {
 } from "native-base";
 import { stl } from "../Screens/styles/styles";
 import * as servicioService from "../Services/servicios";
+import * as commonService from "../Services/common";
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
@@ -52,7 +53,7 @@ export class AddServicio extends Component {
   }
 
   componentDidMount() {
-    servicioService.listadoCategorias().then(response => {
+    commonService.listadoCategorias().then(response => {
       this.setState({
         categorias: response
       });

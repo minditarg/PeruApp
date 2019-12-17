@@ -66,11 +66,7 @@ export class CardList extends Component {
   render() {
     let obj = this.props.obj;
     return (
-      <TouchableOpacity
-        onPress={() => {
-          this.props.navigation.push("UpdateServicio", { id: obj.id });
-        }}
-      >
+      <TouchableOpacity onPress={this.props.onPress}>
         <View style={[stl.card, stl.cardHor]}>
           {this.props.Image && (
             <Left style={stl.cardLeft}>

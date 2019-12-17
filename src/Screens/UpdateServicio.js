@@ -33,6 +33,7 @@ import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as sessionService from "../Services/session";
 import apiConfig from "../Services/api/config";
+import * as commonService from "../Services/common";
 
 export class UpdateServicio extends Component {
   constructor() {
@@ -48,7 +49,7 @@ export class UpdateServicio extends Component {
       categoria: undefined,
       subcategoria: ""
     };
-    servicioService.listadoCategorias().then(categorias => {
+    commonService.listadoCategorias().then(categorias => {
       this.setState({
         categorias: categorias
       });

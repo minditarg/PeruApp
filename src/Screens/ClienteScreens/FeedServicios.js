@@ -67,7 +67,9 @@ class FeedServicios extends Component {
       subcategorias: []
     });
   }
-
+  onBtnPress() {
+    console.log("caca");
+  }
   render() {
     return (
       <Container style={stl.containerList}>
@@ -175,9 +177,14 @@ class FeedServicios extends Component {
             data={this.props.serviciosEncontrados}
             renderItem={({ item }) => (
               <CardList
+                onPress={() => {
+                  servicioService.get(item.id);
+                  this.props.navigation.push("ServicioDetail", { id: item.id });
+                }}
                 navigation={this.props.navigation}
                 trash={false}
                 Image
+                accion={() => this.onBtnPress()}
                 obj={item}
                 keyExtractor={item => item.id.toString()}
               />
