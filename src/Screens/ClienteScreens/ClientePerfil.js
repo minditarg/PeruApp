@@ -24,12 +24,26 @@ import {
   Spinner,
   Toast
 } from "native-base";
+import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
+import * as ImagePicker from "expo-image-picker";
+import Constants from "expo-constants";
+import * as Permissions from "expo-permissions";
 import * as sessionService from "../../Services/session";
+import * as clienteService from "../../Services/clientes";
+import apiConfig from "../../Services/api/config";
 class ClientePerfil extends Component {
   constructor() {
     super();
+    let usuarioLogueado = sessionService.usuarioLogueado();
     this.initialState = {
+      email: usuarioLogueado.email,
+      nombre: usuarioLogueado.nombre,
+      telefono: usuarioLogueado.Cliente.telefono,
+      direccion: usuarioLogueado.Cliente.direccion,
+      foto: apiConfig.pathFiles + usuarioLogueado.avatar,
       fotoNueva: null,
+
+
       submitted: false,
       isLoading: false,
       error: null,
@@ -40,6 +54,74 @@ class ClientePerfil extends Component {
   logout() {
     sessionService.logout();
     this.props.navigation.navigate("Select");
+  }
+  componentDidMount() {
+    this.getPermissionAsync();
+  }
+
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== "granted") {
+        alert("Disculpe, necesitamos permiso para acceder a la cámara!");
+      }
+    }
+  };
+  igualarEstados() {
+    this.state = this.initialState;
+   }
+  _pickImage = async () => {
+    this.componentDidMount();
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      base64: true,
+      aspect: [1, 1]
+    });
+    if (!result.cancelled) {
+      this.setState({ fotoNueva: result, foto: result.uri, hasChange: true });
+    }
+  };
+
+  HandleGuardarBtn() {
+    this.setState({
+      isLoading: true
+    });
+    dismissKeyboard();
+    
+      clienteService.actualizar(
+        this.state.nombre,
+        this.state.fotoNueva
+      )
+      .then(response => {
+        if (response.statusType == "success") {
+          this.setState({
+            isLoading: false,
+            hasChange: false
+          });
+          this.igualarEstados();
+          this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true });
+          Toast.show({
+            text: response.message,
+            buttonText: "OK",
+            position: "top",
+            type: "success"
+          });
+        } else {
+          this.setState({ isLoading: false, error: response.message });
+        }
+      })
+      .catch(exception => {
+        const error = exception;
+        this.setState({
+          isLoading: false,
+          ...(error ? { error } : {})
+        });
+
+        if (!error) {
+          throw exception;
+        }
+      });
   }
   render() {
     let classesBtn = [stl.btn, stl.primary];
@@ -94,15 +176,10 @@ class ClientePerfil extends Component {
                       autoCompleteType="email"
                       keyboardType="email-address"
                       name="email"
+                      disabled="true"
                       value={this.state.email}
-                      onChangeText={email => {
-                        this.setState({ email, hasChange: true });
-                      }}
                     />
                   </Item>
-                  {this.state.submitted && !this.state.email && (
-                    <Text style={stl.txtError}> El email es requerido</Text>
-                  )}
                   <Item
                     floatingLabel
                     error={this.state.submitted && !this.state.nombre}

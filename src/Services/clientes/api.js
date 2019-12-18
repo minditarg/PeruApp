@@ -5,6 +5,7 @@ const endPoints = {
     get: '/cliente/',
     crear: '/cliente',
     eliminar: '/cliente/',
+    actualizar: '/cliente/',
 };
 
 
@@ -32,3 +33,21 @@ export const crear = (nombre, descripcion, fotos, subcategoriaId, proveedorId) =
 }
 
 export const eliminar = (id) => fetchApi(endPoints.eliminar + id, {}, 'delete');
+
+
+export const actualizar = (
+    idUsuario,
+    nombre,
+    fotoNueva,
+  ) => {
+    const formData = new FormData();
+    formData.append("nombre", nombre);
+    if (fotoNueva != null) {
+      let localUri = fotoNueva.uri;
+      let filename = localUri.split("/").pop();
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+      formData.append("foto", { uri: localUri, name: filename, type });
+    }
+    return fetchApi(endPoints.actualizar + idUsuario, formData, "put", true);
+  };

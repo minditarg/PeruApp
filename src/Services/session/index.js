@@ -123,7 +123,7 @@ export const avatar = () => {
     return apiConfig.pathFiles + usuarioLogueado().Proveedor.foto;
   }
   if (esUsuarioTipoCliente()) {
-    return "data:image/png;base64," + usuarioLogueado().avatar;
+    return apiConfig.pathFiles  + usuarioLogueado().avatar;
   } else {
     return require("../../../assets/noFoto.png");
   }

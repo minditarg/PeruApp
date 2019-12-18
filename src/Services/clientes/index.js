@@ -8,11 +8,18 @@ export const listado = () => {
         }
     })
 }
-export const crear = (nombre, descripcion, fotos, subcategoriaId) => {
-    return api.crear(nombre, descripcion, fotos, subcategoriaId, session.usuarioLogueado().Proveedor.id);
-}
-export const actualizar = (id, nombre, descripcion, fotos, subcategoriaId) => {
-    return api.actualizar(id, nombre, descripcion, fotos, subcategoriaId, session.usuarioLogueado().Proveedor.id);
+// export const crear = (nombre, descripcion, fotos, subcategoriaId) => {
+//     return api.crear(nombre, descripcion, fotos, subcategoriaId, session.usuarioLogueado().Proveedor.id);
+// }
+
+const onRequestSuccess = response => {
+    console.log(response);
+    if (response.statusType == "success")
+      session.actualizarUsuario();
+    return response;
+  };
+export const actualizar = ( nombre, foto) => {
+    return api.actualizar(session.usuarioLogueado().id, nombre, foto).then(onRequestSuccess);
 }
 
 export const eliminar = (servicioId) => {
@@ -22,7 +29,6 @@ export const eliminar = (servicioId) => {
 export const get = (id) => {
     return api.get(id).then(response => {
         if (response.statusType == "success") {
-            
             return response.data;
         }
     })
