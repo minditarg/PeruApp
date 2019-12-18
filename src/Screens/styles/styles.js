@@ -234,6 +234,7 @@ export const stl = StyleSheet.create({
     bottom: 25,
     borderRadius: 100,
     width: 60,
+    zIndex: 7,
     height: 60
   },
   iconPlus: {
@@ -541,12 +542,16 @@ export const stl = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
+    zIndex: 9,
     bottom: 0,
     justifyContent: "center",
     backgroundColor: "rgba(0,0,0,.8)"
   },
 
   imgModal: {
+    aspectRatio: 1,
+    width: "100%",
+    zIndex: 9,
     alignSelf: "center"
   },
   pointEnCard: {

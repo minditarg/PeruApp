@@ -46,7 +46,7 @@ class ServicioDetail extends Component {
     super();
     this.state = {
       modal: false,
-
+      fotoModal: "",
       videosId: [
         {
           id: 1,
@@ -78,6 +78,7 @@ class ServicioDetail extends Component {
   };
   openModal = link => {
     this.setState({ fotoModal: link, modal: true });
+    console.log(this.state.fotoModal);
   };
   closeModal = () => {
     this.setState({ modal: false });
@@ -97,7 +98,6 @@ class ServicioDetail extends Component {
   render() {
     if (!this.props.isLoading) {
       console.log(this.props.servicio);
-
       let videos = this.state.videosId.map((s, i) => {
         let link = "https://i.ytimg.com/vi/" + s.code + "/hqdefault.jpg";
         return (
@@ -114,6 +114,12 @@ class ServicioDetail extends Component {
         );
       });
 
+      let fotoPcipal = require("../../../assets/noFoto.png");
+      if (this.props.servicio.foto) {
+        fotoPcipal = {
+          uri: apiConfig.pathFiles + this.props.servicio.foto
+        };
+      }
       let fotos = this.props.servicio.galeria.map((s, i) => {
         let link = require("../../../assets/noFoto.png");
         if (s.foto) {
@@ -219,7 +225,16 @@ class ServicioDetail extends Component {
                   </Text>
 
                   <Row style={stl.MarginTop15}>
-                    <ScrollView horizontal>{fotos}</ScrollView>
+                    <ScrollView horizontal>
+                      <TouchableOpacity
+                        keyExtractor={item => item.id.toString()}
+                        onPress={() => this.openModal(fotoPcipal)}
+                      >
+                        <Image style={stl.imgEmp} source={fotoPcipal} />
+                      </TouchableOpacity>
+
+                      {fotos}
+                    </ScrollView>
                   </Row>
 
                   <Text style={[stl.tituloSeccionCard, stl.MarginTop15]}>
@@ -241,16 +256,18 @@ class ServicioDetail extends Component {
               </Button>
             </Row>
           </Content>
-          <Button
-            onPress={this.makeCall}
-            style={[stl.btnRounded, stl.primary]}
-            block
-          >
-            <Image
-              source={require("../../../assets/whapp.png")}
-              style={stl.btnFloatImg}
-            />
-          </Button>
+          {!this.state.modal && (
+            <Button
+              onPress={this.makeCall}
+              style={[stl.btnRounded, stl.primary]}
+              block
+            >
+              <Image
+                source={require("../../../assets/whapp.png")}
+                style={stl.btnFloatImg}
+              />
+            </Button>
+          )}
           {this.state.modal && (
             <TouchableOpacity style={stl.modal} onPress={this.closeModal}>
               <View>
