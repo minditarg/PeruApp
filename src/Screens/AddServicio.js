@@ -32,8 +32,7 @@ import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
-import * as sessionService from "../Services/session";
-
+import * as serviciosService from "../Services/servicios";
 export class AddServicio extends Component {
   constructor() {
     super();
@@ -108,7 +107,7 @@ export class AddServicio extends Component {
             position: "top",
             type: "success"
           });
-          sessionService.actualizarUsuario().then(response => {
+          serviciosService.listadoPorProveedor().then(response => {
             this.state = this.initialState;
             this.props.navigation.navigate("Servicios");
           });

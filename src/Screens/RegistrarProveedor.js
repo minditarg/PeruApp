@@ -62,6 +62,7 @@ class RegistrarProveedor extends Component {
 
   componentDidMount() {
     this.getPermissionAsync();
+    this.setState({email: this.props.navigation.getParam("email")})
   }
 
   getPermissionAsync = async () => {

@@ -6,10 +6,12 @@ const endPoints = {
     actualizar: '/servicio/',
     eliminar: '/servicio/',
     buscar: '/servicio/buscar/',
+    listadoPorProveedor: '/servicios/listadoPorProveedor/'
 };
 
 
 export const get = (id) => fetchApi(endPoints.get + id, {}, 'get');
+
 
 export const buscar = (categoriaId, subcategoriaId, localidadId) => fetchApi(endPoints.buscar, {categoriaId:categoriaId, subcategoriaId:subcategoriaId, localidadId:localidadId}, 'post');
 
@@ -51,3 +53,5 @@ export const actualizar = (id, nombre, descripcion, fotos, subcategoriaId, prove
 
 
 export const eliminar = (id) => fetchApi(endPoints.eliminar + id, {}, 'delete');
+
+export const listadoPorProveedor = (id) => fetchApi(endPoints.listadoPorProveedor + id, {}, 'get');

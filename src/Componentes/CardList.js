@@ -22,7 +22,7 @@ export class CardList extends Component {
             type: "success"
           });
 
-          sessionService.actualizarUsuario().then(response => {
+          servicioService.listadoPorProveedor().then(response => {
             this.props.navigation.push("Servicios");
           });
         } else {

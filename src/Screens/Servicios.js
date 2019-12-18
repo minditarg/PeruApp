@@ -4,10 +4,12 @@ import { Container, Content, Button, Icon, Spinner } from "native-base";
 import { CardList } from "../Componentes/CardList";
 import { stl } from "../Screens/styles/styles";
 import * as session from "../Services/session";
+import * as serviciosService from "../Services/servicios";
 import { connect } from "react-redux";
 class Servicios extends Component {
   constructor() {
     super();
+    serviciosService.listadoPorProveedor();
   }
 
   render() {
@@ -47,10 +49,7 @@ class Servicios extends Component {
 
 const mapStateToProps = state => {
   return {
-    servicios:
-      session.usuarioLogueado() != null
-        ? session.usuarioLogueado().Proveedor.servicios
-        : null
+    servicios: serviciosService.getStore().servicios
   };
 };
 export default connect(mapStateToProps)(Servicios);

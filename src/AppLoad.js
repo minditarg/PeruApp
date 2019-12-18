@@ -33,7 +33,7 @@ export default class AppLoad extends React.Component {
         if (response) {
           if (session.esUsuarioTipoCliente())
             this.props.navigation.navigate("FeedServicios");
-          else if(session.esUsuarioTipoEmpresa())
+            else if (session.esUsuarioTipoEmpresa() && session.usuarioLogueado().Proveedor != null)
             this.props.navigation.navigate("Servicios");
           else {
             //se pudo registrar pero no completo los datos particulares

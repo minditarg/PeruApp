@@ -129,7 +129,7 @@ export class UpdateServicio extends Component {
             position: "top",
             type: "success"
           });
-          sessionService.actualizarUsuario().then(response => {
+          servicioService.listadoPorProveedor().then(response => {
             this.props.navigation.push("Servicios");
           });
         } else {
