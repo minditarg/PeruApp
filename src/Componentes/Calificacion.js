@@ -9,7 +9,7 @@ export class Calificacion extends Component {
   }
 
   render() {
-    let stars = [];
+    let stars = []; 
     for (let i = 0; i < 5; i++) {
       if (i + 1 <= this.props.promedio) {
         stars.push(
@@ -30,7 +30,10 @@ export class Calificacion extends Component {
         );
       }
     }
-
-    return <View style={stl.puntaje}>{stars}</View>;
+    if(this.props.promedio){
+      return <View style={stl.puntaje}>{stars}</View>;
+    }
+    return null
+   
   }
 }

@@ -5,6 +5,7 @@ import { stl } from "../Screens/styles/styles";
 import * as servicioService from "../Services/servicios";
 import * as sessionService from "../Services/session";
 import apiConfig from "../Services/api/config";
+import { Calificacion } from "./Calificacion";
 export class CardList extends Component {
   constructor() {
     super();
@@ -84,13 +85,7 @@ export class CardList extends Component {
           <Body style={stl.cardBody}>
             <Text style={stl.cardTitulo}>{obj.nombre}</Text>
             <Text style={stl.cardSubtitulo}>{obj.descripcion}</Text>
-            <View style={stl.puntaje}>
-              <Icon style={stl.iconstar} type="Ionicons" name="star" />
-              <Icon style={stl.iconstar} type="Ionicons" name="star" />
-              <Icon style={stl.iconstar} type="Ionicons" name="star-half" />
-              <Icon style={stl.iconstar} type="Ionicons" name="star-outline" />
-              <Icon style={stl.iconstar} type="Ionicons" name="star-outline" />
-            </View>
+            <Calificacion promedio={obj.puntaje}></Calificacion>
           </Body>
 
           <Right style={stl.cardRight}>
