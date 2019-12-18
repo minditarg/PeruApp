@@ -34,7 +34,7 @@ export const get = id => {
   return api.get(id).then(response => {
     if (response.statusType == "success") {
       store.dispatch(actionCreators.seleccionarServicio(response.data));
-      //return response.data;
+      return response.data;
     }
   });
 };
@@ -48,4 +48,13 @@ export const buscar = (categoriaId, subcategoriaId, localidadId) => {
 };
 export const getStore = () => {
   return selectors.get();
+};
+
+
+export const listadoPorProveedor = () => {
+  return api.listadoPorProveedor(session.usuarioLogueado().Proveedor.id).then(response => {
+    if (response.statusType == "success") {
+      store.dispatch(actionCreators.actualizarServicios(response.data));
+    }
+  });
 };

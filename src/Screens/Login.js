@@ -120,6 +120,7 @@ class Login extends Component {
       .authenticate(this.state.email, this.state.password)
       .then(response => {
         if (response.statusType == "success") {
+          let email= this.state.email;
           this.setState(this.initialState);
           if (session.esUsuarioTipoCliente())
             this.props.navigation.navigate("FeedServicios");

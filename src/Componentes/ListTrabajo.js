@@ -95,8 +95,8 @@ export class ListTrabajo extends Component {
               <Text style={stl.cardSubtitulo}>{obj.Cliente.Usuario.nombre} {!obj.puntajeDelCliente && <Text > (aún sin puntuar)</Text>}</Text>
             }
 
-            {!obj.puntajeDelCliente && (
-              <Calificacion promedio={5}></Calificacion>
+            {obj.puntajeDelCliente && (
+              <Calificacion promedio={obj.puntajeDelCliente}></Calificacion>
             )}
             {!obj.puntajeDelCliente && (
               <Right style={stl.cardRight}>
