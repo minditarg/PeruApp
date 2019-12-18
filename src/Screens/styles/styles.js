@@ -25,7 +25,6 @@ export const stl = StyleSheet.create({
     height: 80
   },
   vista: {
-    paddingTop: 10,
     paddingBottom: 30
   },
   btn: {
@@ -175,8 +174,6 @@ export const stl = StyleSheet.create({
 
   cardFluid: {
     paddingLeft: 10,
-    // paddingVertical: 5,
-    // flex: 1,
     borderRadius: 3,
     shadowColor: "#ffff",
     backgroundColor: "#fff",
@@ -490,7 +487,9 @@ export const stl = StyleSheet.create({
   tituloSeccionCard: {
     paddingHorizontal: 10,
     paddingVertical: 0,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    fontSize: 20,
+    flex: 1
   },
   CardEmpresa: {
     borderRadius: 25,
@@ -526,7 +525,8 @@ export const stl = StyleSheet.create({
     fontWeight: "bold",
     color: darkBlue,
     paddingHorizontal: 15,
-    paddingVertical: 7
+    paddingVertical: 7,
+    flex: 1
   },
   DescEmpresa: {
     margin: 5,
@@ -563,5 +563,8 @@ export const stl = StyleSheet.create({
   },
   checboxLabel: {
     marginLeft: 5
+  },
+  puntajeEnCard: {
+    marginLeft: 10
   }
 });

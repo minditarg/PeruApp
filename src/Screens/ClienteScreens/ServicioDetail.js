@@ -2,44 +2,18 @@ import React, { Component } from "react";
 import {
   View,
   Image,
-  SafeAreaView,
-  TouchableWithoutFeedback,
   ScrollView,
   TouchableOpacity,
-  Keyboard,
-  FlatList,
   Linking,
-  Platform,
-  KeyboardAvoidingView
+  Platform
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import {
-  Button,
-  Text,
-  Container,
-  Header,
-  Content,
-  Card,
-  CardItem,
-  Body,
-  Item,
-  Form,
-  Textarea,
-  Input,
-  Label,
-  Icon,
-  Spinner,
-  Toast
-} from "native-base";
+import { Button, Text, Container, Content, Spinner } from "native-base";
 import { stl } from "../styles/styles";
-import { CardList } from "../../Componentes/CardList";
 import * as servicioService from "../../Services/servicios";
-import * as storeda from "../../Store/index";
-
+import { Calificacion } from "../../Componentes/Calificacion";
 import { connect } from "react-redux";
 import apiConfig from "../../Services/api/config";
-
-import works from "../../../Datos/Trabajos.json";
 
 class ServicioDetail extends Component {
   constructor() {
@@ -65,17 +39,17 @@ class ServicioDetail extends Component {
     };
   }
 
-  makeCall = () => {
+  //#region UiFunctions
+  makeCall = num => {
     let phoneNumber = "";
-
     if (Platform.OS === "android") {
-      phoneNumber = "tel:${1234567890}";
+      phoneNumber = "tel:${" + num + "}";
     } else {
-      phoneNumber = "telprompt:${1234567890}";
+      phoneNumber = "telprompt:${" + num + "}";
     }
-
     Linking.openURL(phoneNumber);
   };
+
   openModal = link => {
     this.setState({ fotoModal: link, modal: true });
     console.log(this.state.fotoModal);
@@ -83,22 +57,19 @@ class ServicioDetail extends Component {
   closeModal = () => {
     this.setState({ modal: false });
   };
-  sendMail = () => {
-    Linking.openURL(
-      "mailto:support@example.com?subject=SendMail&body=Description"
-    );
+  sendMail = mail => {
+    Linking.openURL("mailto:" + mail + "?subject=SendMail&body=Description");
   };
-
-  sendWhatsapp = () => {
-    Linking.openURL(
-      "whatsapp://send?text=" + "soregato" + "&phone=91" + "123456789"
-    );
+  sendWhatsapp = num => {
+    Linking.openURL("whatsapp://send?text=" + "soregato" + "&phone=91" + num);
   };
-
+  //#endregion
   render() {
     if (!this.props.isLoading) {
-      console.log(this.props.servicio);
-      let videos = this.state.videosId.map((s, i) => {
+      let Servicio = this.props.servicio;
+      let Proveedor = Servicio.Proveedor;
+      //#region Videos
+      let videos = Servicio.videos.map((s, i) => {
         let link = "https://i.ytimg.com/vi/" + s.code + "/hqdefault.jpg";
         return (
           <TouchableOpacity
@@ -113,14 +84,15 @@ class ServicioDetail extends Component {
           </TouchableOpacity>
         );
       });
-
+      //#endregion
+      //#region Fotos Servicio
       let fotoPcipal = require("../../../assets/noFoto.png");
-      if (this.props.servicio.foto) {
+      if (Servicio.foto) {
         fotoPcipal = {
-          uri: apiConfig.pathFiles + this.props.servicio.foto
+          uri: apiConfig.pathFiles + Servicio.foto
         };
       }
-      let fotos = this.props.servicio.galeria.map((s, i) => {
+      let fotos = Servicio.galeria.map((s, i) => {
         let link = require("../../../assets/noFoto.png");
         if (s.foto) {
           link = {
@@ -136,14 +108,15 @@ class ServicioDetail extends Component {
           </TouchableOpacity>
         );
       });
-
+      //#endregion
+      //#region Foto Empresa
       let fotoEmpresa = require("../../../assets/noFoto.png");
-
-      if (this.props.servicio.Proveedor.foto) {
+      if (Servicio.Proveedor.foto) {
         fotoEmpresa = {
-          uri: apiConfig.pathFiles + this.props.servicio.Proveedor.foto
+          uri: apiConfig.pathFiles + Proveedor.foto
         };
       }
+      //#endregion
       return (
         <Container style={stl.containerList}>
           <Content>
@@ -151,72 +124,18 @@ class ServicioDetail extends Component {
               <View style={stl.vista}>
                 <Grid>
                   <Row>
-                    <Text style={stl.tituloSeccionCard}>
-                      {this.props.servicio.Proveedor.nombre}
-                    </Text>
-                  </Row>
-                  <Row>
-                    <View style={[stl.puntaje, stl.pointEnCard]}>
-                      <Icon style={stl.iconstar} type="Ionicons" name="star" />
-                      <Icon style={stl.iconstar} type="Ionicons" name="star" />
-                      <Icon
-                        style={stl.iconstar}
-                        type="Ionicons"
-                        name="star-half"
-                      />
-                      <Icon
-                        style={stl.iconstar}
-                        type="Ionicons"
-                        name="star-outline"
-                      />
-                      <Icon
-                        style={stl.iconstar}
-                        type="Ionicons"
-                        name="star-outline"
-                      />
-                    </View>
-                  </Row>
-                  <Row>
-                    <Col style={[stl.imgEmpresa, { width: "30%" }]}>
-                      <Image style={stl.imgEmp} source={fotoEmpresa} />
-                    </Col>
-                    <Col style={{ width: "70%" }}>
-                      <Text style={stl.txtEmpresa}>
-                        {this.props.servicio.Proveedor.descripcion}
-                      </Text>
-                    </Col>
-                  </Row>
-                  <Row style={stl.MarginTop15}>
-                    <Col>
-                      <TouchableOpacity onPress={this.sendMail}>
-                        <Text style={stl.MailEmpresa}>
-                          {this.props.servicio.Proveedor.email}
-                        </Text>
-                      </TouchableOpacity>
-                    </Col>
-                    <Col>
-                      <TouchableOpacity onPress={this.sendWhatsapp}>
-                        <Text style={stl.TelEmpresa}>
-                          {this.props.servicio.Proveedor.telefono}
-                        </Text>
-                      </TouchableOpacity>
-                    </Col>
-                  </Row>
-                </Grid>
-              </View>
-            </View>
-            <View style={stl.cardFluid}>
-              <View style={stl.vista}>
-                <Grid>
-                  <Row>
                     <Col>
                       <Text style={stl.tituloSeccionCard}>
-                        {this.props.servicio.nombre}
+                        {Servicio.nombre}
                       </Text>
-                      <Text style={stl.txtEmpresa}>
-                        {" "}
-                        {this.props.servicio.descripcion}
-                      </Text>
+                      <Row>
+                        <Col style={stl.puntajeEnCard}>
+                          <Calificacion
+                            promedio={Servicio.puntaje}
+                          ></Calificacion>
+                        </Col>
+                      </Row>
+                      <Text style={stl.txtEmpresa}>{Servicio.descripcion}</Text>
                     </Col>
                   </Row>
 
@@ -236,10 +155,11 @@ class ServicioDetail extends Component {
                       {fotos}
                     </ScrollView>
                   </Row>
-
-                  <Text style={[stl.tituloSeccionCard, stl.MarginTop15]}>
-                    Videos del servicio
-                  </Text>
+                  {Servicio.videos.length > 0 && (
+                    <Text style={[stl.tituloSeccionCard, stl.MarginTop15]}>
+                      Videos del servicio
+                    </Text>
+                  )}
 
                   <Row style={stl.MarginTop15}>
                     <ScrollView horizontal>{videos}</ScrollView>
@@ -247,10 +167,60 @@ class ServicioDetail extends Component {
                 </Grid>
               </View>
             </View>
+            <View style={stl.cardFluid}>
+              <View style={stl.vista}>
+                <Grid>
+                  <Row>
+                    <Text style={stl.tituloSeccionCard}>
+                      {Proveedor.nombre}
+                    </Text>
+                  </Row>
+                  <Row>
+                    <Col style={stl.puntajeEnCard}>
+                      <Calificacion promedio={2}></Calificacion>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col style={[stl.imgEmpresa, { width: "30%" }]}>
+                      <Image style={stl.imgEmp} source={fotoEmpresa} />
+                    </Col>
+                    <Col style={{ width: "70%" }}>
+                      <Text style={stl.txtEmpresa}>
+                        {Proveedor.descripcion}
+                      </Text>
+                    </Col>
+                  </Row>
+                  <Row style={stl.MarginTop15}>
+                    <Col>
+                      <TouchableOpacity
+                        onPress={() => this.sendMail(Proveedor.email)}
+                      >
+                        <Text numberOfLines={1} style={stl.MailEmpresa}>
+                          {Proveedor.email}
+                        </Text>
+                      </TouchableOpacity>
+                    </Col>
+                    <Col>
+                      <TouchableOpacity
+                        onPress={() => this.sendWhatsapp(Proveedor.telefono)}
+                      >
+                        <Text style={stl.TelEmpresa}>{Proveedor.telefono}</Text>
+                      </TouchableOpacity>
+                    </Col>
+                  </Row>
+                </Grid>
+              </View>
+            </View>
+
             <Row style={{ justifyContent: "center" }}>
               <Button
                 style={[stl.btn, stl.primary]}
-                onPress={() => this.logout()}
+                onPress={() => {
+                  // servicioService.get(item.id);
+                  this.props.navigation.push("EmpresaDetail", {
+                    id: Proveedor.id
+                  });
+                }}
               >
                 <Text style={stl.btnText}>Otros servicios que ofrecemos</Text>
               </Button>
@@ -258,7 +228,7 @@ class ServicioDetail extends Component {
           </Content>
           {!this.state.modal && (
             <Button
-              onPress={this.makeCall}
+              onPress={() => this.makeCall(Proveedor.telefono)}
               style={[stl.btnRounded, stl.primary]}
               block
             >
@@ -285,9 +255,11 @@ class ServicioDetail extends Component {
               <View style={stl.vista}>
                 <Grid>
                   <Row>
-                    <Text style={stl.tituloSeccionCard}>
-                      Aguanta la mechaaaaaaa
-                    </Text>
+                    <View style={stl.loading}>
+                      <View style={stl.loadingbk}>
+                        <Spinner color="white" />
+                      </View>
+                    </View>
                   </Row>
                 </Grid>
               </View>
