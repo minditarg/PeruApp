@@ -51,8 +51,8 @@ export const getStore = () => {
 };
 
 
-export const listadoPorProveedor = () => {
-  return api.listadoPorProveedor(session.usuarioLogueado().Proveedor.id).then(response => {
+export const listadoPorProveedor = (idProveedor = session.usuarioLogueado().Proveedor.id) => {
+  return api.listadoPorProveedor(idProveedor).then(response => {
     if (response.statusType == "success") {
       store.dispatch(actionCreators.actualizarServicios(response.data));
     }
