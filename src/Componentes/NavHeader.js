@@ -41,7 +41,9 @@ class NavHeader extends React.Component {
           <Left>
             <Button
               transparent
-              onPress={() => this.props.navigation.navigate("Servicios")}
+              onPress={() => 
+                  this.props.navigation.navigate("Servicios")
+              }
             >
               <Thumbnail
                 style={stl.btnAvatar}
@@ -58,7 +60,10 @@ class NavHeader extends React.Component {
             {this.props.usuario && (
               <Button
                 transparent
-                onPress={() => this.props.navigation.navigate("Empresa")}
+                onPress={() => { 
+                  return session.esUsuarioTipoCliente() ?  this.props.navigation.navigate("ClientePerfil") :   this.props.navigation.navigate("Empresa")
+                }
+              }
               >
                 <Thumbnail style={stl.btnAvatar} source={icon} />
               </Button>
