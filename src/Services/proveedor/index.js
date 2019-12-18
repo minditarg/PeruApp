@@ -1,8 +1,8 @@
 import * as api from "./api";
 import * as session from "../session";
 import store from "../../Store";
-
-import * as actionCreators from "../session/actions";
+import * as selectors from "./selectors";
+import * as actionCreators from "./actions";
 
 const onRequestSuccess = response => {
   if (response.statusType == "success")
@@ -13,6 +13,29 @@ const onRequestSuccess = response => {
 const onRequestFailed = exception => {
   console.log(exception);
   throw exception;
+};
+
+export const get = id => {
+  console.log(id);
+  // store.dispatch(actionCreators.isLoading());
+  return api.get(id).then(response => {
+    console.log(response);
+    if (response.statusType == "success") {
+      store.dispatch(actionCreators.getProveedor(response.data));
+    }
+  });
+};
+export const getServicios = id => {
+  console.log("asdf" + id);
+  // store.dispatch(actionCreators.isLoading());
+  return api.getServicios(id).then(response => {
+    if (response.statusType == "success") {
+      store.dispatch(actionCreators.getServicios(response.data));
+    }
+  });
+};
+export const getStore = () => {
+  return selectors.get();
 };
 
 export const listado = () => api.listado();

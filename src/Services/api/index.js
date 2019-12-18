@@ -25,11 +25,13 @@ export function fetchApi(
   return fetch(apiConfig.url + endpoint, {
     method: metodo,
     headers: {
-      Accept: multipart ? "": "application/json",
+      Accept: multipart ? "" : "application/json",
       Authorization: "Bearer " + accessToken,
-      ...( ! multipart ? { "Content-Type": "application/json" }: { })
+      ...(!multipart ? { "Content-Type": "application/json" } : {})
     },
-    ...(metodo === "post" | metodo === "put" ? { body: multipart ? payload : JSON.stringify(payload) } : {})
+    ...((metodo === "post") | (metodo === "put")
+      ? { body: multipart ? payload : JSON.stringify(payload) }
+      : {})
   })
     .then(response => {
       return response.json();

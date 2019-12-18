@@ -71,6 +71,8 @@ class FeedServicios extends Component {
     console.log("caca");
   }
   render() {
+    console.log("en feed");
+    console.log(this.props.state);
     return (
       <Container style={stl.containerList}>
         <View style={stl.SearchBar}>
@@ -198,6 +200,7 @@ class FeedServicios extends Component {
 
 const mapStateToProps = state => {
   return {
+    state: state,
     serviciosEncontrados: servicioService.getStore().servicios,
     categorias: commonService.getStore().categorias,
     localidades: commonService.getStore().localidades

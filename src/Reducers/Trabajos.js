@@ -1,4 +1,4 @@
-import {
+/*import {
   GET_TRABAJOS,
   UPDATE_TRABAJO,
   DELETE_TRABAJO,
@@ -25,3 +25,4 @@ const Trabajos = (state = [], action) => {
 };
 
 export default Trabajos;
+*/

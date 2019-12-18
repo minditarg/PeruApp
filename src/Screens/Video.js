@@ -12,11 +12,8 @@ class Video extends Component {
   onListenMessage() {}
   handleNextBtn() {
     if (session.esAppTipoCliente()) {
-      console.log("asdf");
       this.props.navigation.navigate("Cliente");
     } else {
-      console.log("asdfdfasd");
-
       this.props.navigation.navigate("Login");
     }
   }

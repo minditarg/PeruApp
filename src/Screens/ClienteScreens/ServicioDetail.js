@@ -11,6 +11,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 import { Button, Text, Container, Content, Spinner } from "native-base";
 import { stl } from "../styles/styles";
 import * as servicioService from "../../Services/servicios";
+import * as empresaService from "../../Services/proveedor";
 import { Calificacion } from "../../Componentes/Calificacion";
 import { connect } from "react-redux";
 import apiConfig from "../../Services/api/config";
@@ -216,7 +217,8 @@ class ServicioDetail extends Component {
               <Button
                 style={[stl.btn, stl.primary]}
                 onPress={() => {
-                  // servicioService.get(item.id);
+                  empresaService.get(Proveedor.id);
+                  empresaService.getServicios(Proveedor.id);
                   this.props.navigation.push("EmpresaDetail", {
                     id: Proveedor.id
                   });

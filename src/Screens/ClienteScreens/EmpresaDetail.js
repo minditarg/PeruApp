@@ -27,8 +27,10 @@ import {
 } from "native-base";
 import { stl } from "../styles/styles";
 import { CardList } from "../../Componentes/CardList";
-
+import { connect } from "react-redux";
+import apiConfig from "../../Services/api/config";
 import works from "../../../Datos/Trabajos.json";
+import * as empresaService from "../../Services/proveedor";
 
 class EmpresaDetail extends Component {
   constructor() {
@@ -64,6 +66,9 @@ class EmpresaDetail extends Component {
     );
   };
   render() {
+    console.log("en empresa");
+
+    console.log(this.props.empresa);
     return (
       <Container style={stl.containerList}>
         <Content>
@@ -126,14 +131,14 @@ class EmpresaDetail extends Component {
           <View style={stl.labelSeccion}>
             <Text style={stl.tituloSeccion}>Servicios ofrecidos</Text>
           </View>
-          <FlatList
+          {/*<FlatList
             style={stl.listaPadding}
             data={works}
             renderItem={({ item }) => (
               <CardList navigation={this.props.navigation} Image obj={item} />
             )}
             keyExtractor={item => item.id.toString()}
-          />
+          />*/}
         </Content>
         <Button
           onPress={this.makeCall}
@@ -149,4 +154,11 @@ class EmpresaDetail extends Component {
     );
   }
 }
-export default EmpresaDetail;
+const mapStateToProps = state => {
+  return {
+    estado: state,
+    empresa: empresaService.getStore().ProveedorSeleccionado,
+    servicios: empresaService.getStore().ServiciosPorProveedor
+  };
+};
+export default connect(mapStateToProps)(EmpresaDetail);
