@@ -8,7 +8,8 @@ import {
   Keyboard,
   Alert,
   KeyboardAvoidingView,
-  SafeAreaView
+  SafeAreaView,
+  TouchableHighlight
 } from "react-native";
 import {
   Container,
@@ -25,6 +26,7 @@ import {
   Toast,
   Spinner
 } from "native-base";
+import Modal from "react-native-modal";
 import { stl } from "../Screens/styles/styles";
 import * as servicioService from "../Services/servicios";
 import * as commonService from "../Services/common";
@@ -33,6 +35,7 @@ import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as serviciosService from "../Services/servicios";
+import * as proveedorService from "../Services/proveedor";
 export class AddServicio extends Component {
   constructor() {
     super();
@@ -44,9 +47,13 @@ export class AddServicio extends Component {
       nombre: "",
       descripcion: "",
       foto: [],
+      videos: [],
       visible: false,
       categoria: undefined,
-      subcategoria: ""
+      subcategoria: "",
+      soyPremium: proveedorService.soyPremium(),
+      modalVisible: false,
+      videoNuevo: "",
     };
     this.state = this.initialState;
   }
@@ -93,7 +100,8 @@ export class AddServicio extends Component {
         this.state.nombre,
         this.state.descripcion,
         this.state.foto,
-        this.state.subcategoria
+        this.state.subcategoria,
+        this.state.videos
       )
       .then(response => {
         console.log("then", response);
@@ -166,6 +174,12 @@ export class AddServicio extends Component {
       }
     }
   };
+
+  agregarVideo() {
+    this.setState({ videos: [...this.state.videos, this.state.videoNuevo], videoNuevo: "", modalVisible: false });
+
+  }
+
 
   render() {
     let foto = this.state.foto;
@@ -261,7 +275,60 @@ export class AddServicio extends Component {
       );
     });
 
+
+
+    let videos = this.state.videos.map((s, i) => {
+      let arrayToOrder = this.state.videos;
+      let iconClassArray = [stl.imgActionIcon];
+      let firstItemClassArray = [stl.imgAction, stl.imgActionFirst];
+
+      if (i < 1) {
+        iconClassArray.push(stl.imgActionIconFirst);
+        firstItemClassArray.push(stl.firstItem);
+      }
+      return (
+        <View key={s} style={stl.card}>
+          <Image source={{ uri: "https://i.ytimg.com/vi/" + s + "/hqdefault.jpg" }} style={stl.btnImgServ} />
+          <View style={stl.imgActions}>
+
+            <TouchableOpacity
+              style={stl.imgAction}
+              onPress={() => {
+                Alert.alert(
+                  "Eliminar video",
+                  "¿Quiere eliminar la video?",
+                  [
+                    {
+                      text: "Volver",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel"
+                    },
+                    {
+                      text: "SI, eliminala",
+                      onPress: () =>
+                        this.setState({
+                          videos: this.state.videos.filter(x => x != s)
+                        })
+                    }
+                  ],
+                  { cancelable: true }
+                );
+              }}
+            >
+              <Icon
+                type="FontAwesome"
+                style={[stl.imgActionIcon, stl.imgDeleteIcon]}
+                name="trash"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    });
+
+
     return (
+
       <KeyboardAvoidingView behavior="padding" enabled>
         <SafeAreaView style={stl.containerList}>
           <ScrollView>
@@ -374,6 +441,66 @@ export class AddServicio extends Component {
                     </TouchableOpacity>
                   </View>
 
+
+                  <Modal backdropColor={'white'} isVisible={this.state.modalVisible}>
+                    <View >
+
+                      <Item
+                        floatingLabel
+                        error={this.state.videoNuevo}
+                      >
+                        <Label style={stl.textBlack}>Ingrese link del video</Label>
+                        <Input
+                          style={stl.textBlack}
+                          name="videoNuevo"
+                          value={this.state.videoNuevo}
+                          onChangeText={videoNuevo => {
+                            this.setState({ videoNuevo });
+                          }}
+                        />
+                      </Item>
+
+                      <Button
+                        style={stl.btn}
+                        bordered
+                        onPress={() => {
+                          this.setState({ modalVisible: !this.state.modalVisible });
+                        }}
+                      >
+                        <Text style={stl.btnText}> Cancelar</Text>
+                      </Button>
+
+                      <Button
+                        style={stl.btn}
+                        bordered
+                        onPress={() => {
+                          this.agregarVideo()
+                        }}
+                      >
+                        <Text style={stl.btnText}> Guardar</Text>
+                      </Button>
+
+                    
+                    </View>
+                  </Modal>
+
+                  {this.state.soyPremium && (
+                    <View style={[stl.vista, stl.vistaimgs]}>
+                      {videos}
+                      <TouchableOpacity onPress={() => {
+                        this.setState({ modalVisible: !this.state.modalVisible });
+                      }}>
+                        <View style={stl.btnImgServ}>
+                          <Icon
+                            style={stl.iconCam}
+                            type="FontAwesome"
+                            name="video-camera"
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+
                   <Text style={stl.txtError}> {this.state.error}</Text>
                   <View style={stl.btnsRow}>
                     <Button
@@ -405,6 +532,10 @@ export class AddServicio extends Component {
           </ScrollView>
         </SafeAreaView>
       </KeyboardAvoidingView>
+
+
+
+
     );
   }
 }

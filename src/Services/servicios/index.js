@@ -5,12 +5,13 @@ import store from "../../Store";
 import * as selectors from "./selectors";
 import * as actionCreators from "./actions";
 
-export const crear = (nombre, descripcion, fotos, subcategoriaId) => {
+export const crear = (nombre, descripcion, fotos, subcategoriaId, videos) => {
   return api.crear(
     nombre,
     descripcion,
     fotos,
     subcategoriaId,
+    videos,
     session.usuarioLogueado().Proveedor.id
   );
 };

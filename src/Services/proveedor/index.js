@@ -30,6 +30,8 @@ export const getServicios = id => {
     }
   });
 };
+
+
 export const getStore = () => {
   return selectors.get();
 };
@@ -80,3 +82,8 @@ export const actualizar = (
     )
     .then(onRequestSuccess)
     .catch(onRequestFailed);
+
+
+    export const soyPremium = () => {
+      return session.usuarioLogueado().Proveedor.tipo=='Premium';
+    };

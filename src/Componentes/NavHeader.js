@@ -61,7 +61,7 @@ class NavHeader extends React.Component {
               <Button
                 transparent
                 onPress={() => { 
-                  return session.esUsuarioTipoCliente() ?  this.props.navigation.navigate("ClientePerfil") :   this.props.navigation.navigate("Empresa")
+                  return session.esUsuarioTipoCliente() ?  this.props.navigation.navigate("UserPerfil") :   this.props.navigation.navigate("Empresa")
                 }
               }
               >
