@@ -539,7 +539,6 @@ export class AddServicio extends Component {
 
                 <Button
                   block
-                  disabled={!this.state.hasChange}
                   style={[stl.btn, stl.primary]}
                   onPress={() => {
                     this.agregarVideo();
