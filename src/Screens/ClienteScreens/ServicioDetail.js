@@ -70,14 +70,15 @@ class ServicioDetail extends Component {
       let Servicio = this.props.servicio;
       let Proveedor = Servicio.Proveedor;
       //#region Videos
+      
       let videos = Servicio.videos.map((s, i) => {
-        let link = "https://i.ytimg.com/vi/" + s.code + "/hqdefault.jpg";
+        let link = "https://i.ytimg.com/vi/" + s.video + "/hqdefault.jpg";
         return (
           <TouchableOpacity
             key={s.id.toString()}
             onPress={() => {
               this.props.navigation.navigate("VideoPlayer", {
-                videoCode: s.code
+                videoCode: s.video
               });
             }}
           >
