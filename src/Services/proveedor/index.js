@@ -22,6 +22,15 @@ export const get = id => {
     }
   });
 };
+export const getPremium = () => {
+  return api.getPremium().then(response => {
+    if (response.statusType == "success") {
+      console.log(response.data, "dataaa");
+      store.dispatch(actionCreators.getProveedor(response.data));
+      getServicios(response.data.id);
+    }
+  });
+};
 export const getServicios = id => {
   // store.dispatch(actionCreators.isLoading());
   return api.getServicios(id).then(response => {

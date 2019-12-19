@@ -3,11 +3,14 @@ import { fetchApi } from "../api";
 const endPoints = {
   listadoPorProveedor: "/servicios/listadoPorProveedor/",
   get: "/proveedor/",
+  getPremium: "/proveedores/premium",
   crear: "/proveedor",
   actualizar: "/proveedor/",
   eliminar: "/proveedor/"
 };
 export const get = id => fetchApi(endPoints.get + id, {}, "get");
+
+export const getPremium = id => fetchApi(endPoints.getPremium , {}, "get");
 
 export const getServicios = id =>
   fetchApi(endPoints.listadoPorProveedor + id, {}, "get");

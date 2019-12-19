@@ -13,9 +13,7 @@ import { connect } from "react-redux";
 class FeedServicios extends Component {
   constructor() {
     super();
-    servicioService.buscar();
-    commonService.listadoCategorias();
-    commonService.listadoLocalidades();
+
     this.state = {
       subcategorias: [],
       localidadSeleccionadaText: "Localidad",
@@ -23,11 +21,19 @@ class FeedServicios extends Component {
       subcategoriaSeleccionadaText: "Subacategoría",
       subcategoriaId: "",
       categoriaSeleccionadaText: "Categoría",
-      categoriaId: ""
+      categoriaId: "",
+      esSupervisado: false
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    let esSup = this.props.navigation.getParam("esSupervisado");
+    this.setState({esSupervisado: esSup})
+
+    servicioService.buscar(esSup);
+    commonService.listadoCategorias();
+    commonService.listadoLocalidades();
+}
 
   _cambioCategoria(nombre, id) {
     this.setState({
@@ -40,23 +46,24 @@ class FeedServicios extends Component {
       subcategorias: this.props.categorias.find(item => item.id === id)
         .subcategorias
     });
-    servicioService.buscar(id, "", this.state.localidadId);
+    servicioService.buscar(this.state.esSupervisado,id, "", this.state.localidadId);
   }
 
   _cambioSubcategoria(nombre, id) {
     this.setState({ subcategoriaSeleccionadaText: nombre, subcategoriaId: id });
-    servicioService.buscar(this.state.categoriaId, id, this.state.localidadId);
+    servicioService.buscar(this.state.esSupervisado,this.state.categoriaId, id, this.state.localidadId);
   }
   _cambioLocalidad(nombre, id) {
     this.setState({ localidadSeleccionadaText: nombre, localidadId: id });
     servicioService.buscar(
+      this.state.esSupervisado,
       this.state.categoriaId,
       this.state.subcategoriaId,
       id
     );
   }
   HandleLimpiarBuscadorBtn() {
-    servicioService.buscar();
+    servicioService.buscar(this.state.esSupervisado);
     this.setState({
       subcategoriaId: "",
       subcategoriaSeleccionadaText: "Subcategoría",
@@ -71,8 +78,6 @@ class FeedServicios extends Component {
     console.log("caca");
   }
   render() {
-    console.log("en feed");
-    console.log(this.props.state);
     return (
       <Container style={stl.containerList}>
         <View style={stl.SearchBar}>
