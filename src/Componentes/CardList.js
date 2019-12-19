@@ -84,7 +84,9 @@ export class CardList extends Component {
 
           <Body style={stl.cardBody}>
             <Text style={stl.cardTitulo}>{obj.nombre}</Text>
-            <Text style={stl.cardSubtitulo}>{obj.descripcion}</Text>
+            <Text numberOfLines={2} style={stl.cardSubtitulo}>
+              {obj.descripcion}
+            </Text>
             <Calificacion promedio={obj.puntaje}></Calificacion>
           </Body>
 

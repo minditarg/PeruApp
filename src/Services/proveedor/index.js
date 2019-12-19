@@ -11,22 +11,18 @@ const onRequestSuccess = response => {
 };
 
 const onRequestFailed = exception => {
-  console.log(exception);
   throw exception;
 };
 
 export const get = id => {
-  console.log(id);
   // store.dispatch(actionCreators.isLoading());
   return api.get(id).then(response => {
-    console.log(response);
     if (response.statusType == "success") {
       store.dispatch(actionCreators.getProveedor(response.data));
     }
   });
 };
 export const getServicios = id => {
-  console.log("asdf" + id);
   // store.dispatch(actionCreators.isLoading());
   return api.getServicios(id).then(response => {
     if (response.statusType == "success") {

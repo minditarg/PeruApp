@@ -2,34 +2,19 @@ import React, { Component } from "react";
 import {
   View,
   Image,
-  SafeAreaView,
-  TouchableWithoutFeedback,
-  ScrollView,
   TouchableOpacity,
-  Keyboard,
   FlatList,
-  KeyboardAvoidingView
+  Linking,
+  Platform
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
-import {
-  Button,
-  Text,
-  Form,
-  Item,
-  Textarea,
-  Input,
-  Label,
-  Container,
-  Icon,
-  Content,
-  Spinner,
-  Toast
-} from "native-base";
+import { Button, Text, Container, Content } from "native-base";
+import { Calificacion } from "../../Componentes/Calificacion";
 import { stl } from "../styles/styles";
 import { CardList } from "../../Componentes/CardList";
 import { connect } from "react-redux";
 import apiConfig from "../../Services/api/config";
-import works from "../../../Datos/Trabajos.json";
+import * as servicioService from "../../Services/servicios";
 import * as empresaService from "../../Services/proveedor";
 
 class EmpresaDetail extends Component {
@@ -37,38 +22,34 @@ class EmpresaDetail extends Component {
     super();
   }
 
-  makeCall = () => {
+  //#region UiFunctions
+  makeCall = num => {
     let phoneNumber = "";
-
     if (Platform.OS === "android") {
-      phoneNumber = "tel:${1234567890}";
+      phoneNumber = "tel:${" + num + "}";
     } else {
-      phoneNumber = "telprompt:${1234567890}";
+      phoneNumber = "telprompt:${" + num + "}";
     }
-
     Linking.openURL(phoneNumber);
   };
-  openModal = () => {
-    this.setState({ modal: true });
+  sendMail = mail => {
+    Linking.openURL("mailto:" + mail + "?subject=SendMail&body=Description");
   };
-  closeModal = () => {
-    this.setState({ modal: false });
+  sendWhatsapp = num => {
+    Linking.openURL("whatsapp://send?text=" + "soregato" + "&phone=91" + num);
   };
-  sendMail = () => {
-    Linking.openURL(
-      "mailto:support@example.com?subject=SendMail&body=Description"
-    );
-  };
-
-  sendWhatsapp = () => {
-    Linking.openURL(
-      "whatsapp://send?text=" + "soregato" + "&phone=91" + "123456789"
-    );
-  };
+  //#endregion
   render() {
-    console.log("en empresa");
-
-    console.log(this.props.empresa);
+    let emp = this.props.empresa;
+    let serv = this.props.servicios;
+    //#region Foto Empresa
+    let fotoEmpresa = require("../../../assets/noFoto.png");
+    if (emp.foto) {
+      fotoEmpresa = {
+        uri: apiConfig.pathFiles + emp.foto
+      };
+    }
+    //#endregion
     return (
       <Container style={stl.containerList}>
         <Content>
@@ -76,52 +57,34 @@ class EmpresaDetail extends Component {
             <View style={stl.vista}>
               <Grid>
                 <Row>
-                  <Text style={stl.tituloSeccionCard}>Nombresadf Empresa</Text>
+                  <Text style={stl.tituloSeccionCard}>{emp.nombre}</Text>
                 </Row>
                 <Row>
-                  <View style={[stl.puntaje, stl.pointEnCard]}>
-                    <Icon style={stl.iconstar} type="Ionicons" name="star" />
-                    <Icon style={stl.iconstar} type="Ionicons" name="star" />
-                    <Icon
-                      style={stl.iconstar}
-                      type="Ionicons"
-                      name="star-half"
-                    />
-                    <Icon
-                      style={stl.iconstar}
-                      type="Ionicons"
-                      name="star-outline"
-                    />
-                    <Icon
-                      style={stl.iconstar}
-                      type="Ionicons"
-                      name="star-outline"
-                    />
-                  </View>
+                  <Col style={stl.puntajeEnCard}>
+                    <Calificacion promedio={2}></Calificacion>
+                  </Col>
                 </Row>
                 <Row>
                   <Col style={[stl.imgEmpresa, { width: "30%" }]}>
-                    <Image
-                      style={stl.imgEmp}
-                      source={require("../../../assets/noFoto.png")}
-                    />
+                    <Image style={stl.imgEmp} source={fotoEmpresa} />
                   </Col>
                   <Col style={{ width: "70%" }}>
-                    <Text style={stl.txtEmpresa}>
-                      descripcion de la empresa larga larga larga mas y mas y
-                      todavia mas larga que lo anterior
-                    </Text>
+                    <Text style={stl.txtEmpresa}>{emp.descripcion}</Text>
                   </Col>
                 </Row>
                 <Row style={stl.MarginTop15}>
                   <Col>
-                    <TouchableOpacity onPress={this.sendMail}>
-                      <Text style={stl.MailEmpresa}>mail@empresa.com </Text>
+                    <TouchableOpacity onPress={() => this.sendMail(emp.email)}>
+                      <Text numberOfLines={1} style={stl.MailEmpresa}>
+                        {emp.email}
+                      </Text>
                     </TouchableOpacity>
                   </Col>
                   <Col>
-                    <TouchableOpacity onPress={this.sendWhatsapp}>
-                      <Text style={stl.TelEmpresa}>2215603558 </Text>
+                    <TouchableOpacity
+                      onPress={() => this.makeCall(emp.telefono)}
+                    >
+                      <Text style={stl.TelEmpresa}>{emp.telefono}</Text>
                     </TouchableOpacity>
                   </Col>
                 </Row>
@@ -131,17 +94,25 @@ class EmpresaDetail extends Component {
           <View style={stl.labelSeccion}>
             <Text style={stl.tituloSeccion}>Servicios ofrecidos</Text>
           </View>
-          {/*<FlatList
+          <FlatList
             style={stl.listaPadding}
-            data={works}
+            data={serv}
             renderItem={({ item }) => (
-              <CardList navigation={this.props.navigation} Image obj={item} />
+              <CardList
+                onPress={() => {
+                  servicioService.get(item.id);
+                  this.props.navigation.push("ServicioDetail", { id: item.id });
+                }}
+                navigation={this.props.navigation}
+                Image
+                obj={item}
+              />
             )}
             keyExtractor={item => item.id.toString()}
-          />*/}
+          />
         </Content>
         <Button
-          onPress={this.makeCall}
+          onPress={() => this.sendWhatsapp(emp.telefono)}
           style={[stl.btnRounded, stl.primary]}
           block
         >
@@ -156,7 +127,6 @@ class EmpresaDetail extends Component {
 }
 const mapStateToProps = state => {
   return {
-    estado: state,
     empresa: empresaService.getStore().ProveedorSeleccionado,
     servicios: empresaService.getStore().ServiciosPorProveedor
   };

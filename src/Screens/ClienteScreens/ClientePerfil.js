@@ -34,22 +34,23 @@ import apiConfig from "../../Services/api/config";
 class ClientePerfil extends Component {
   constructor() {
     super();
-    let usuarioLogueado = sessionService.usuarioLogueado();
-    this.initialState = {
-      email: usuarioLogueado.email,
-      nombre: usuarioLogueado.nombre,
-      telefono: usuarioLogueado.Cliente.telefono,
-      direccion: usuarioLogueado.Cliente.direccion,
-      foto: apiConfig.pathFiles + usuarioLogueado.avatar,
-      fotoNueva: null,
+    if (sessionService.usuarioLogueado() != null) {
+      let usuarioLogueado = sessionService.usuarioLogueado();
+      this.initialState = {
+        email: usuarioLogueado.email,
+        nombre: usuarioLogueado.nombre,
+        telefono: usuarioLogueado.Cliente.telefono,
+        direccion: usuarioLogueado.Cliente.direccion,
+        foto: apiConfig.pathFiles + usuarioLogueado.avatar,
+        fotoNueva: null,
 
-
-      submitted: false,
-      isLoading: false,
-      error: null,
-      hasChange: false
-    };
-    this.state = this.initialState;
+        submitted: false,
+        isLoading: false,
+        error: null,
+        hasChange: false
+      };
+      this.state = this.initialState;
+    }
   }
   logout() {
     sessionService.logout();
@@ -69,7 +70,7 @@ class ClientePerfil extends Component {
   };
   igualarEstados() {
     this.state = this.initialState;
-   }
+  }
   _pickImage = async () => {
     this.componentDidMount();
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -88,11 +89,9 @@ class ClientePerfil extends Component {
       isLoading: true
     });
     dismissKeyboard();
-    
-      clienteService.actualizar(
-        this.state.nombre,
-        this.state.fotoNueva
-      )
+
+    clienteService
+      .actualizar(this.state.nombre, this.state.fotoNueva)
       .then(response => {
         if (response.statusType == "success") {
           this.setState({
@@ -124,118 +123,122 @@ class ClientePerfil extends Component {
       });
   }
   render() {
-    let classesBtn = [stl.btn, stl.primary];
-    if (!this.state.hasChange) {
-      classesBtn.push(stl.disabled);
-    }
-    return (
-      <KeyboardAvoidingView behavior="padding" enabled>
-        <SafeAreaView style={stl.containerList}>
-          <ScrollView ref="_scrollView" style={stl.scrollView}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <Content style={stl.card}>
-                <Form style={stl.form}>
-                  <View style={stl.vista}>
-                    <TouchableOpacity onPress={this._pickImage}>
-                      {!this.state.foto && (
-                        <View style={stl.btnImg}>
-                          <Icon
-                            style={stl.iconCam}
-                            type="FontAwesome"
-                            name="camera"
+    if (sessionService.usuarioLogueado() != null) {
+      let classesBtn = [stl.btn, stl.primary];
+      if (!this.state.hasChange) {
+        classesBtn.push(stl.disabled);
+      }
+      return (
+        <KeyboardAvoidingView behavior="padding" enabled>
+          <SafeAreaView style={stl.containerList}>
+            <ScrollView ref="_scrollView" style={stl.scrollView}>
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <Content style={stl.card}>
+                  <Form style={stl.form}>
+                    <View style={stl.vista}>
+                      <TouchableOpacity onPress={this._pickImage}>
+                        {!this.state.foto && (
+                          <View style={stl.btnImg}>
+                            <Icon
+                              style={stl.iconCam}
+                              type="FontAwesome"
+                              name="camera"
+                            />
+                          </View>
+                        )}
+                        {this.state.foto && (
+                          <Image
+                            source={{
+                              uri: this.state.foto
+                            }}
+                            style={stl.btnImg}
                           />
-                        </View>
-                      )}
-                      {this.state.foto && (
-                        <Image
-                          source={{
-                            uri: this.state.foto
-                          }}
-                          style={stl.btnImg}
-                        />
-                      )}
-                    </TouchableOpacity>
-                  </View>
-                  <Button
-                    block
-                    style={[stl.btn, stl.primary]}
-                    onPress={() => this.logout()}
-                  >
-                    <Text style={stl.btnText}>Cerrar Sesión</Text>
-                  </Button>
-                  <Item
-                    floatingLabel
-                    error={this.state.submitted && !this.state.email}
-                  >
-                    <Label style={stl.textBlack}>Mail </Label>
-                    <Input
-                      style={stl.textBlack}
-                      onSubmitEditing={event => {
-                        this._nombre._root.focus();
-                      }}
-                      autoCompleteType="email"
-                      keyboardType="email-address"
-                      name="email"
-                      disabled="true"
-                      value={this.state.email}
-                    />
-                  </Item>
-                  <Item
-                    floatingLabel
-                    error={this.state.submitted && !this.state.nombre}
-                  >
-                    <Label style={stl.textBlack}>Nombre completo</Label>
-                    <Input
-                      onSubmitEditing={event => {
-                        this._tel._root.focus();
-                      }}
-                      getRef={c => (this._nombre = c)}
-                      style={stl.textBlack}
-                      name="nombre"
-                      autoCompleteType="name"
-                      value={this.state.nombre}
-                      onChangeText={nombre => {
-                        this.setState({ nombre, hasChange: true });
-                      }}
-                    />
-                  </Item>
-                  {this.state.submitted && !this.state.nombre && (
-                    <Text style={stl.txtError}>El nombre es requerido</Text>
-                  )}
-
-                  <Text style={stl.txtError}> {this.state.error}</Text>
-                  <View style={stl.btnsRow}>
-                    <Button
-                      style={stl.btn}
-                      bordered
-                      onPress={() => this.HandleCancelarBtn()}
-                    >
-                      <Text style={stl.btnText}> Cancelar</Text>
-                    </Button>
-
+                        )}
+                      </TouchableOpacity>
+                    </View>
                     <Button
                       block
-                      style={classesBtn}
-                      disabled={!this.state.hasChange}
-                      onPress={() => this.HandleGuardarBtn()}
+                      style={[stl.btn, stl.primary]}
+                      onPress={() => this.logout()}
                     >
-                      <Text style={stl.btnText}>Guardar Cambios</Text>
+                      <Text style={stl.btnText}>Cerrar Sesión</Text>
                     </Button>
-                  </View>
-                </Form>
-                {this.state.isLoading && (
-                  <View style={stl.loading}>
-                    <View style={stl.loadingbk}>
-                      <Spinner color="white" />
+                    <Item
+                      floatingLabel
+                      error={this.state.submitted && !this.state.email}
+                    >
+                      <Label style={stl.textBlack}>Mail </Label>
+                      <Input
+                        style={stl.textBlack}
+                        onSubmitEditing={event => {
+                          this._nombre._root.focus();
+                        }}
+                        autoCompleteType="email"
+                        keyboardType="email-address"
+                        name="email"
+                        disabled="true"
+                        value={this.state.email}
+                      />
+                    </Item>
+                    <Item
+                      floatingLabel
+                      error={this.state.submitted && !this.state.nombre}
+                    >
+                      <Label style={stl.textBlack}>Nombre completo</Label>
+                      <Input
+                        onSubmitEditing={event => {
+                          this._tel._root.focus();
+                        }}
+                        getRef={c => (this._nombre = c)}
+                        style={stl.textBlack}
+                        name="nombre"
+                        autoCompleteType="name"
+                        value={this.state.nombre}
+                        onChangeText={nombre => {
+                          this.setState({ nombre, hasChange: true });
+                        }}
+                      />
+                    </Item>
+                    {this.state.submitted && !this.state.nombre && (
+                      <Text style={stl.txtError}>El nombre es requerido</Text>
+                    )}
+
+                    <Text style={stl.txtError}> {this.state.error}</Text>
+                    <View style={stl.btnsRow}>
+                      <Button
+                        style={stl.btn}
+                        bordered
+                        onPress={() => this.HandleCancelarBtn()}
+                      >
+                        <Text style={stl.btnText}> Cancelar</Text>
+                      </Button>
+
+                      <Button
+                        block
+                        style={classesBtn}
+                        disabled={!this.state.hasChange}
+                        onPress={() => this.HandleGuardarBtn()}
+                      >
+                        <Text style={stl.btnText}>Guardar Cambios</Text>
+                      </Button>
                     </View>
-                  </View>
-                )}
-              </Content>
-            </TouchableWithoutFeedback>
-          </ScrollView>
-        </SafeAreaView>
-      </KeyboardAvoidingView>
-    );
+                  </Form>
+                  {this.state.isLoading && (
+                    <View style={stl.loading}>
+                      <View style={stl.loadingbk}>
+                        <Spinner color="white" />
+                      </View>
+                    </View>
+                  )}
+                </Content>
+              </TouchableWithoutFeedback>
+            </ScrollView>
+          </SafeAreaView>
+        </KeyboardAvoidingView>
+      );
+    } else {
+      return this.props.navigation.navigate("Login");
+    }
   }
 }
 export default ClientePerfil;

@@ -200,7 +200,6 @@ class FeedServicios extends Component {
 
 const mapStateToProps = state => {
   return {
-    state: state,
     serviciosEncontrados: servicioService.getStore().servicios,
     categorias: commonService.getStore().categorias,
     localidades: commonService.getStore().localidades
