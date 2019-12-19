@@ -38,7 +38,7 @@ class TipoServicio extends Component {
             style={[stl.btnSelect, stl.Standar]}
             block
           >
-            <Text style={stl.btnTextTipoServicio}>STANDAR</Text>
+            <Text style={stl.btnTextTipoServicio}>STANDARD</Text>
           </Button>
         </View>
       </View>
