@@ -24,9 +24,7 @@ export const stl = StyleSheet.create({
     paddingBottom: 20,
     height: 80
   },
-  vista: {
-    paddingBottom: 30
-  },
+
   btn: {
     flexDirection: "row",
     alignContent: "center",
@@ -172,6 +170,24 @@ export const stl = StyleSheet.create({
     elevation: 1
   },
 
+  cardEnModal: {
+    paddingLeft: 10,
+    paddingVertical: 5,
+
+    borderRadius: 3,
+    shadowColor: "#ffff",
+    backgroundColor: "#fff",
+    marginVertical: 3,
+    borderColor: "white",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.01,
+    shadowRadius: 1.41,
+
+    elevation: 1
+  },
   cardFluid: {
     paddingLeft: 10,
     borderRadius: 3,
@@ -187,6 +203,18 @@ export const stl = StyleSheet.create({
     shadowRadius: 1.41,
 
     elevation: 1
+  },
+  tituloModal: {
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 17,
+    marginBottom: 15
+  },
+  link: {
+    color: "#444"
+  },
+  codigoYt: {
+    backgroundColor: "yellow"
   },
   cardHor: {
     flexDirection: "row"
@@ -417,8 +445,6 @@ export const stl = StyleSheet.create({
     marginBottom: 2,
     borderBottomColor: "#aaa",
     borderBottomWidth: 1,
-    // backgroundColor: "rgba(255,255,255,1)",
-
     borderRadius: 0,
     flexDirection: "row"
   },

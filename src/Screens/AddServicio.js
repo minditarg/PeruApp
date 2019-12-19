@@ -26,6 +26,8 @@ import {
   Toast,
   Spinner
 } from "native-base";
+import { Col, Row, Grid } from "react-native-easy-grid";
+
 import Modal from "react-native-modal";
 import { stl } from "../Screens/styles/styles";
 import * as servicioService from "../Services/servicios";
@@ -53,7 +55,7 @@ export class AddServicio extends Component {
       subcategoria: "",
       soyPremium: proveedorService.soyPremium(),
       modalVisible: false,
-      videoNuevo: "",
+      videoNuevo: ""
     };
     this.state = this.initialState;
   }
@@ -176,10 +178,12 @@ export class AddServicio extends Component {
   };
 
   agregarVideo() {
-    this.setState({ videos: [...this.state.videos, this.state.videoNuevo], videoNuevo: "", modalVisible: false });
-
+    this.setState({
+      videos: [...this.state.videos, this.state.videoNuevo],
+      videoNuevo: "",
+      modalVisible: false
+    });
   }
-
 
   render() {
     let foto = this.state.foto;
@@ -275,8 +279,6 @@ export class AddServicio extends Component {
       );
     });
 
-
-
     let videos = this.state.videos.map((s, i) => {
       let arrayToOrder = this.state.videos;
       let iconClassArray = [stl.imgActionIcon];
@@ -287,10 +289,12 @@ export class AddServicio extends Component {
         firstItemClassArray.push(stl.firstItem);
       }
       return (
-        <View key={s} style={stl.card}>
-          <Image source={{ uri: "https://i.ytimg.com/vi/" + s + "/hqdefault.jpg" }} style={stl.btnImgServ} />
+        <View key={s} style={stl.touchableImg}>
+          <Image
+            source={{ uri: "https://i.ytimg.com/vi/" + s + "/hqdefault.jpg" }}
+            style={stl.btnImgServ}
+          />
           <View style={stl.imgActions}>
-
             <TouchableOpacity
               style={stl.imgAction}
               onPress={() => {
@@ -326,9 +330,7 @@ export class AddServicio extends Component {
       );
     });
 
-
     return (
-
       <KeyboardAvoidingView behavior="padding" enabled>
         <SafeAreaView style={stl.containerList}>
           <ScrollView>
@@ -407,7 +409,6 @@ export class AddServicio extends Component {
                     </Item>
                     {this.state.submitted && !this.state.subcategoria && (
                       <Text style={stl.txtError}>
-                        {" "}
                         La subcategoría es requerida
                       </Text>
                     )}
@@ -427,6 +428,9 @@ export class AddServicio extends Component {
                       }}
                     />
                   </View>
+                  <Row>
+                    <Text style={stl.tituloSeccionCard}>Fotos</Text>
+                  </Row>
 
                   <View style={[stl.vista, stl.vistaimgs]}>
                     {fotos}
@@ -440,56 +444,21 @@ export class AddServicio extends Component {
                       </View>
                     </TouchableOpacity>
                   </View>
-
-
-                  <Modal backdropColor={'white'} isVisible={this.state.modalVisible}>
-                    <View >
-
-                      <Item
-                        floatingLabel
-                        error={this.state.videoNuevo}
-                      >
-                        <Label style={stl.textBlack}>Ingrese link del video</Label>
-                        <Input
-                          style={stl.textBlack}
-                          name="videoNuevo"
-                          value={this.state.videoNuevo}
-                          onChangeText={videoNuevo => {
-                            this.setState({ videoNuevo });
-                          }}
-                        />
-                      </Item>
-
-                      <Button
-                        style={stl.btn}
-                        bordered
-                        onPress={() => {
-                          this.setState({ modalVisible: !this.state.modalVisible });
-                        }}
-                      >
-                        <Text style={stl.btnText}> Cancelar</Text>
-                      </Button>
-
-                      <Button
-                        style={stl.btn}
-                        bordered
-                        onPress={() => {
-                          this.agregarVideo()
-                        }}
-                      >
-                        <Text style={stl.btnText}> Guardar</Text>
-                      </Button>
-
-                    
-                    </View>
-                  </Modal>
-
+                  {this.state.soyPremium && (
+                    <Row>
+                      <Text style={stl.tituloSeccionCard}>Videos</Text>
+                    </Row>
+                  )}
                   {this.state.soyPremium && (
                     <View style={[stl.vista, stl.vistaimgs]}>
                       {videos}
-                      <TouchableOpacity onPress={() => {
-                        this.setState({ modalVisible: !this.state.modalVisible });
-                      }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.setState({
+                            modalVisible: !this.state.modalVisible
+                          });
+                        }}
+                      >
                         <View style={stl.btnImgServ}>
                           <Icon
                             style={stl.iconCam}
@@ -530,12 +499,58 @@ export class AddServicio extends Component {
               </Content>
             </TouchableWithoutFeedback>
           </ScrollView>
+
+          <Modal
+            backdropColor={"black"}
+            backdropOpacity={0.7}
+            isVisible={this.state.modalVisible}
+          >
+            <View style={stl.cardEnModal}>
+              <Text style={stl.tituloModal}>Nuevo video de YOUTUBE</Text>
+
+              <Text>Ejemplo del codigo dentro del link de youtube</Text>
+              <Text style={stl.link}>
+                https://www.youtube.com/watch?v=
+                <Text style={stl.codigoYt}>4eUsVLk0fao</Text>
+              </Text>
+
+              <Item floatingLabel>
+                <Label style={stl.textBlack}>Ingrese el Codigo del video</Label>
+                <Input
+                  style={stl.textBlack}
+                  name="videoNuevo"
+                  value={this.state.videoNuevo}
+                  onChangeText={videoNuevo => {
+                    this.setState({ videoNuevo });
+                  }}
+                />
+              </Item>
+
+              <View style={[stl.btnsRow, stl.MarginTop15]}>
+                <Button
+                  style={stl.btn}
+                  bordered
+                  onPress={() => {
+                    this.setState({ modalVisible: !this.state.modalVisible });
+                  }}
+                >
+                  <Text style={stl.btnText}> Cancelar</Text>
+                </Button>
+
+                <Button
+                  block
+                  style={[stl.btn, stl.primary]}
+                  onPress={() => {
+                    this.agregarVideo();
+                  }}
+                >
+                  <Text style={stl.btnText}>Cargar Video</Text>
+                </Button>
+              </View>
+            </View>
+          </Modal>
         </SafeAreaView>
       </KeyboardAvoidingView>
-
-
-
-
     );
   }
 }
