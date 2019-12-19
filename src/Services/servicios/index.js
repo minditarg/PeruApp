@@ -39,9 +39,8 @@ export const get = id => {
     }
   });
 };
-export const buscar = (categoriaId, subcategoriaId, localidadId) => {
-  return api.buscar(categoriaId, subcategoriaId, localidadId).then(response => {
-    console.log(response);
+export const buscar = (esSupervisado, categoriaId, subcategoriaId, localidadId) => {
+  return api.buscar(esSupervisado,categoriaId, subcategoriaId, localidadId).then(response => {
     if (response.statusType == "success") {
       store.dispatch(actionCreators.actualizarServicios(response.data));
     }

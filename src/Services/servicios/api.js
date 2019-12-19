@@ -13,7 +13,7 @@ const endPoints = {
 export const get = (id) => fetchApi(endPoints.get + id, {}, 'get');
 
 
-export const buscar = (categoriaId, subcategoriaId, localidadId) => fetchApi(endPoints.buscar, {categoriaId:categoriaId, subcategoriaId:subcategoriaId, localidadId:localidadId}, 'post');
+export const buscar = (esSupervisado,categoriaId, subcategoriaId, localidadId) => fetchApi(endPoints.buscar, {esSupervisado: esSupervisado, categoriaId:categoriaId, subcategoriaId:subcategoriaId, localidadId:localidadId}, 'post');
 
 export const crear = (nombre, descripcion, fotos, subcategoriaId,videos, proveedorId, ) => {
 
