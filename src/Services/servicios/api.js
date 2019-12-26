@@ -36,7 +36,7 @@ export const crear = (nombre, descripcion, fotos, subcategoriaId,videos, proveed
     return fetchApi(endPoints.crear, formData, 'post', true);
 }
 
-export const actualizar = (id, nombre, descripcion, fotos, subcategoriaId, proveedorId) => {
+export const actualizar = (id, nombre, descripcion, fotos, subcategoriaId,videos, proveedorId) => {
     const formData = new FormData();
     formData.append('nombre', nombre);
     formData.append('descripcion', descripcion);
@@ -49,6 +49,9 @@ export const actualizar = (id, nombre, descripcion, fotos, subcategoriaId, prove
         let match = /\.(\w+)$/.exec(filename);
         let type = match ? `image/${match[1]}` : `image`;
         formData.append('fotos', { uri: localUri, name: filename, type });
+    });
+    videos.forEach(element => {
+        formData.append('videos', element);
     });
     return fetchApi(endPoints.actualizar + id, formData, 'post', true);
 }

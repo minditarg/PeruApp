@@ -25,8 +25,11 @@ import {
   Toast,
   Spinner
 } from "native-base";
+import { Col, Row, Grid } from "react-native-easy-grid";
 import { stl } from "../Screens/styles/styles";
+import Modal from "react-native-modal";
 import * as servicioService from "../Services/servicios";
+import * as proveedorService from "../Services/proveedor";
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
@@ -45,9 +48,13 @@ export class UpdateServicio extends Component {
       submitted: false,
       nombre: "",
       descripcion: "",
+      videos: [],
       foto: [],
       categoria: undefined,
-      subcategoria: ""
+      subcategoria: "",
+      soyPremium: proveedorService.soyPremium(),
+      modalVideoVisible: false,
+      videoNuevo: ""
     };
     commonService.listadoCategorias().then(categorias => {
       this.setState({
@@ -56,12 +63,16 @@ export class UpdateServicio extends Component {
       servicioService
         .get(this.props.navigation.getParam("id"))
         .then(servicio => {
+          console.log(servicio);
           this.setState({
             id: servicio.id,
             nombre: servicio.nombre,
             descripcion: servicio.descripcion,
             categoria: servicio.subcategoria.categoria.id,
             subcategoria: servicio.subcategoriaId,
+            videos: servicio.videos.map((s, i) => {
+              return s.video;
+            }),
             foto: this.galeriaExterna(servicio),
             subcategorias: this.state.categorias.find(
               item => item.id === servicio.subcategoria.categoria.id
@@ -116,7 +127,8 @@ export class UpdateServicio extends Component {
         this.state.nombre,
         this.state.descripcion,
         this.state.foto,
-        this.state.subcategoria
+        this.state.subcategoria,
+        this.state.videos,
       )
       .then(response => {
         if (response.statusType == "success") {
@@ -189,6 +201,13 @@ export class UpdateServicio extends Component {
       }
     }
   };
+  agregarVideo() {
+    this.setState({
+      videos: [...this.state.videos, this.state.videoNuevo],
+      videoNuevo: "",
+      modalVideoVisible: false
+    });
+  }
 
   render() {
     let categoriasItems = this.state.categorias.map((s, i) => {
@@ -285,6 +304,57 @@ export class UpdateServicio extends Component {
         </View>
       );
     });
+    let videos = this.state.videos.map((s, i) => {
+      let arrayToOrder = this.state.videos;
+      let iconClassArray = [stl.imgActionIcon];
+      let firstItemClassArray = [stl.imgAction, stl.imgActionFirst];
+
+      if (i < 1) {
+        iconClassArray.push(stl.imgActionIconFirst);
+        firstItemClassArray.push(stl.firstItem);
+      }
+      return (
+        <View key={s} style={stl.touchableImg}>
+          <Image
+            source={{ uri: "https://i.ytimg.com/vi/" + s + "/hqdefault.jpg" }}
+            style={stl.btnImgServ}
+          />
+          <View style={stl.imgActions}>
+            <TouchableOpacity
+              style={stl.imgAction}
+              onPress={() => {
+                Alert.alert(
+                  "Eliminar video",
+                  "¿Quiere eliminar la video?",
+                  [
+                    {
+                      text: "Volver",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel"
+                    },
+                    {
+                      text: "SI, eliminala",
+                      onPress: () =>
+                        this.setState({
+                          videos: this.state.videos.filter(x => x != s)
+                        })
+                    }
+                  ],
+                  { cancelable: true }
+                );
+              }}
+            >
+              <Icon
+                type="FontAwesome"
+                style={[stl.imgActionIcon, stl.imgDeleteIcon]}
+                name="trash"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    });
+
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         <SafeAreaView style={stl.containerList}>
@@ -395,6 +465,33 @@ export class UpdateServicio extends Component {
                     </TouchableOpacity>
                   </View>
 
+                  {this.state.soyPremium && (
+                    <Row>
+                      <Text style={stl.tituloSeccionCard}>Videos</Text>
+                    </Row>
+                  )}
+                  {this.state.soyPremium && (
+                    <View style={[stl.vista, stl.vistaimgs]}>
+                      {videos}
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.setState({
+                            modalVideoVisible: !this.state.modalVideoVisible
+                          });
+                        }}
+                      >
+                        <View style={stl.btnImgServ}>
+                          <Icon
+                            style={stl.iconCam}
+                            type="FontAwesome"
+                            name="video-camera"
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+
+
                   <Text style={stl.txtError}> {this.state.error}</Text>
                   <View style={stl.btnsRow}>
                     <Button
@@ -424,6 +521,55 @@ export class UpdateServicio extends Component {
               </Content>
             </TouchableWithoutFeedback>
           </ScrollView>
+          <Modal
+            backdropColor={"black"}
+            backdropOpacity={0.7}
+            isVisible={this.state.modalVideoVisible}
+          >
+            <View style={stl.cardEnModal}>
+              <Text style={stl.tituloModal}>Nuevo video de YOUTUBE</Text>
+
+              <Text>Ejemplo del codigo dentro del link de youtube</Text>
+              <Text style={stl.link}>
+                https://www.youtube.com/watch?v=
+                <Text style={stl.codigoYt}>4eUsVLk0fao</Text>
+              </Text>
+
+              <Item floatingLabel>
+                <Label style={stl.textBlack}>Ingrese el Codigo del video</Label>
+                <Input
+                  style={stl.textBlack}
+                  name="videoNuevo"
+                  value={this.state.videoNuevo}
+                  onChangeText={videoNuevo => {
+                    this.setState({ videoNuevo });
+                  }}
+                />
+              </Item>
+
+              <View style={[stl.btnsRow, stl.MarginTop15]}>
+                <Button
+                  style={stl.btn}
+                  bordered
+                  onPress={() => {
+                    this.setState({ modalVideoVisible: !this.state.modalVideoVisible });
+                  }}
+                >
+                  <Text style={stl.btnText}> Cancelar</Text>
+                </Button>
+
+                <Button
+                  block
+                  style={[stl.btn, stl.primary]}
+                  onPress={() => {
+                    this.agregarVideo();
+                  }}
+                >
+                  <Text style={stl.btnText}>Cargar Video</Text>
+                </Button>
+              </View>
+            </View>
+          </Modal>
         </SafeAreaView>
       </KeyboardAvoidingView>
     );

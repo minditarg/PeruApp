@@ -15,13 +15,14 @@ export const crear = (nombre, descripcion, fotos, subcategoriaId, videos) => {
     session.usuarioLogueado().Proveedor.id
   );
 };
-export const actualizar = (id, nombre, descripcion, fotos, subcategoriaId) => {
+export const actualizar = (id, nombre, descripcion, fotos, subcategoriaId,videos) => {
   return api.actualizar(
     id,
     nombre,
     descripcion,
     fotos,
     subcategoriaId,
+    videos,
     session.usuarioLogueado().Proveedor.id
   );
 };
