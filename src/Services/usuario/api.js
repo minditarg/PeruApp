@@ -14,5 +14,5 @@ export const crear = (email, password, esCliente) =>
 export const recuperarPassword = (email) =>
     fetchApi(endPoints.recuperarPassword, { email: email }, 'post');
 
-export const cambiarPassword = (codigo, password, passwordConfirm) =>
-    fetchApi(endPoints.recuperar, { codigo, password, passwordConfirm }, 'post');
+export const cambiarPassword = (email, codigo, password, passwordConfirm) =>
+    fetchApi(endPoints.cambiarPassword, {email, codigo, password, passwordConfirm }, 'post');

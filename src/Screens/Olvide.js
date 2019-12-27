@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView
 } from "react-native";
 import { Col, Row, Grid } from "react-native-easy-grid";
+import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import {
   Container,
   Button,
@@ -44,9 +45,9 @@ export class Olvide extends Component {
   HandleEnviarAyuda() {
     this.setState({ isLoading: true });
     dismissKeyboard();
-    usuarioServicio.recuperar(this.state.email)
+    usuarioServicio.recuperarPassword(this.state.email)
       .then(response => {
-        this.setState({ isLoading: false });
+        this.setState({ isLoading: false, error: null });
         if (response.statusType == "success") {
           this.setState({ mostrarFormularioPassword: true });
         } else {
@@ -69,12 +70,11 @@ export class Olvide extends Component {
     this.setState({ isLoading: true });
     dismissKeyboard();
     usuarioServicio
-      .recuperar(this.state.email)
+      .cambiarPassword(this.state.email, this.state.codigo, this.state.password, this.state.passwordConfirm)
       .then(response => {
         this.setState({ isLoading: false });
         if (response.statusType == "success") {
-
-
+          this.props.navigation.navigate("Login");
         } else {
           this.setState({ isLoading: false, error: response.message });
         }
@@ -117,7 +117,12 @@ export class Olvide extends Component {
                           <View>
                             <Item floatingLabel>
                               <Label style={stl.textwhite}>Mail</Label>
-                              <Input style={stl.textwhite} />
+                              <Input
+                                style={stl.textwhite}
+                                onChangeText={email => {
+                                  this.setState({ email });
+                                }}
+                              />
                             </Item>
                             <Row size={1} style={stl.center}>
                               <Button style={[stl.btn, stl.primary]} onPress={() => this.HandleEnviarAyuda()}>
@@ -128,12 +133,13 @@ export class Olvide extends Component {
                         )}
 
                         {this.state.mostrarFormularioPassword && (
-                          <View style={stl.PassChangeForm}>
+
+                          <View >
+                            <Text style={stl.btnText}>Se envió correctamente un código al email ingresado. Ingreselo a continuación </Text>
                             <Item floatingLabel>
-                              <Label style={stl.textBlack}>Código enviado</Label>
+                              <Label style={stl.textwhite}>Código enviado</Label>
                               <Input
-                                secureTextEntry={true}
-                                style={stl.textBlack}
+                                style={stl.textwhite}
                                 name="Codigo"
                                 value={this.state.codigo}
                                 onSubmitEditing={() => {
@@ -145,14 +151,14 @@ export class Olvide extends Component {
                               />
                             </Item>
                             <Item floatingLabel>
-                              <Label style={stl.textBlack}>Nueva Contraseña</Label>
+                              <Label style={stl.textwhite}>Nueva Contraseña</Label>
                               <Input
                                 onSubmitEditing={event => {
                                   this._passConfirm._root.focus();
                                 }}
                                 getRef={c => (this._passNew = c)}
                                 secureTextEntry={true}
-                                style={stl.textBlack}
+                                style={stl.textwhite}
                                 name="NewPass"
                                 value={this.state.password}
                                 onSubmitEditing={() => {
@@ -164,13 +170,13 @@ export class Olvide extends Component {
                               />
                             </Item>
                             <Item floatingLabel>
-                              <Label style={stl.textBlack}>
+                              <Label style={stl.textwhite}>
                                 Confirmar Contraseña
                              </Label>
                               <Input
                                 getRef={c => (this._passConfirm = c)}
                                 secureTextEntry={true}
-                                style={stl.textBlack}
+                                style={stl.textwhite}
                                 name="ConfirmPass"
                                 value={this.state.passwordConfirm}
                                 onSubmitEditing={() => {

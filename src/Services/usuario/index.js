@@ -8,7 +8,7 @@ export const crear = (email, password) => {
 }
 
 export const recuperarPassword = (email) =>
-     api.recuperarPassword(endPoints.recuperarPassword, { email: email }, 'post');
+     api.recuperarPassword( email);
 
-export const cambiarPassword = (codigo, password, passwordConfirm) =>
-    api.cambiarPassword(endPoints.recuperar, { codigo, password, passwordConfirm }, 'post');
+export const cambiarPassword = (email,codigo, password, passwordConfirm) =>
+    api.cambiarPassword(email,codigo, password, passwordConfirm );
