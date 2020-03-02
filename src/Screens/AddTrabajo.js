@@ -26,22 +26,22 @@ import { stl } from "../Screens/styles/styles";
 import { connect } from "react-redux";
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import * as sessionService from "../Services/session";
-import * as servicioService from "../Services/servicios";
+import * as serviciosService from "../Services/servicios";
 import * as trabajosService from "../Services/trabajos";
 import * as clientesService from "../Services/clientes";
 import { ThemeColors } from "react-navigation";
 
-export class AddTrabajo extends Component {
+ class AddTrabajo extends Component {
   constructor() {
     super();
-
+    serviciosService.listadoPorProveedor();
     this.initialState = {
       submitted: false,
       isLoading: false,
       puntaje: "",
       descripcion: "",
       servicioId: undefined,
-      listadoServicios: sessionService.usuarioLogueado().Proveedor.servicios,
+      //listadoServicios: serviciosService.getStore().servicios,
       listadoClientes: [],
       clienteId: undefined,
       clienteSeleccionadoText: ""
@@ -122,14 +122,18 @@ export class AddTrabajo extends Component {
   }
 
   render() {
-    serviciosItems = this.state.listadoServicios.map((s, i) => {
-      return (
-        <Picker.Item key={s.id.toString()} value={s.id} label={s.nombre} />
+    serviciosItems= null;
+    if(this.props.listadoServicios){
+      serviciosItems = this.props.listadoServicios.map((s, i) => {
+        return (
+          <Picker.Item key={s.id.toString()} value={s.id} label={s.nombre} />
+        );
+      }) ;
+      serviciosItems.unshift(
+        <Picker.Item key={"empty"} label="Seleccione un servicio" value="null" />
       );
-    });
-    serviciosItems.unshift(
-      <Picker.Item key={"empty"} label="Seleccione un servicio" value="null" />
-    );
+    }
+    
 
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
@@ -283,10 +287,7 @@ export class AddTrabajo extends Component {
 
 const mapStateToProps = state => {
   return {
-    listadoServicios:
-      sessionService.usuarioLogueado() != null
-        ? sessionService.usuarioLogueado().Proveedor.servicios
-        : null
+    listadoServicios: serviciosService.getStore().servicios
   };
 };
 export default connect(mapStateToProps)(AddTrabajo);

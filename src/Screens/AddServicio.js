@@ -54,7 +54,7 @@ export class AddServicio extends Component {
       categoria: undefined,
       subcategoria: "",
       soyPremium: proveedorService.soyPremium(),
-      modalVisible: false,
+      modalVideoVisible: false,
       videoNuevo: ""
     };
     this.state = this.initialState;
@@ -181,7 +181,7 @@ export class AddServicio extends Component {
     this.setState({
       videos: [...this.state.videos, this.state.videoNuevo],
       videoNuevo: "",
-      modalVisible: false
+      modalVideoVisible: false
     });
   }
 
@@ -455,7 +455,7 @@ export class AddServicio extends Component {
                       <TouchableOpacity
                         onPress={() => {
                           this.setState({
-                            modalVisible: !this.state.modalVisible
+                            modalVideoVisible: !this.state.modalVideoVisible
                           });
                         }}
                       >
@@ -503,7 +503,7 @@ export class AddServicio extends Component {
           <Modal
             backdropColor={"black"}
             backdropOpacity={0.7}
-            isVisible={this.state.modalVisible}
+            isVisible={this.state.modalVideoVisible}
           >
             <View style={stl.cardEnModal}>
               <Text style={stl.tituloModal}>Nuevo video de YOUTUBE</Text>
@@ -531,7 +531,7 @@ export class AddServicio extends Component {
                   style={stl.btn}
                   bordered
                   onPress={() => {
-                    this.setState({ modalVisible: !this.state.modalVisible });
+                    this.setState({ modalVideoVisible: !this.state.modalVideoVisible });
                   }}
                 >
                   <Text style={stl.btnText}> Cancelar</Text>
