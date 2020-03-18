@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   Image,
-  Linking,
   Keyboard,
   TouchableWithoutFeedback,
   ImageBackground,
@@ -11,6 +10,7 @@ import {
   TextInput,
   KeyboardAvoidingView
 } from "react-native";
+import { Linking,AuthSession } from 'expo';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import * as WebBrowser from "expo-web-browser";
 import {
@@ -26,11 +26,12 @@ import {
 import { connect } from "react-redux";
 import { LOAD_TOKEN_USER } from "../Actions/actionsTypes";
 import * as session from "../Services/session";
+import * as clientesService from '../Services/clientes'
 import * as api from "../Services/api";
-
+import apiConfig from "../Services/api/config";
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import { stl } from "./styles/styles";
-
+import Constants from 'expo-constants';
 class Login extends Component {
   constructor() {
     super();
@@ -45,62 +46,58 @@ class Login extends Component {
       error: null,
       passwordInput: ""
     };
-
     this.state = this.initialState;
   }
-
-  Redirigir() {
-    if (
-      this.state.authResult.type &&
-      this.state.authResult.type === "success"
-    ) {
-      const query = new URLSearchParams(this.state.authResult.url);
-      var regex = /[?&]([^=#]+)=([^&#]*)/g,
-        params = {},
-        match;
-      while ((match = regex.exec(this.state.authResult.url))) {
-        params[match[1]] = match[2];
-      }
-      this.props.dispatch({ type: LOAD_TOKEN_USER, payload: params.token });
-      this.setState({ isPostBack: false });
-
-      if (params.nuevo === "true") {
-        console.log("redirigir login nuevi");
-      } else if (params.nuevo === "false") {
-        console.log("redirigir login vieji");
-      }
+  _handleRedirect = event => {
+    if (Constants.platform.ios) {
+      WebBrowser.dismissBrowser();
+    } else {
+      this._removeLinkingListener();
     }
-  }
-
-  // LOGIN De FACEBBOK
+    let data = Linking.parse(event.url);
+    this.HandleInicioSocialBtn(data.queryParams.token);
+  };
   loginFacebook = async () => {
-    let redirectUrl = await Linking.getInitialURL();
-    let authUrl = "https://50.63.166.215:5000/api/auth/facebook";
     try {
-      let authResult = await WebBrowser.openAuthSessionAsync(
-        "https://50.63.166.215:5000/api/auth/facebook",
-        redirectUrl
+      this._addLinkingListener();
+      let result = await WebBrowser.openBrowserAsync(
+        apiConfig.url + "/auth/facebook"
       );
-      await this.setState({ authResult: authResult, isPostBack: true });
-    } catch (err) {
-      console.log("ERROR loginfacebook:", err);
+      if (Constants.platform.ios) {
+        this._removeLinkingListener();
+      }
+
+      this.setState({ result });
+    } catch (error) {
+      alert(error);
+      console.log(error);
+    }
+  };
+   loginGoogle = async () => {
+    try {
+      this._addLinkingListener();
+      let result = await WebBrowser.openBrowserAsync(
+        apiConfig.url + "/auth/google"
+      );
+      if (Constants.platform.ios) {
+        this._removeLinkingListener();
+      }
+
+      this.setState({ result });
+    } catch (error) {
+      alert(error);
+      console.log(error);
     }
   };
 
-    // LOGIN De FACEBBOK
-    loginGoogle = async () => {
-      let redirectUrl = await Linking.getInitialURL();
-      let authUrl = "http://192.168.56.1:3001/api/auth/google";
-      try {
-        let authResult = await WebBrowser.openAuthSessionAsync(
-          "http://192.168.56.1:3001/api/auth/google",
-          redirectUrl
-        );
-        await this.setState({ authResult: authResult, isPostBack: true });
-      } catch (err) {
-        console.log("ERROR logiGoogle:", err);
-      }
-    };
+  _addLinkingListener = () => {
+    Linking.addEventListener('url', this._handleRedirect);
+  };
+
+  _removeLinkingListener = () => {
+    Linking.removeEventListener('url', this._handleRedirect);
+  };
+
 
   HandleRegistroBtn() {
     this.props.navigation.navigate("Registrarse");
@@ -108,6 +105,48 @@ class Login extends Component {
   HandleOlvidePass() {
     this.props.navigation.navigate("Olvide");
   }
+  HandleInicioSocialBtn(token) {
+    this.setState({
+      isLoading: true,
+      error: ""
+    });
+    session
+      .guardarToken(token)
+      .then(response => {
+        if (response) {
+          this.setState(this.initialState);
+          console.log(session.esAppTipoCliente(), "session.esAppTipoCliente()");
+          if (session.esUsuarioTipoCliente())
+            this.props.navigation.navigate("FeedServicios");
+          else if (session.esUsuarioTipoEmpresa() && session.usuarioLogueado().Proveedor != null)
+            this.props.navigation.navigate("Servicios");
+          else {
+            //se pudo registrar pero no completo los datos particulares
+            if (session.esAppTipoCliente()) {
+              clientesService.crear().then(resp=> this.props.navigation.navigate("FeedServicios"));
+            } else {
+              this.props.navigation.navigate("RegistrarProveedor");
+            }
+          }
+        }else{
+          this.props.navigation.navigate("Select");
+        }
+      })
+      .catch(exception => {
+        console.log(exception);
+        const error = api.exceptionExtractError(exception);
+        this.setState({
+          isLoading: false,
+          ...(error ? { error } : {})
+        });
+
+        if (!error) {
+          throw exception;
+        }
+      });
+  }
+
+
 
   HandleInicioBtn() {
     this.setState({
@@ -135,6 +174,7 @@ class Login extends Component {
             }
           }
         } else {
+          console.log(response);
           if (response.error) {
             this.setState({ isLoading: false, error: response.error });
           } else {
@@ -149,6 +189,7 @@ class Login extends Component {
         }
       })
       .catch(exception => {
+        console.log(exception);
         const error = api.exceptionExtractError(exception);
         this.setState({
           isLoading: false,

@@ -34,6 +34,7 @@ export function fetchApi(
       : {})
   })
     .then(response => {
+      console.log(response);
       return response.json();
     })
     .catch(function(error) {

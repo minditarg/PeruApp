@@ -8,12 +8,11 @@ export const listado = () => {
         }
     })
 }
-// export const crear = (nombre, descripcion, fotos, subcategoriaId) => {
-//     return api.crear(nombre, descripcion, fotos, subcategoriaId, session.usuarioLogueado().Proveedor.id);
-// }
+export const crear = () => {
+    return api.crear(session.usuarioLogueado().id);
+}
 
 const onRequestSuccess = response => {
-    console.log(response);
     if (response.statusType == "success")
       session.actualizarUsuario();
     return response;

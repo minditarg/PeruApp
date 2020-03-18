@@ -29,6 +29,20 @@ const getTokenEnStore = async () => {
   } catch (error) {
   }
 };
+
+const saveTipoSesionEnStore = async (tipo) => {
+  try {
+    await AsyncStorage.setItem('TipoSesion', tipo);
+  } catch (error) {
+  }
+};
+const getTipoSesionEnStore = async () => {
+  try {
+    return await AsyncStorage.getItem('TipoSesion');
+  } catch (error) {
+  }
+};
+
 const setSessionTimeout = duration => {
   clearTimeout(sessionTimeout);
   sessionTimeout = setTimeout(
@@ -66,6 +80,16 @@ const onRequestFailed = exception => {
   clearSession();
   throw exception;
 };
+
+export const guardarToken = (token) => { 
+  store.dispatch(
+    actionCreators.update({
+      tokens: token,
+    })
+  );
+    saveTokenEnStore(token);
+    return estaLogueado();
+}
 
 
 export const authenticate = (email, password) =>
@@ -130,17 +154,22 @@ export const avatar = () => {
 };
 
 export const elegirTipoApp = tipo => {
+  console.log("tipo de appp", tipo);
+  saveTipoSesionEnStore(tipo);
   store.dispatch(actionCreators.update({ tipo: tipo }));
 };
 export const esAppTipoCliente = () => {
-  return selectors.get().tipo == "Cliente";
+  return getTipoSesionEnStore().then(res=>{
+    return selectors.get().tipo == "Cliente" | res == "Cliente";
+  });
+  
 };
 
 export const esUsuarioTipoCliente = () => {
   return usuarioLogueado() && usuarioLogueado().esCliente;
 };
 export const esUsuarioTipoEmpresa = () => {
-  return usuarioLogueado() && !usuarioLogueado().esCliente ;
+  return usuarioLogueado() && usuarioLogueado().Proveedor != null ;
 };
 
 export const actualizarUsuario = () => {

@@ -62,7 +62,7 @@ class RegistrarProveedor extends Component {
 
   componentDidMount() {
     this.getPermissionAsync();
-    this.setState({email: this.props.navigation.getParam("email")})
+    this.setState({email:this.props.usuario.email, nombre: this.props.usuario.nombre })
   }
 
   getPermissionAsync = async () => {
@@ -373,7 +373,8 @@ const mapStateToProps = state => {
   return {
     servServ: servicioService,
     prov: proveedor,
-    localidades: commonService.getStore().localidades
+    localidades: commonService.getStore().localidades,
+    usuario: sessionService.usuarioLogueado()
   };
 };
 export default connect(mapStateToProps)(RegistrarProveedor);

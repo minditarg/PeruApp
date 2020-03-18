@@ -5,7 +5,7 @@ const endPoints = {
     crear: '/servicio',
     actualizar: '/servicio/',
     eliminar: '/servicio/',
-    buscar: '/servicio/buscar/',
+    buscar: '/servicios/buscar/',
     listadoPorProveedor: '/servicios/listadoPorProveedor/'
 };
 
