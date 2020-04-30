@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {
     View,
     ScrollView,
+    Platform,
     TouchableWithoutFeedback,
     Keyboard,
     KeyboardAvoidingView,
@@ -97,8 +98,8 @@ export class PuntuarTrabajo extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView behavior="padding" enabled>
-                <SafeAreaView style={stl.containerList}>
+            <KeyboardAvoidingView   behavior={Platform.OS == "ios" ? "padding" : "height"}>
+            <SafeAreaView style={stl.containerList}>
                     <ScrollView>
                         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                             <Content style={stl.card}>

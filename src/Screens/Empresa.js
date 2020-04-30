@@ -4,6 +4,7 @@ import {
   Image,
   SafeAreaView,
   TouchableWithoutFeedback,
+  Platform,
   ScrollView,
   TouchableOpacity,
   Keyboard,
@@ -178,7 +179,7 @@ class Empresa extends Component {
       classesBtn.push(stl.disabled);
     }
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
+      <KeyboardAvoidingView   behavior={Platform.OS == "ios" ? "padding" : "height"}>
         <SafeAreaView style={stl.containerList}>
           <ScrollView ref="_scrollView" style={stl.scrollView}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

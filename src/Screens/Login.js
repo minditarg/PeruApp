@@ -5,7 +5,7 @@ import {
   TouchableWithoutFeedback,
   ImageBackground,
   View,
-  ScrollView,
+  ScrollView,Platform,
   SafeAreaView,
   TextInput,
   KeyboardAvoidingView
@@ -208,7 +208,7 @@ class Login extends Component {
     }
 
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
+      <KeyboardAvoidingView   behavior={Platform.OS == "ios" ? "padding" : "height"}>
         <SafeAreaView style={stl.container}>
           <ImageBackground
             source={require("../../assets/bkblues.png")}

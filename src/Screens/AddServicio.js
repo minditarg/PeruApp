@@ -3,6 +3,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Platform,
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
@@ -331,7 +332,8 @@ export class AddServicio extends Component {
     });
 
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
+      <KeyboardAvoidingView   behavior={Platform.OS == "ios" ? "padding" : "height"}>
+
         <SafeAreaView style={stl.containerList}>
           <ScrollView>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

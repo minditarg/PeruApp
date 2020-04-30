@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {
   View,
   Image,
-  ImageBackground,
+  ImageBackground,Platform,
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
@@ -85,7 +85,7 @@ export class Registrarse extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
+      <KeyboardAvoidingView   behavior={Platform.OS == "ios" ? "padding" : "height"}>
         <SafeAreaView style={stl.container}>
           <ImageBackground
             source={require("../../assets/bkblues.png")}

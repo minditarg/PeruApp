@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   ImageBackground,
   Keyboard,
-  ScrollView,
+  ScrollView,Platform,
   TouchableOpacity,
   KeyboardAvoidingView
 } from "react-native";
@@ -140,7 +140,7 @@ class RegistrarProveedor extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
+      <KeyboardAvoidingView   behavior={Platform.OS == "ios" ? "padding" : "height"}>
         <SafeAreaView style={stl.container}>
           <ImageBackground
             source={require("../../assets/bkblues.png")}

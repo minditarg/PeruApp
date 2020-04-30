@@ -4,6 +4,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
   KeyboardAvoidingView,
   SafeAreaView
 } from "react-native";
@@ -136,7 +137,7 @@ import { ThemeColors } from "react-navigation";
     
 
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
+      <KeyboardAvoidingView   behavior={Platform.OS == "ios" ? "padding" : "height"}>
         <SafeAreaView style={stl.containerList}>
           <ScrollView>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

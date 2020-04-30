@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   TouchableOpacity,
+  Platform,
   Keyboard,
   KeyboardAvoidingView
 } from "react-native";
@@ -129,8 +130,8 @@ class ClientePerfil extends Component {
         classesBtn.push(stl.disabled);
       }
       return (
-        <KeyboardAvoidingView behavior="padding" enabled>
-          <SafeAreaView style={stl.containerList}>
+        <KeyboardAvoidingView   behavior={Platform.OS == "ios" ? "padding" : "height"}>
+        <SafeAreaView style={stl.containerList}>
             <ScrollView ref="_scrollView" style={stl.scrollView}>
               <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <Content style={stl.card}>
