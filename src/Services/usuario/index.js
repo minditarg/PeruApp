@@ -4,7 +4,9 @@ import * as session from '../session';
 
 
 export const crear = (email, password) => { 
-    return api.crear(email, password,session.esAppTipoCliente()); 
+  return session.esAppTipoCliente().then(res=>{
+    return api.crear(email, password,res); 
+  });
 }
 
 export const recuperarPassword = (email) =>

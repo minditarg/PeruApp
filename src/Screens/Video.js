@@ -8,14 +8,19 @@ import * as session from "../Services/session";
 class Video extends Component {
   constructor() {
     super();
+    
   }
   onListenMessage() {}
   handleNextBtn() {
-    if (session.esAppTipoCliente()) {
-      this.props.navigation.navigate("Cliente");
-    } else {
-      this.props.navigation.navigate("Login");
-    }
+    session.esAppTipoCliente().then(tipoCliente=>{
+      if (tipoCliente) {
+        this.props.navigation.navigate("Cliente");
+      } else {
+        this.props.navigation.navigate("Login");
+      }
+    });
+    
+   
   }
 
   render() {
@@ -37,7 +42,7 @@ class Video extends Component {
               }
               userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
               source={{
-                ...(session.esAppTipoCliente()
+                ...(session.esSelectorTipoCliente()
                   ? {
                       uri:
                         "https://www.youtube.com/embed/7qOqCtg6HWo?&controls=0&rel=0&autoplay=1&frameborder='0'&allow='autoplay;'&allowfullscreen"

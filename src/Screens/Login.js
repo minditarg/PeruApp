@@ -115,18 +115,19 @@ class Login extends Component {
       .then(response => {
         if (response) {
           this.setState(this.initialState);
-          console.log(session.esAppTipoCliente(), "session.esAppTipoCliente()");
           if (session.esUsuarioTipoCliente())
             this.props.navigation.navigate("FeedServicios");
           else if (session.esUsuarioTipoEmpresa() && session.usuarioLogueado().Proveedor != null)
             this.props.navigation.navigate("Servicios");
           else {
             //se pudo registrar pero no completo los datos particulares
-            if (session.esAppTipoCliente()) {
-              clientesService.crear().then(resp=> this.props.navigation.navigate("FeedServicios"));
-            } else {
-              this.props.navigation.navigate("RegistrarProveedor");
-            }
+            session.esAppTipoCliente().then(esCliente=>{
+              if (esCliente) {
+                clientesService.crear().then(resp=> this.props.navigation.navigate("FeedServicios"));
+              } else {
+                this.props.navigation.navigate("RegistrarProveedor");
+              }
+            });
           }
         }else{
           this.props.navigation.navigate("Select");

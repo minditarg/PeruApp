@@ -37,11 +37,15 @@ export default class AppLoad extends React.Component {
             this.props.navigation.navigate("Servicios");
           else {
             //se pudo registrar pero no completo los datos particulares
-            if (session.esAppTipoCliente()) {
-              this.props.navigation.navigate("Trabajos");
-            } else {
-              this.props.navigation.navigate("RegistrarProveedor");
-            }
+            session.esAppTipoCliente().then(esCliente=>{
+              if (esCliente) {
+                this.props.navigation.navigate("Trabajos");
+              } else {
+                this.props.navigation.navigate("RegistrarProveedor");
+              }
+            });
+
+            
           }
         }else{
           this.props.navigation.navigate("Select");

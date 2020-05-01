@@ -155,8 +155,8 @@ export const avatar = () => {
 
 export const elegirTipoApp = tipo => {
   console.log("tipo de appp", tipo);
-  saveTipoSesionEnStore(tipo);
   store.dispatch(actionCreators.update({ tipo: tipo }));
+  return saveTipoSesionEnStore(tipo);
 };
 export const esAppTipoCliente = () => {
   return getTipoSesionEnStore().then(res=>{
@@ -164,7 +164,15 @@ export const esAppTipoCliente = () => {
   });
   
 };
+export const esSelectorTipoCliente = () => {
+  return selectors.get().tipo == "Cliente"
+  
+};
 
+// export const esAppTipoCliente = () => {
+//     return  getTipoSesionEnStore() == "Cliente";
+// };
+ 
 export const esUsuarioTipoCliente = () => {
   return usuarioLogueado() && usuarioLogueado().esCliente;
 };
