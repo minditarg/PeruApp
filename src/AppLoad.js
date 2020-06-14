@@ -32,16 +32,20 @@ export default class AppLoad extends React.Component {
       let logueado = session.estaLogueado().then(response => {
         if (response) {
           if (session.esUsuarioTipoCliente())
-            this.props.navigation.navigate("Trabajos");
-          if (session.esUsuarioTipoEmpresa())
+            this.props.navigation.navigate("FeedServicios");
+            else if (session.esUsuarioTipoEmpresa() && session.usuarioLogueado().Proveedor != null)
             this.props.navigation.navigate("Servicios");
           else {
             //se pudo registrar pero no completo los datos particulares
-            if (session.esAppTipoCliente()) {
-              this.props.navigation.navigate("Trabajos");
-            } else {
-              this.props.navigation.navigate("RegistrarProveedor");
-            }
+            session.esAppTipoCliente().then(esCliente=>{
+              if (esCliente) {
+                this.props.navigation.navigate("Trabajos");
+              } else {
+                this.props.navigation.navigate("RegistrarProveedor");
+              }
+            });
+
+            
           }
         }else{
           this.props.navigation.navigate("Select");

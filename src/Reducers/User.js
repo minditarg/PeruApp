@@ -1,4 +1,4 @@
-import { LOGIN, CREATE_USER, UPDATE_USER } from "../Actions/actionsTypes";
+/*import { LOGIN, CREATE_USER, UPDATE_USER } from "../Actions/actionsTypes";
 
 const User = (state = [], action) => {
   switch (action.type) {
@@ -18,3 +18,4 @@ const User = (state = [], action) => {
 };
 
 export default User;
+*/

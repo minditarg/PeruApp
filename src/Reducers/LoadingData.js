@@ -20,7 +20,6 @@ const LoadingData = (state = [], action) => {
         error: action.payload
       };
     default:
-      console.log("default loading data");
       return state;
   }
 };

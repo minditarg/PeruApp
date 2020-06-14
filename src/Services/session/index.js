@@ -6,6 +6,7 @@ import { initialState } from "./reducer";
 import apiConfig from "../api/config";
 import { AsyncStorage } from 'react-native';
 
+
 const SESSION_TIMEOUT_THRESHOLD = 300; // Will refresh the access token 5 minutes before it expires
 
 let sessionTimeout = null;
@@ -28,6 +29,20 @@ const getTokenEnStore = async () => {
   } catch (error) {
   }
 };
+
+const saveTipoSesionEnStore = async (tipo) => {
+  try {
+    await AsyncStorage.setItem('TipoSesion', tipo);
+  } catch (error) {
+  }
+};
+const getTipoSesionEnStore = async () => {
+  try {
+    return await AsyncStorage.getItem('TipoSesion');
+  } catch (error) {
+  }
+};
+
 const setSessionTimeout = duration => {
   clearTimeout(sessionTimeout);
   sessionTimeout = setTimeout(
@@ -56,7 +71,6 @@ const onRequestSuccess = response => {
       })
     );
     saveTokenEnStore(response.data.tokens);
-
   }
   //setSessionTimeout(tokens.access.expiresIn);
   return response;
@@ -66,6 +80,16 @@ const onRequestFailed = exception => {
   clearSession();
   throw exception;
 };
+
+export const guardarToken = (token) => { 
+  store.dispatch(
+    actionCreators.update({
+      tokens: token,
+    })
+  );
+    saveTokenEnStore(token);
+    return estaLogueado();
+}
 
 
 export const authenticate = (email, password) =>
@@ -99,7 +123,7 @@ export const estaLogueado = () => {
                 actionCreators.update({
                   user: response.data,
                   tokens: token,
-                  tipo: response.data.Cliente ? "Cliente" : "Proveedor"
+                  tipo: response.data.esCliente ? "Cliente" : "Proveedor"
                 })
               );
               return true;
@@ -119,28 +143,41 @@ export const usuarioLogueado = () => {
   }
 };
 export const avatar = () => {
-  if (usuarioLogueado() != null && usuarioLogueado().Proveedor != null) {
+  if (esUsuarioTipoEmpresa()) {
     return apiConfig.pathFiles + usuarioLogueado().Proveedor.foto;
   }
-  if (usuarioLogueado() != null && usuarioLogueado().Cliente != null) {
-    return "data:image/png;base64," + usuarioLogueado().avatar;
+  if (esUsuarioTipoCliente()) {
+    return apiConfig.pathFiles  + usuarioLogueado().avatar;
   } else {
     return require("../../../assets/noFoto.png");
   }
 };
 
 export const elegirTipoApp = tipo => {
+  console.log("tipo de appp", tipo);
   store.dispatch(actionCreators.update({ tipo: tipo }));
+  return saveTipoSesionEnStore(tipo);
 };
 export const esAppTipoCliente = () => {
-  return selectors.get().tipo == "Cliente";
+  return getTipoSesionEnStore().then(res=>{
+    return selectors.get().tipo == "Cliente" | res == "Cliente";
+  });
+  
+};
+export const esSelectorTipoCliente = () => {
+  return selectors.get().tipo == "Cliente"
+  
 };
 
+// export const esAppTipoCliente = () => {
+//     return  getTipoSesionEnStore() == "Cliente";
+// };
+ 
 export const esUsuarioTipoCliente = () => {
-  return usuarioLogueado() && usuarioLogueado().Cliente != null;
+  return usuarioLogueado() && usuarioLogueado().esCliente;
 };
 export const esUsuarioTipoEmpresa = () => {
-  return usuarioLogueado() && usuarioLogueado().Proveedor != null;
+  return usuarioLogueado() && usuarioLogueado().Proveedor != null ;
 };
 
 export const actualizarUsuario = () => {
