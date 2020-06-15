@@ -1,0 +1,4 @@
+export const ACTUALIZAR = 'trabajos/ACTUALIZAR';
+export const ACTUALIZAR_CALIFICADOS = 'trabajos/ACTUALIZAR_CALIFICADOS';
+export const ACTUALIZAR_SIN_CALIFICAR = 'trabajos/ACTUALIZAR_SIN_CALIFICAR';
+

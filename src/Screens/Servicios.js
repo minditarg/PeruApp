@@ -4,20 +4,12 @@ import { Container, Content, Button, Icon, Spinner } from "native-base";
 import { CardList } from "../Componentes/CardList";
 import { stl } from "../Screens/styles/styles";
 import * as session from "../Services/session";
+import * as serviciosService from "../Services/servicios";
 import { connect } from "react-redux";
 class Servicios extends Component {
   constructor() {
     super();
-    //this.componentDidUpdate();
-    this.state = {
-      servicios: session.usuarioLogueado().Proveedor.servicios
-    };
-  }
-
-  componentDidMount() {
-    this.state = {
-      servicios: session.usuarioLogueado().Proveedor.servicios
-    };
+    serviciosService.listadoPorProveedor();
   }
 
   render() {
@@ -28,7 +20,15 @@ class Servicios extends Component {
             style={stl.listaPadding}
             data={this.props.servicios}
             renderItem={({ item }) => (
-              <CardList navigation={this.props.navigation} Image obj={item} />
+              <CardList
+                onPress={() => {
+                  this.props.navigation.push("UpdateServicio", { id: item.id });
+                }}
+                trash={true}
+                navigation={this.props.navigation}
+                Image
+                obj={item}
+              />
             )}
             keyExtractor={item => item.id.toString()}
           />
@@ -49,7 +49,7 @@ class Servicios extends Component {
 
 const mapStateToProps = state => {
   return {
-    servicios: session.usuarioLogueado() != null ? session.usuarioLogueado().Proveedor.servicios : null
+    servicios: serviciosService.getStore().servicios
   };
 };
 export default connect(mapStateToProps)(Servicios);

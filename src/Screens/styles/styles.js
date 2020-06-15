@@ -24,10 +24,7 @@ export const stl = StyleSheet.create({
     paddingBottom: 20,
     height: 80
   },
-  vista: {
-    paddingTop: 30,
-    paddingBottom: 30
-  },
+
   btn: {
     flexDirection: "row",
     alignContent: "center",
@@ -172,6 +169,53 @@ export const stl = StyleSheet.create({
 
     elevation: 1
   },
+
+  cardEnModal: {
+    paddingLeft: 10,
+    paddingVertical: 5,
+
+    borderRadius: 3,
+    shadowColor: "#ffff",
+    backgroundColor: "#fff",
+    marginVertical: 3,
+    borderColor: "white",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.01,
+    shadowRadius: 1.41,
+
+    elevation: 1
+  },
+  cardFluid: {
+    paddingLeft: 10,
+    borderRadius: 3,
+    shadowColor: "#ffff",
+    backgroundColor: "#fff",
+    marginVertical: 3,
+    borderColor: "white",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.01,
+    shadowRadius: 1.41,
+
+    elevation: 1
+  },
+  tituloModal: {
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 17,
+    marginBottom: 15
+  },
+  link: {
+    color: "#444"
+  },
+  codigoYt: {
+    backgroundColor: "yellow"
+  },
   cardHor: {
     flexDirection: "row"
   },
@@ -215,6 +259,7 @@ export const stl = StyleSheet.create({
     bottom: 25,
     borderRadius: 100,
     width: 60,
+    zIndex: 7,
     height: 60
   },
   iconPlus: {
@@ -326,5 +371,226 @@ export const stl = StyleSheet.create({
     marginLeft: 20,
     marginBottom: -30,
     padding: 0
+  },
+  BotonesTipoServicio: {
+    flexDirection: "column",
+    flex: 1,
+    paddingBottom: 60,
+    paddingHorizontal: "10%",
+    alignContent: "center",
+    justifyContent: "space-around"
+  },
+  SelectCatText: {
+    textAlign: "center",
+    padding: 10,
+    justifyContent: "center",
+    alignContent: "center",
+    flex: 0.3
+  },
+  TextPregunta: {
+    textAlign: "center",
+    fontSize: 25,
+    color: "#444"
+  },
+  Premium: {
+    backgroundColor: "#24e263"
+  },
+  Supervisado: {
+    backgroundColor: "#e28c24"
+  },
+  Standar: {
+    backgroundColor: "#2392e5"
+  },
+  btnTextTipoServicio: {
+    fontWeight: "bold",
+    fontSize: 18
+  },
+  selectLabelTextStyle: {
+    fontFamily: "Roboto",
+    color: "#000",
+    textAlign: "left",
+    width: "99%",
+    padding: 10,
+    flexDirection: "row"
+  },
+  placeHolderTextStyle: {
+    fontFamily: "Roboto",
+    color: "#D3D3D3",
+    padding: 10,
+    textAlign: "left",
+    width: "99%",
+    flexDirection: "row"
+  },
+  dropDownImageStyle: {
+    marginLeft: 10,
+    width: 10,
+    height: 10,
+    alignSelf: "center"
+  },
+  listTextViewStyle: {
+    fontFamily: "Roboto",
+    color: "#000",
+    marginVertical: 10,
+    flex: 0.9,
+    marginLeft: 20,
+    marginHorizontal: 10,
+    textAlign: "left",
+    color: "#444"
+  },
+  pickerStyle: {
+    marginLeft: 23,
+    fontFamily: "Roboto",
+    paddingRight: 25,
+    marginRight: 10,
+    marginBottom: 2,
+    borderBottomColor: "#aaa",
+    borderBottomWidth: 1,
+    borderRadius: 0,
+    flexDirection: "row"
+  },
+  LabelSelect2: {
+    marginBottom: 10
+  },
+  searchBarContainerStyle: {
+    marginBottom: 10,
+    flexDirection: "row",
+    height: 40,
+    borderRadius: 0,
+    fontFamily: "Roboto",
+    borderBottomWidth: 1,
+    borderColor: "#aaa",
+    marginLeft: 10,
+    marginRight: 10
+  },
+  SearchBar: {
+    backgroundColor: "white",
+    height: 60,
+    margin: -10,
+
+    marginBottom: 10
+  },
+  filter: {
+    width: 110,
+    color: "#444",
+    paddingTop: 10,
+    textAlign: "center",
+    paddingBottom: 10
+  },
+
+  pickerStyle2: {
+    color: "#333",
+    width: 110
+  },
+
+  selectLabelTextStyle2: {
+    paddingTop: 10,
+
+    textAlign: "center"
+  },
+  dropDownImageStyle2: {
+    display: "none"
+  },
+  EmptyFilter: {
+    width: 60,
+    color: "#444",
+    paddingTop: 20,
+    textAlign: "center",
+    alignItems: "center",
+    alignContent: "center"
+  },
+  EmptyFilterIcon: {
+    color: "#444",
+    fontSize: 35
+  },
+  labelSeccion: {
+    marginLeft: -10
+  },
+  tituloSeccion: {
+    padding: 10,
+    fontWeight: "bold",
+    paddingLeft: 20
+  },
+  tituloSeccionCard: {
+    paddingHorizontal: 10,
+    paddingVertical: 0,
+    fontWeight: "bold",
+    fontSize: 20,
+    flex: 1
+  },
+  CardEmpresa: {
+    borderRadius: 25,
+    backgroundColor: "red"
+  },
+  imgEmpresa: {
+    flex: 1,
+    aspectRatio: 1,
+    paddingTop: 10
+  },
+  imgEmp: {
+    height: 100,
+    width: 100,
+    margin: 5
+  },
+  tituloEmpresa: {},
+  MarginTop15: {
+    marginTop: 15
+  },
+  txtEmpresa: { paddingHorizontal: 15, paddingTop: 15 },
+  TelEmpresa: {
+    fontWeight: "bold",
+    color: darkBlue,
+    textAlign: "right",
+    paddingHorizontal: 15,
+    paddingVertical: 7
+  },
+  btnFloatImg: {
+    width: 60,
+    height: 60
+  },
+  MailEmpresa: {
+    fontWeight: "bold",
+    color: darkBlue,
+    paddingHorizontal: 15,
+    paddingVertical: 7,
+    flex: 1
+  },
+  DescEmpresa: {
+    margin: 5,
+    paddingLeft: 10,
+    flex: 3
+  },
+  DescEmpresaCard: {
+    paddingLeft: 10,
+    flex: 3
+  },
+  modal: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 9,
+    bottom: 0,
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,.8)"
+  },
+
+  imgModal: {
+    aspectRatio: 1,
+    width: "100%",
+    zIndex: 9,
+    alignSelf: "center"
+  },
+  pointEnCard: {
+    paddingLeft: 10
+  },
+  PassChangeForm: {
+    backgroundColor: "#eee",
+    marginLeft: 15
+  },
+  checboxLabel: {
+    marginLeft: 5
+  },
+  puntajeEnCard: {
+    marginLeft: 10
   }
 });

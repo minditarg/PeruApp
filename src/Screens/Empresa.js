@@ -4,11 +4,14 @@ import {
   Image,
   SafeAreaView,
   TouchableWithoutFeedback,
+  Platform,
   ScrollView,
   TouchableOpacity,
   Keyboard,
   KeyboardAvoidingView
 } from "react-native";
+import RNModal from "rn-modal-picker";
+
 import { Col } from "react-native-easy-grid";
 import {
   Button,
@@ -21,23 +24,36 @@ import {
   Icon,
   Content,
   Spinner,
-  Toast
+  CheckBox,
+  Toast,
+  ListItem
 } from "native-base";
 import { stl } from "./styles/styles";
 import * as sessionService from "../Services/session";
 import apiConfig from "../Services/api/config";
-import * as proveedorService from "../Services/proveedor";
+
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 
-export class Empresa extends Component {
+import * as proveedorService from "../Services/proveedor";
+import * as commonService from "../Services/common";
+import { connect } from "react-redux";
+
+class Empresa extends Component {
   constructor() {
     super();
     let usuarioLogueado = sessionService.usuarioLogueado();
-
+    commonService.listadoLocalidades();
+    let localidad = usuarioLogueado.Proveedor.localidad
+      ? usuarioLogueado.Proveedor.localidad
+      : { id: "", nombre: "" };
     this.initialState = {
+      localidadId: localidad.id,
+      pass: "",
+      confPass: "",
+      localidadSeleccionadoText: localidad.nombre,
       nombre: usuarioLogueado.Proveedor.nombre,
       email: usuarioLogueado.Proveedor.email,
       descripcion: usuarioLogueado.Proveedor.descripcion,
@@ -47,10 +63,12 @@ export class Empresa extends Component {
       fotoNueva: null,
       submitted: false,
       isLoading: false,
+      cambiarPass: false,
       error: null,
       hasChange: false
     };
     this.state = this.initialState;
+    console.log(this.state);
   }
   componentDidMount() {
     this.getPermissionAsync();
@@ -60,8 +78,10 @@ export class Empresa extends Component {
     this.initialState = {
       nombre: this.state.nombre,
       email: this.state.email,
+
       descripcion: this.state.descripcion,
       direccion: this.state.direccion,
+
       telefono: this.state.telefono,
       foto: this.state.foto,
       fotoNueva: null,
@@ -102,12 +122,13 @@ export class Empresa extends Component {
       isLoading: true
     });
     dismissKeyboard();
-    proveedorService
+    this.props.provService
       .actualizar(
         this.state.nombre,
         this.state.email,
         this.state.descripcion,
         this.state.direccion,
+        this.state.localidadId,
         this.state.telefono,
         this.state.fotoNueva
       )
@@ -141,9 +162,15 @@ export class Empresa extends Component {
         }
       });
   }
-
+  _cambioLocalidad(nombre, id) {
+    this.setState({
+      localidadSeleccionadoText: nombre,
+      localidadId: id,
+      hasChange: true
+    });
+  }
   logout() {
-    sessionService.logout();
+    this.props.session.logout();
     this.props.navigation.navigate("Select");
   }
   render() {
@@ -152,7 +179,7 @@ export class Empresa extends Component {
       classesBtn.push(stl.disabled);
     }
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
+      <KeyboardAvoidingView   behavior={Platform.OS == "ios" ? "padding" : "height"}>
         <SafeAreaView style={stl.containerList}>
           <ScrollView ref="_scrollView" style={stl.scrollView}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -247,6 +274,44 @@ export class Empresa extends Component {
                       }}
                     />
                   </Item>
+
+                  <View style={stl.pickerSelect2}>
+                    <Text
+                      style={[stl.textBlack, stl.pickerlbl, stl.LabelSelect2]}
+                    >
+                      Localidad:
+                    </Text>
+
+                    <RNModal
+                      dataSource={this.props.localidades.map((s, i) => {
+                        return { id: s.id, name: s.nombre };
+                      })}
+                      dummyDataSource={this.props.localidades.map((s, i) => {
+                        return { id: s.id, name: s.nombre };
+                      })}
+                      defaultValue={true}
+                      pickerTitle={"Localidad"}
+                      showSearchBar={true}
+                      disablePicker={false}
+                      changeAnimation={"none"}
+                      searchBarPlaceHolder={"Buscar....."}
+                      showPickerTitle={true}
+                      searchBarContainerStyle={stl.searchBarContainerStyle}
+                      pickerStyle={stl.pickerStyle}
+                      pickerItemTextStyle={stl.listTextViewStyle}
+                      selectedLabel={this.state.localidadSeleccionadoText}
+                      placeHolderLabel={"Seleccione localidad"}
+                      selectLabelTextStyle={stl.selectLabelTextStyle}
+                      placeHolderTextStyle={stl.placeHolderTextStyle}
+                      dropDownImageStyle={stl.dropDownImageStyle}
+                      selectedValue={(index, seleccionado) => {
+                        this._cambioLocalidad(
+                          seleccionado.name,
+                          seleccionado.id
+                        );
+                      }}
+                    />
+                  </View>
                   <Item floatingLabel>
                     <Label style={stl.textBlack}>Dirección</Label>
                     <Input
@@ -284,6 +349,68 @@ export class Empresa extends Component {
                     />
                   </Item>
                   <Text style={stl.txtError}> {this.state.error}</Text>
+
+                  <ListItem
+                    onPress={() => {
+                      this.setState({
+                        cambiarPass: !this.state.cambiarPass
+                      });
+                      console.log(this.state.cambiarPass);
+                    }}
+                  >
+                    <CheckBox
+                      onPress={() => {
+                        this.setState({
+                          cambiarPass: !this.state.cambiarPass
+                        });
+                        console.log(this.state.cambiarPass);
+                      }}
+                      checked={this.state.cambiarPass}
+                      color="#235be5"
+                    />
+                    <Text style={stl.checboxLabel}>Cambiar contraseña</Text>
+                  </ListItem>
+                  {this.state.cambiarPass && (
+                    <View style={stl.PassChangeForm}>
+                      <Item floatingLabel>
+                        <Label style={stl.textBlack}>Nueva Contraseña</Label>
+                        <Input
+                          onSubmitEditing={event => {
+                            this._passConfirm._root.focus();
+                          }}
+                          getRef={c => (this._passNew = c)}
+                          secureTextEntry={true}
+                          style={stl.textBlack}
+                          name="NewPass"
+                          value={this.state.NewPass}
+                          onSubmitEditing={() => {
+                            Keyboard.dismiss;
+                          }}
+                          onChangeText={pass => {
+                            this.setState({ pass, hasChange: true });
+                          }}
+                        />
+                      </Item>
+                      <Item floatingLabel>
+                        <Label style={stl.textBlack}>
+                          Confirmar Contraseña
+                        </Label>
+                        <Input
+                          getRef={c => (this._passConfirm = c)}
+                          secureTextEntry={true}
+                          style={stl.textBlack}
+                          name="ConfirmPass"
+                          value={this.state.ConfirmPass}
+                          onSubmitEditing={() => {
+                            Keyboard.dismiss;
+                          }}
+                          onChangeText={confPass => {
+                            this.setState({ confPass, hasChange: true });
+                          }}
+                        />
+                      </Item>
+                    </View>
+                  )}
                   <View style={stl.btnsRow}>
                     <Button
                       style={stl.btn}
@@ -318,3 +445,11 @@ export class Empresa extends Component {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    session: sessionService,
+    provService: proveedorService,
+    localidades: commonService.getStore().localidades
+  };
+};
+export default connect(mapStateToProps)(Empresa);

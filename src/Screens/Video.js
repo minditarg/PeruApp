@@ -8,12 +8,20 @@ import * as session from "../Services/session";
 class Video extends Component {
   constructor() {
     super();
+    
   }
-onListenMessage(){
-
-
-}
-
+  onListenMessage() {}
+  handleNextBtn() {
+    session.esAppTipoCliente().then(tipoCliente=>{
+      if (tipoCliente) {
+        this.props.navigation.navigate("Cliente");
+      } else {
+        this.props.navigation.navigate("Login");
+      }
+    });
+    
+   
+  }
 
   render() {
     return (
@@ -24,8 +32,9 @@ onListenMessage(){
               cacheEnabled={true}
               javaScriptEnabled={true}
               allowsInlineMediaPlayback={true}
-               domStorageEnabled
-               onMessage={(msg)=>console.log(msg)}
+              startInLoadingState={true}
+              domStorageEnabled
+              onMessage={msg => console.log(msg)}
               mediaPlaybackRequiresUserAction={
                 Platform.OS !== "android" || Platform.Version >= 17
                   ? false
@@ -33,16 +42,15 @@ onListenMessage(){
               }
               userAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
               source={{
-                ...(session.esAppTipoCliente()
+                ...(session.esSelectorTipoCliente()
                   ? {
                       uri:
-                        "https://www.youtube.com/embed/7qOqCtg6HWo?&controls=0&autoplay=1&frameborder='0'&allow='autoplay;'&allowfullscreen"
+                        "https://www.youtube.com/embed/7qOqCtg6HWo?&controls=0&rel=0&autoplay=1&frameborder='0'&allow='autoplay;'&allowfullscreen"
                     }
                   : {
-                     uri:
-                        "https://www.youtube.com/embed/1TEn9uxH07w?&controls=0&autoplay=1&frameborder='0'&allow='autoplay;'&allowfullscreen"
-                    
-                  })
+                      uri:
+                        "https://www.youtube.com/embed/1TEn9uxH07w?&controls=0&rel=0&autoplay=1&frameborder='0'&allow='autoplay;'&allowfullscreen"
+                    })
               }}
             />
           </Row>
@@ -50,7 +58,7 @@ onListenMessage(){
         <Button
           style={stl.btnSaltar}
           block
-          onPress={() => this.props.navigation.navigate("Login")}
+          onPress={() => this.handleNextBtn()}
         >
           <Text>>> Saltar</Text>
         </Button>
