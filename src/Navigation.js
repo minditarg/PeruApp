@@ -16,12 +16,122 @@ import {
   AddTrabajo,
   Empresa,
   Servicios,
-  Trabajos
+  Trabajos,
+  DetalleTrabajo,
+  EmpresaDetail,
+  FeedServicios,
+  ServicioDetail,
+  TipoServicio,
+  TrabajosHechos,
+  ClientePerfil,
+  PuntuarTrabajo,
+  VideoPlayer
 } from "../src/Screens/Index";
 import { stl } from "./Screens/styles/styles";
 import NavHeader from "../src/Componentes/NavHeader";
 import AppLoad from "./AppLoad";
 
+const ClienteTrabajos = createStackNavigator(
+  {
+    TrabajosHechos: TrabajosHechos,
+    DetalleTrabajo: DetalleTrabajo,
+    PuntuarTrabajo: PuntuarTrabajo
+  },
+  {
+    defaultNavigationOptions: {
+      header: ({ navigation }) => <NavHeader navigation={navigation} />,
+      title: "TrabajosHechos",
+      headerStyle: {
+        backgroundColor: "#044fb3",
+        borderBottomColor: "red",
+        borderBottomWidth: 4
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold"
+      }
+    }
+  }
+);
+
+const ClienteServicios = createStackNavigator(
+  {
+    TipoServicio: TipoServicio,
+    FeedServicios: FeedServicios,
+    VideoPlayer: VideoPlayer,
+    ServicioDetail: ServicioDetail,
+    EmpresaDetail: EmpresaDetail
+  },
+  {
+    defaultNavigationOptions: {
+      header: ({ navigation }) => <NavHeader navigation={navigation} />,
+      title: "TipoServicio",
+      headerStyle: {
+        backgroundColor: "#044fb3",
+        borderBottomColor: "red",
+        borderBottomWidth: 4
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold"
+      }
+    }
+  }
+);
+
+const PerfilNav = createStackNavigator(
+  {
+    UserPerfil: ClientePerfil
+  },
+  {
+    defaultNavigationOptions: {
+      header: ({ navigation }) => <NavHeader navigation={navigation} />,
+      title: "Empresa",
+      headerStyle: {
+        backgroundColor: "#044fb3",
+        borderBottomColor: "red",
+        borderBottomWidth: 4
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold"
+      }
+    }
+  }
+);
+
+/* BottomTabs Cliente  */
+const ClientTabNavigator = createBottomTabNavigator(
+  {
+    Trabajos: ClienteTrabajos,
+    Servicios: ClienteServicios,
+    Perfil: PerfilNav
+  },
+  {
+    initialRouteName: "Servicios",
+    tabBarOptions: {
+      showLabel: false,
+      activeTintColor: "#fff",
+      inactiveTintColor: "#fff",
+      inactiveBackgroundColor: "#4d50a2",
+      activeBackgroundColor: "#5b62bf"
+    },
+    tabBarStyle: {
+      backgroundColor: "#4d50a2",
+      shadow: "none",
+      border: "none",
+      fontWeight: "bold"
+    },
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        const { routeName } = navigation.state;
+        return <Text style={{ color: tintColor }}>{routeName} </Text>;
+      }
+    })
+  }
+);
+
+/* Trabajos Empresa stack */
 const TrabajosNav = createStackNavigator(
   {
     Trabajos: Trabajos,
@@ -44,6 +154,7 @@ const TrabajosNav = createStackNavigator(
   }
 );
 
+/* Perfil Empresa stack */
 const EmpresaNav = createStackNavigator(
   {
     Empresa: Empresa
@@ -64,6 +175,8 @@ const EmpresaNav = createStackNavigator(
     }
   }
 );
+
+/* Servicios Empresa stack */
 const ServiciosNav = createStackNavigator(
   {
     Servicios: Servicios,
@@ -83,6 +196,7 @@ const ServiciosNav = createStackNavigator(
   }
 );
 
+/* BottomTabs Empresa  */
 const TabNavigator = createBottomTabNavigator(
   {
     Trabajos: TrabajosNav,
@@ -113,6 +227,7 @@ const TabNavigator = createBottomTabNavigator(
   }
 );
 
+/* Login stack */
 const AppNavigator = createStackNavigator(
   {
     Home: AppLoad,
@@ -128,10 +243,12 @@ const AppNavigator = createStackNavigator(
   }
 );
 
+/* Root navigation */
 const RootStack = createStackNavigator(
   {
     Main: AppNavigator,
-    Index: TabNavigator
+    Index: TabNavigator,
+    Cliente: ClientTabNavigator
   },
   {
     headerMode: "none",
@@ -139,10 +256,18 @@ const RootStack = createStackNavigator(
   }
 );
 
-const Nav = createAppContainer(RootStack);
 
-export default () => (
-  <Root>
-    <Nav></Nav>
-  </Root>
-);
+const Navigation = () => {
+return (
+createAppContainer(RootStack)
+ );
+}
+
+export default Navigation ();
+
+
+//export default () {
+//  <Root>
+ //   <Nav></Nav>
+//  </Root>
+//};

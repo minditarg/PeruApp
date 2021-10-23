@@ -1,9 +1,10 @@
 {
   "expo": {
-    "name": "Construcciones  y Soluciones",
+    "name": "Construcciones y Soluciones",
+    "scheme": "construccionesysoluciones",
     "slug": "cys",
     "privacy": "public",
-    "sdkVersion": "35.0.0",
+    "sdkVersion": "42.0.0",
     "platforms": [
       "ios",
       "android",

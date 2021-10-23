@@ -25,14 +25,18 @@ import {
   Toast,
   Spinner
 } from "native-base";
+import { Col, Row, Grid } from "react-native-easy-grid";
 import { stl } from "../Screens/styles/styles";
+import Modal from "react-native-modal";
 import * as servicioService from "../Services/servicios";
+import * as proveedorService from "../Services/proveedor";
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as sessionService from "../Services/session";
 import apiConfig from "../Services/api/config";
+import * as commonService from "../Services/common";
 
 export class UpdateServicio extends Component {
   constructor() {
@@ -44,38 +48,47 @@ export class UpdateServicio extends Component {
       submitted: false,
       nombre: "",
       descripcion: "",
+      videos: [],
       foto: [],
       categoria: undefined,
-      subcategoria: undefined
+      subcategoria: "",
+      soyPremium: proveedorService.soyPremium(),
+      modalVideoVisible: false,
+      videoNuevo: ""
     };
-    servicioService.listadoCategorias().then(categorias => {
-      console.log("eseteo categorias");
+    commonService.listadoCategorias().then(categorias => {
       this.setState({
         categorias: categorias
       });
       servicioService
         .get(this.props.navigation.getParam("id"))
         .then(servicio => {
+          console.log(servicio);
           this.setState({
-            id: servicio.id,
+            id: this.props.navigation.getParam("id"),
             nombre: servicio.nombre,
             descripcion: servicio.descripcion,
             categoria: servicio.subcategoria.categoria.id,
             subcategoria: servicio.subcategoriaId,
-            foto: this.galeriaExterna(servicio)
+            videos: servicio.videos.map((s, i) => {
+              return s.video;
+            }),
+            foto: this.galeriaExterna(servicio),
+            subcategorias: this.state.categorias.find(
+              item => item.id === servicio.subcategoria.categoria.id
+            ).subcategorias
+
+            
+          //después de recibir los datos de la api actualizamos
+         // this.onChangeCategoria(servicio.subcategoria.categoria.id);
+         // this.onChangeSubcategoria(servicio.subcategoriaId);
           });
-          // this.onChangeCategoria(servicio.subcategoria.categoria.id);
-          // console.log("entre al contructor", servicio.subcategoria.categoria.id);
-          // this.onChangeSubcategoria(servicio.subcategoriaId);
         });
     });
   }
 
   componentDidMount() {
     this.getPermissionAsync();
-    this.onChangeCategoria(this.state.categoria);
-    console.log("componentDidMount 222");
-    this.onChangeSubcategoria(this.state.subcategoria);
   }
   galeriaExterna(servicio) {
     if (!servicio.foto) {
@@ -119,7 +132,8 @@ export class UpdateServicio extends Component {
         this.state.nombre,
         this.state.descripcion,
         this.state.foto,
-        this.state.subcategoria
+        this.state.subcategoria,
+        this.state.videos,
       )
       .then(response => {
         if (response.statusType == "success") {
@@ -132,12 +146,14 @@ export class UpdateServicio extends Component {
             position: "top",
             type: "success"
           });
-          sessionService.actualizarUsuario().then(response => {
+          servicioService.listadoPorProveedor().then(response => {
             this.props.navigation.push("Servicios");
           });
         } else {
-          console.log(response);
-          this.setState({ isLoading: false, error: response.message });
+          this.setState({
+            isLoading: false,
+            error: `${response.message}: ${response.error}`
+          });
           Toast.show({
             text: response.message,
             buttonText: "OK",
@@ -160,7 +176,7 @@ export class UpdateServicio extends Component {
   }
 
   onChangeCategoria(value) {
-    if (value) {
+    if (value > 0) {
       this.setState({
         categoria: value,
         subcategorias: this.state.categorias.find(item => item.id === value)
@@ -171,17 +187,17 @@ export class UpdateServicio extends Component {
   }
 
   cambiarSubcategorias() {
-    console.log("cambiarSubcategorias");
     subcategoriasItems = this.state.subcategorias.map((s, i) => {
-      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
+      return (
+        <Picker.Item
+          keyExtractor={item => item.id.toString()}
+          value={s.id}
+          label={s.nombre}
+        />
+      );
     });
   }
-  onChangeSubcategoria(value) {
-    console.log("onChangeSubcategoria", value);
-    this.setState({
-      subcategoria: value
-    });
-  }
+
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -190,15 +206,33 @@ export class UpdateServicio extends Component {
       }
     }
   };
+  agregarVideo() {
+    this.setState({
+      videos: [...this.state.videos, this.state.videoNuevo],
+      videoNuevo: "",
+      modalVideoVisible: false
+    });
+  }
 
   render() {
     let categoriasItems = this.state.categorias.map((s, i) => {
-      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
+      return (
+        <Picker.Item key={s.id.toString()} value={s.id} label={s.nombre} />
+      );
     });
+    categoriasItems.unshift(
+      <Picker.Item key={"emptytwo"} label="Seleccione categoria" value="null" />
+    );
 
     let subcategoriasItems = this.state.subcategorias.map((s, i) => {
-      return <Picker.Item key={s.id} value={s.id} label={s.nombre} />;
+      return (
+        <Picker.Item key={s.id.toString()} value={s.id} label={s.nombre} />
+      );
     });
+    subcategoriasItems.unshift(
+      <Picker.Item key={"empty"} label="Seleccione subcategoria" value="" />
+    );
+
     let fotos = this.state.foto.map((s, i) => {
       let arrayToOrder = this.state.foto;
       let iconClassArray = [stl.imgActionIcon];
@@ -275,6 +309,57 @@ export class UpdateServicio extends Component {
         </View>
       );
     });
+    let videos = this.state.videos.map((s, i) => {
+      let arrayToOrder = this.state.videos;
+      let iconClassArray = [stl.imgActionIcon];
+      let firstItemClassArray = [stl.imgAction, stl.imgActionFirst];
+
+      if (i < 1) {
+        iconClassArray.push(stl.imgActionIconFirst);
+        firstItemClassArray.push(stl.firstItem);
+      }
+      return (
+        <View key={s} style={stl.touchableImg}>
+          <Image
+            source={{ uri: "https://i.ytimg.com/vi/" + s + "/hqdefault.jpg" }}
+            style={stl.btnImgServ}
+          />
+          <View style={stl.imgActions}>
+            <TouchableOpacity
+              style={stl.imgAction}
+              onPress={() => {
+                Alert.alert(
+                  "Eliminar video",
+                  "¿Quiere eliminar la video?",
+                  [
+                    {
+                      text: "Volver",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel"
+                    },
+                    {
+                      text: "SI, eliminala",
+                      onPress: () =>
+                        this.setState({
+                          videos: this.state.videos.filter(x => x != s)
+                        })
+                    }
+                  ],
+                  { cancelable: true }
+                );
+              }}
+            >
+              <Icon
+                type="FontAwesome"
+                style={[stl.imgActionIcon, stl.imgDeleteIcon]}
+                name="trash"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    });
+
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         <SafeAreaView style={stl.containerList}>
@@ -297,7 +382,7 @@ export class UpdateServicio extends Component {
                     />
                   </Item>
                   {this.state.submitted && !this.state.nombre && (
-                    <Text style={stl.txtError}> El nombre es requerido</Text>
+                    <Text style={stl.txtError}> El título es requerido</Text>
                   )}
                   <View>
                     <Text style={[stl.textBlack, stl.pickerlbl]}>
@@ -310,7 +395,7 @@ export class UpdateServicio extends Component {
                     >
                       <Picker
                         mode="dropdown"
-                        placeholder="Categoria"
+                        placeholder="Categoría"
                         iosIcon={<Icon name="arrow-down" />}
                         style={[stl.textBlack, stl.pickerInput]}
                         name="categoria"
@@ -321,10 +406,15 @@ export class UpdateServicio extends Component {
                         {categoriasItems}
                       </Picker>
                     </Item>
+                    {this.state.submitted && !this.state.categoria && (
+                      <Text style={stl.txtError}>
+                        La categoría es requerida
+                      </Text>
+                    )}
                   </View>
                   <View>
                     <Text style={[stl.textBlack, stl.pickerlbl]}>
-                      SubCategoría
+                      Subcategoría
                     </Text>
                     <Item
                       picker
@@ -333,18 +423,25 @@ export class UpdateServicio extends Component {
                     >
                       <Picker
                         mode="dropdown"
-                        placeholder="SubCategoria"
+                        placeholder="Subcategoría"
                         iosIcon={<Icon name="arrow-down" />}
                         style={[stl.textBlack, stl.pickerInput]}
                         name="subcategoria"
                         selectedValue={this.state.subcategoria}
-                        onValueChange={this.onChangeSubcategoria.bind(this)}
+                        onValueChange={subcategoria => {
+                          this.setState({ subcategoria });
+                        }}
                       >
                         {subcategoriasItems}
                       </Picker>
                     </Item>
+                    {this.state.submitted && !this.state.subcategoria && (
+                      <Text style={stl.txtError}>
+                        La subcategoría es requerida
+                      </Text>
+                    )}
                   </View>
-                  <Label style={stl.areaText}>
+                  <View style={stl.areaText}>
                     <Label style={stl.textBlack}>Descripción</Label>
                     <Textarea
                       style={[stl.textBlack, stl.txtArea]}
@@ -358,7 +455,7 @@ export class UpdateServicio extends Component {
                         this.setState({ descripcion });
                       }}
                     />
-                  </Label>
+                  </View>
 
                   <View style={[stl.vista, stl.vistaimgs]}>
                     {fotos}
@@ -372,6 +469,33 @@ export class UpdateServicio extends Component {
                       </View>
                     </TouchableOpacity>
                   </View>
+
+                  {this.state.soyPremium && (
+                    <Row>
+                      <Text style={stl.tituloSeccionCard}>Videos</Text>
+                    </Row>
+                  )}
+                  {this.state.soyPremium && (
+                    <View style={[stl.vista, stl.vistaimgs]}>
+                      {videos}
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.setState({
+                            modalVideoVisible: !this.state.modalVideoVisible
+                          });
+                        }}
+                      >
+                        <View style={stl.btnImgServ}>
+                          <Icon
+                            style={stl.iconCam}
+                            type="FontAwesome"
+                            name="video-camera"
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+
 
                   <Text style={stl.txtError}> {this.state.error}</Text>
                   <View style={stl.btnsRow}>
@@ -402,6 +526,55 @@ export class UpdateServicio extends Component {
               </Content>
             </TouchableWithoutFeedback>
           </ScrollView>
+          <Modal
+            backdropColor={"black"}
+            backdropOpacity={0.7}
+            isVisible={this.state.modalVideoVisible}
+          >
+            <View style={stl.cardEnModal}>
+              <Text style={stl.tituloModal}>Nuevo video de YOUTUBE</Text>
+
+              <Text>Ejemplo del codigo dentro del link de youtube</Text>
+              <Text style={stl.link}>
+                https://www.youtube.com/watch?v=
+                <Text style={stl.codigoYt}>4eUsVLk0fao</Text>
+              </Text>
+
+              <Item floatingLabel>
+                <Label style={stl.textBlack}>Ingrese el Codigo del video</Label>
+                <Input
+                  style={stl.textBlack}
+                  name="videoNuevo"
+                  value={this.state.videoNuevo}
+                  onChangeText={videoNuevo => {
+                    this.setState({ videoNuevo });
+                  }}
+                />
+              </Item>
+
+              <View style={[stl.btnsRow, stl.MarginTop15]}>
+                <Button
+                  style={stl.btn}
+                  bordered
+                  onPress={() => {
+                    this.setState({ modalVideoVisible: !this.state.modalVideoVisible });
+                  }}
+                >
+                  <Text style={stl.btnText}> Cancelar</Text>
+                </Button>
+
+                <Button
+                  block
+                  style={[stl.btn, stl.primary]}
+                  onPress={() => {
+                    this.agregarVideo();
+                  }}
+                >
+                  <Text style={stl.btnText}>Cargar Video</Text>
+                </Button>
+              </View>
+            </View>
+          </Modal>
         </SafeAreaView>
       </KeyboardAvoidingView>
     );

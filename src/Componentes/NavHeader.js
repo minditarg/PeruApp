@@ -9,6 +9,7 @@ import {
   Left,
   Right,
   Body,
+  Text,
   Thumbnail,
   View
 } from "native-base";
@@ -40,7 +41,9 @@ class NavHeader extends React.Component {
           <Left>
             <Button
               transparent
-              onPress={() => this.props.navigation.navigate("Servicios")}
+              onPress={() => 
+                  this.props.navigation.navigate("Servicios")
+              }
             >
               <Thumbnail
                 style={stl.btnAvatar}
@@ -50,16 +53,30 @@ class NavHeader extends React.Component {
           </Left>
           <Body>
             <Title style={{ paddingLeft: 10 }}>
-              {this.props.navigation.state.key}
+             {/* {this.props.navigation.state.key} */}
+             {(session.usuarioLogueado() != null && session.usuarioLogueado().nombre != null ? 'Hola ' + session.usuarioLogueado().nombre + "!" : 'Bienvenido')} 
             </Title>
           </Body>
           <Right>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.navigate("Empresa")}
-            >
-              <Thumbnail style={stl.btnAvatar} source={icon} />
-            </Button>
+            {this.props.usuario && (
+              <Button
+                transparent
+                onPress={() => { 
+                  return session.esUsuarioTipoCliente() ?  this.props.navigation.navigate("UserPerfil") :   this.props.navigation.navigate("Empresa")
+                }
+              }
+              >
+                <Thumbnail style={stl.btnAvatar} source={icon} />
+              </Button>
+            )}
+            {!this.props.usuario && (
+              <Button
+                style={stl.primary}
+                onPress={() => this.props.navigation.navigate("Login")}
+              >
+                <Text>Login</Text>
+              </Button>
+            )}
           </Right>
         </Header>
       </ImageBackground>
@@ -69,7 +86,8 @@ class NavHeader extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    avatar: session.avatar()
+    avatar: session.avatar(),
+    usuario: session.usuarioLogueado()
   };
 };
 export default connect(mapStateToProps)(NavHeader);

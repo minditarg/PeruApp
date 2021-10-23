@@ -5,6 +5,7 @@ import { stl } from "../Screens/styles/styles";
 import * as servicioService from "../Services/servicios";
 import * as sessionService from "../Services/session";
 import apiConfig from "../Services/api/config";
+import { Calificacion } from "./Calificacion";
 export class CardList extends Component {
   constructor() {
     super();
@@ -21,7 +22,7 @@ export class CardList extends Component {
             type: "success"
           });
 
-          sessionService.actualizarUsuario().then(response => {
+          servicioService.listadoPorProveedor().then(response => {
             this.props.navigation.push("Servicios");
           });
         } else {
@@ -66,11 +67,7 @@ export class CardList extends Component {
   render() {
     let obj = this.props.obj;
     return (
-      <TouchableOpacity
-        onPress={() => {
-          this.props.navigation.navigate("UpdateServicio", { id: obj.id });
-        }}
-      >
+      <TouchableOpacity onPress={this.props.onPress}>
         <View style={[stl.card, stl.cardHor]}>
           {this.props.Image && (
             <Left style={stl.cardLeft}>
@@ -84,26 +81,26 @@ export class CardList extends Component {
               />
             </Left>
           )}
+
           <Body style={stl.cardBody}>
             <Text style={stl.cardTitulo}>{obj.nombre}</Text>
-            <Text style={stl.cardSubtitulo}>{obj.descripcion}</Text>
-            <View style={stl.puntaje}>
-              <Icon style={stl.iconstar} type="Ionicons" name="star" />
-              <Icon style={stl.iconstar} type="Ionicons" name="star" />
-              <Icon style={stl.iconstar} type="Ionicons" name="star-half" />
-              <Icon style={stl.iconstar} type="Ionicons" name="star-outline" />
-              <Icon style={stl.iconstar} type="Ionicons" name="star-outline" />
-            </View>
+            <Text numberOfLines={2} style={stl.cardSubtitulo}>
+              {obj.descripcion}
+            </Text>
+            <Calificacion promedio={obj.puntaje}></Calificacion>
           </Body>
+
           <Right style={stl.cardRight}>
-            <Button
-              transparent
-              onPress={() => {
-                this.HandleEliminarBtn(obj);
-              }}
-            >
-              <Icon style={stl.iconCam} type="EvilIcons" name="trash" />
-            </Button>
+            {this.props.trash && (
+              <Button
+                transparent
+                onPress={() => {
+                  this.HandleEliminarBtn(obj);
+                }}
+              >
+                <Icon style={stl.iconCam} type="EvilIcons" name="trash" />
+              </Button>
+            )}
           </Right>
         </View>
       </TouchableOpacity>

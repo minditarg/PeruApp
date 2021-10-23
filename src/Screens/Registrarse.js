@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {
   View,
   Image,
-  ImageBackground,
+  ImageBackground,Platform,
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
@@ -45,7 +45,9 @@ export class Registrarse extends Component {
             .then(response => {
               if (response.statusType == "success") {
                 this.setState(this.initialState);
-                this.props.navigation.navigate("RegistrarProveedor");
+                session.esUsuarioTipoCliente() ?
+                  this.props.navigation.navigate("FeedServicios") :
+                  this.props.navigation.navigate("RegistrarProveedor")
               } else {
                 this.setState({
                   isLoading: false
@@ -83,7 +85,7 @@ export class Registrarse extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
+      <KeyboardAvoidingView   behavior={Platform.OS == "ios" ? "padding" : "height"}>
         <SafeAreaView style={stl.container}>
           <ImageBackground
             source={require("../../assets/bkblues.png")}

@@ -4,6 +4,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
   KeyboardAvoidingView,
   SafeAreaView
 } from "react-native";
@@ -15,75 +16,167 @@ import {
   Picker,
   Icon,
   Form,
+  Toast,
   Item,
   Input,
   Textarea,
   Label
 } from "native-base";
+import RNModal from "rn-modal-picker";
 import { stl } from "../Screens/styles/styles";
-export class AddTrabajo extends Component {
+import { connect } from "react-redux";
+import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
+import * as sessionService from "../Services/session";
+import * as serviciosService from "../Services/servicios";
+import * as trabajosService from "../Services/trabajos";
+import * as clientesService from "../Services/clientes";
+import { ThemeColors } from "react-navigation";
+
+ class AddTrabajo extends Component {
   constructor() {
     super();
-    this.state = {
-      titulo: "",
+    serviciosService.listadoPorProveedor();
+    this.initialState = {
       submitted: false,
-      image: null,
-      selected2: undefined
+      isLoading: false,
+      puntaje: "",
+      descripcion: "",
+      servicioId: undefined,
+      //listadoServicios: serviciosService.getStore().servicios,
+      listadoClientes: [],
+      clienteId: undefined,
+      clienteSeleccionadoText: ""
     };
+    this.state = this.initialState;
   }
-  onValueChange2(value: string) {
-    this.setState({
-      selected2: value
+  componentDidMount() {
+    clientesService.listado().then(response => {
+      //se agregó un filter para evitar a los clientes sin nombre
+      const updatedSinTexto = response.filter((s, i) => s.Usuario.nombre !== null  & s.Usuario.nombre !== "null");
+      this.setState({
+        listadoClientes: updatedSinTexto.map((s, i) => {
+          return { id: s.id, name: s.Usuario.nombre };
+        })
+      });
     });
   }
+
+  HandleRegistroBtn() {
+    this.setState({
+      isLoading: true,
+      submitted: true,
+      error: ""
+    });
+    dismissKeyboard();
+    trabajosService
+      .crear(
+        this.state.clienteId,
+        this.state.servicioId,
+        this.state.puntaje,
+        this.state.descripcion
+      )
+      .then(response => {
+        console.log("then", response);
+        if (response.statusType == "success") {
+          this.setState({
+            isLoading: false
+          });
+          // Toast.show({
+          //   text: response.message,
+          //   buttonText: "OK",
+          //   position: "top",
+          //   type: "success"
+          // });
+          trabajosService.listadoPorProveedor().then(response => {
+            this.state = this.initialState;
+            this.props.navigation.navigate("Trabajos", {
+              toast: {
+                text: response.message,
+                buttonText: "OK",
+                position: "top",
+                type: "success"
+              }
+            });
+          });
+        } else {
+          this.setState({
+            isLoading: false,
+            error: `${response.message}: ${response.error}`
+          });
+          Toast.show({
+            text: response.message,
+            buttonText: "OK",
+            position: "top",
+            type: "danger"
+          });
+        }
+      })
+      .catch(exception => {
+        const error = exception;
+        this.setState({
+          isLoading: false,
+          ...(error ? { error } : {})
+        });
+
+        if (!error) {
+          throw exception;
+        }
+      });
+  }
+
   render() {
+    serviciosItems= null;
+    if(this.props.listadoServicios){
+      serviciosItems = this.props.listadoServicios.map((s, i) => {
+        return (
+          <Picker.Item key={s.id.toString()} value={s.id} label={s.nombre} />
+        );
+      }) ;
+      serviciosItems.unshift(
+        <Picker.Item key={"empty"} label="Seleccione un servicio" value="null" />
+      );
+    }
+    
+
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
+      <KeyboardAvoidingView   behavior={Platform.OS == "ios" ? "padding" : "height"}>
         <SafeAreaView style={stl.containerList}>
           <ScrollView>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <Content style={stl.card}>
                 <Form style={stl.form}>
-                  <Item
-                    floatingLabel
-                    error={this.state.submitted && !this.state.titulo}
-                  >
-                    <Label style={stl.textBlack}>Título</Label>
-                    <Input
-                      style={stl.textBlack}
-                      name="titulo"
-                      value={this.state.email}
-                      onChangeText={email => {
-                        this.setState({ email });
-                      }}
-                    />
-                  </Item>
-                  {this.state.submitted && !this.state.email && (
-                    <Text style={stl.txtError}> El título es requerido</Text>
-                  )}
-                  <Item
-                    picker
-                    style={stl.picker}
-                    error={this.state.submitted && !this.state.email}
-                  >
-                    <Picker
-                      mode="dropdown"
-                      placeholder="Categoria"
-                      iosIcon={<Icon name="arrow-down" />}
-                      style={[stl.textBlack, stl.pickerInput]}
-                      name="categoria"
-                      selectedValue={this.state.selected2}
-                      onValueChange={this.onValueChange2.bind(this)}
+                  <View>
+                    <Text style={[stl.textBlack, stl.pickerlbl]}>
+                      Servicio que ofreciste
+                    </Text>
+                    <Item
+                      picker
+                      style={stl.picker}
+                      error={this.state.submitted && !this.state.servicioId}
                     >
-                      <Picker.Item label="Carpinteria" value="key0" />
-                      <Picker.Item label="ATM Card" value="key1" />
-                      <Picker.Item label="Debit Card" value="key2" />
-                      <Picker.Item label="Credit Card" value="key3" />
-                      <Picker.Item label="Net Banking" value="key4" />
-                    </Picker>
-                  </Item>
+                      <Picker
+                        mode="dropdown"
+                        placeholder="Seleccione el servicio ofrecido"
+                        iosIcon={<Icon name="arrow-down" />}
+                        style={[stl.textBlack, stl.pickerInput]}
+                        name="servicio"
+                        selectedValue={this.state.servicioId}
+                        onValueChange={servicioSeleccionado => {
+                          this.setState({ servicioId: servicioSeleccionado });
+                        }}
+                      >
+                        {serviciosItems}
+                      </Picker>
+                    </Item>
+                    {this.state.submitted && !this.state.servicioId && (
+                      <Text style={stl.txtError}>
+                        {" "}
+                        El servicio es requerido
+                      </Text>
+                    )}
+                  </View>
                   <View style={stl.areaText}>
-                    <Label style={stl.textBlack}>Descripción</Label>
+                    <Label style={stl.textBlack}>Descripción del trabajo</Label>
                     <Textarea
                       style={[stl.textBlack, stl.txtArea]}
                       ligth
@@ -97,56 +190,77 @@ export class AddTrabajo extends Component {
                       }}
                     />
                   </View>
-
-                  <Item
-                    picker
-                    style={stl.picker}
-                    error={this.state.submitted && !this.state.email}
-                  >
-                    <Picker
-                      mode="dropdown"
-                      placeholder="Categoria"
-                      iosIcon={<Icon name="arrow-down" />}
-                      style={[stl.textBlack, stl.pickerInput]}
-                      name="categoria"
-                      selectedValue={this.state.selected2}
-                      onValueChange={this.onValueChange2.bind(this)}
+                  <View style={stl.pickerSelect2}>
+                    <Text
+                      style={[stl.textBlack, stl.pickerlbl, stl.LabelSelect2]}
                     >
-                      <Picker.Item label="Carpinteria" value="key0" />
-                      <Picker.Item label="ATM Card" value="key1" />
-                      <Picker.Item label="Debit Card" value="key2" />
-                      <Picker.Item label="Credit Card" value="key3" />
-                      <Picker.Item label="Net Banking" value="key4" />
-                    </Picker>
-                  </Item>
-                  <Item
-                    picker
-                    style={stl.picker}
-                    error={this.state.submitted && !this.state.email}
-                  >
-                    <Picker
-                      mode="dropdown"
-                      placeholder="Categoria"
-                      iosIcon={<Icon name="arrow-down" />}
-                      style={[stl.textBlack, stl.pickerInput]}
-                      name="categoria"
-                      selectedValue={this.state.selected2}
-                      onValueChange={this.onValueChange2.bind(this)}
-                    >
-                      <Picker.Item label="0" value="key0" />
-                      <Picker.Item label="1" value="key1" />
-                      <Picker.Item label="2" value="key2" />
-                      <Picker.Item label="3" value="key3" />
-                      <Picker.Item label="4" value="key4" />
-                      <Picker.Item label="5" value="key5" />
-                      <Picker.Item label="6" value="key6" />
-                      <Picker.Item label="7" value="key7" />
-                      <Picker.Item label="8" value="key8" />
-                      <Picker.Item label="9" value="key9" />
-                      <Picker.Item label="10" value="key10" />
-                    </Picker>
-                  </Item>
+                      El cliente fue:
+                    </Text>
 
+                    <RNModal
+                      dataSource={this.state.listadoClientes}
+                      dummyDataSource={this.state.listadoClientes}
+                      defaultValue={false}
+                      pickerTitle={"¿Quien fue el cliente?"}
+                      showSearchBar={true}
+                      disablePicker={false}
+                      changeAnimation={"none"}
+                      searchBarPlaceHolder={"Buscar....."}
+                      showPickerTitle={true}
+                      searchBarContainerStyle={stl.searchBarStyle}
+                      pickerStyle={stl.pickerStyle}
+                      pickerItemTextStyle={stl.listTextViewStyle}
+                      selectedLabel={this.state.clienteSeleccionadoText}
+                      placeHolderLabel={"Por favor, seleccione un cliente"}
+                      selectLabelTextStyle={stl.selectLabelTextStyle}
+                      placeHolderTextStyle={stl.placeHolderTextStyle}
+                      dropDownImageStyle={stl.dropDownImageStyle}
+                      selectedValue={(index, seleccionado) => {
+                        this.setState({
+                          clienteSeleccionadoText: seleccionado.name,
+                          clienteId: seleccionado.id
+                        });
+                      }}
+                    />
+                    {this.state.submitted && !this.state.clienteId && (
+                      <Text style={stl.txtError}> El cliente es requerido</Text>
+                    )}
+                  </View>
+                  <View>
+                    <Text style={[stl.textBlack, stl.pickerlbl]}>
+                      Que puntaje le pones al cliente:
+                    </Text>
+                    <Item
+                      picker
+                      style={stl.picker}
+                      error={this.state.submitted && !this.state.puntaje}
+                    >
+                      <Picker
+                        mode="dropdown"
+                        placeholder="Seleccione el puntaje"
+                        iosIcon={<Icon name="arrow-down" />}
+                        style={[stl.textBlack, stl.pickerInput]}
+                        name="puntaje"
+                        selectedValue={this.state.puntaje}
+                        onValueChange={puntaje => this.setState({ puntaje })}
+                      >
+                        <Picker.Item
+                          label="Por favor, seleccione el puntaje"
+                          value="0"
+                        />
+                        <Picker.Item label="1 Muy malo" value="1" />
+                        <Picker.Item label="2 Malo" value="2" />
+                        <Picker.Item label="3 Regular" value="3" />
+                        <Picker.Item label="4 Bueno" value="4" />
+                        <Picker.Item label="5 Excelente " value="5" />
+                      </Picker>
+                    </Item>
+                    {this.state.submitted && !this.state.puntaje && (
+                      <Text style={stl.txtError}> El puntaje es requerido</Text>
+                    )}
+                  </View>
+
+                  <Text style={stl.txtError}> {this.state.error}</Text>
                   <View style={stl.btnsRow}>
                     <Button
                       style={stl.btn}
@@ -173,3 +287,10 @@ export class AddTrabajo extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    listadoServicios: serviciosService.getStore().servicios
+  };
+};
+export default connect(mapStateToProps)(AddTrabajo);

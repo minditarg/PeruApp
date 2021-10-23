@@ -1,5 +1,6 @@
 
-const urlApi= "http://10.30.30.125:3001/api/";
+//const urlApi= "http://10.30.30.125:3001/api/";
+const urlApi= "http://construccionesysoluciones.com/api/"
 export async function Fetchiar(endpoint, payload = {}, metodo = 'get') {
   try {
     let response = await fetch(

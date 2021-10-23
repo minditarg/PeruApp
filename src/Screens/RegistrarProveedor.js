@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   ImageBackground,
   Keyboard,
-  ScrollView,
+  ScrollView,Platform,
   TouchableOpacity,
   KeyboardAvoidingView
 } from "react-native";
@@ -24,20 +24,29 @@ import {
   Textarea,
   Spinner
 } from "native-base";
-import * as proveedor from "../Services/proveedor";
 import dismissKeyboard from "react-native/Libraries/Utilities/dismissKeyboard";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
+import RNModal from "rn-modal-picker";
+
+import * as servicioService from "../Services/servicios";
+import * as sessionService from "../Services/session";
+
+import * as proveedor from "../Services/proveedor";
+import * as commonService from "../Services/common";
+import { connect } from "react-redux";
 
 import { stl } from "./styles/styles";
 import { TextInput } from "react-native-gesture-handler";
 
-export class RegistrarProveedor extends Component {
+class RegistrarProveedor extends Component {
   constructor() {
     super();
-
+    commonService.listadoLocalidades();
     this.initialState = {
+      localidadSeleccionadaText: "Localidad",
+      localidadId: "",
       nombre: "",
       email: "",
       descripcion: "",
@@ -53,6 +62,7 @@ export class RegistrarProveedor extends Component {
 
   componentDidMount() {
     this.getPermissionAsync();
+    this.setState({email:this.props.usuario.email, nombre: this.props.usuario.nombre })
   }
 
   getPermissionAsync = async () => {
@@ -76,7 +86,19 @@ export class RegistrarProveedor extends Component {
       this.setState({ foto: result });
     }
   };
+  _cambioLocalidad(nombre, id) {
+    this.setState({ localidadSeleccionadaText: nombre, localidadId: id });
+    this.props.servServ.buscar(
+      this.state.categoriaId,
+      this.state.subcategoriaId,
+      id
+    );
+  }
 
+  _handleCancelar() {
+    sessionService.logout();
+    this.props.navigation.navigate("Login");
+  }
   HandleRegistroBtn() {
     this.setState({
       isLoading: true,
@@ -84,12 +106,14 @@ export class RegistrarProveedor extends Component {
       error: ""
     });
     dismissKeyboard();
-    proveedor
+
+    this.props.prov
       .crear(
         this.state.nombre,
         this.state.email,
         this.state.descripcion,
         this.state.direccion,
+        this.state.localidadId,
         this.state.telefono,
         this.state.foto
       )
@@ -116,7 +140,7 @@ export class RegistrarProveedor extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding" enabled>
+      <KeyboardAvoidingView   behavior={Platform.OS == "ios" ? "padding" : "height"}>
         <SafeAreaView style={stl.container}>
           <ImageBackground
             source={require("../../assets/bkblues.png")}
@@ -201,7 +225,54 @@ export class RegistrarProveedor extends Component {
                             }}
                           />
                         </Item>
+                        <View style={stl.pickerSelect2}>
+                          <Text
+                            style={[
+                              stl.pickerlbl,
+                              stl.textwhite,
+                              stl.LabelSelect2
+                            ]}
+                          >
+                            Localidad:
+                          </Text>
 
+                          <RNModal
+                            dataSource={this.props.localidades.map((s, i) => {
+                              return { id: s.id, name: s.nombre };
+                            })}
+                            dummyDataSource={this.props.localidades.map(
+                              (s, i) => {
+                                return { id: s.id, name: s.nombre };
+                              }
+                            )}
+                            defaultValue={false}
+                            pickerTitle={"Localidad"}
+                            showSearchBar={true}
+                            disablePicker={false}
+                            changeAnimation={"none"}
+                            searchBarPlaceHolder={"Buscar....."}
+                            showPickerTitle={true}
+                            searchBarContainerStyle={
+                              stl.searchBarStyle
+                            }
+                            pickerStyle={stl.pickerStyle}
+                            pickerItemTextStyle={stl.listTextViewStyle}
+                            selectedLabel={this.state.localidadSeleccionadaText}
+                            placeHolderLabel={"Seleccione localidad"}
+                            selectLabelTextStyle={[
+                              stl.selectLabelTextStyle,
+                              stl.textwhite
+                            ]}
+                            placeHolderTextStyle={stl.placeHolderTextStyle}
+                            dropDownImageStyle={stl.dropDownImageStyle}
+                            selectedValue={(index, seleccionado) => {
+                              this._cambioLocalidad(
+                                seleccionado.name,
+                                seleccionado.id
+                              );
+                            }}
+                          />
+                        </View>
                         <Item floatingLabel>
                           <Label style={stl.textwhite}>Dirección</Label>
                           <Input
@@ -231,7 +302,7 @@ export class RegistrarProveedor extends Component {
                             rowSpan={5}
                             name="descripcion"
                             bordered
-                            placeholderTextColor="whitesmoke"
+                            placeHolderTextStyle="whitesmoke"
                             placeholder="Descripcion"
                             value={this.state.descripcion}
                             onChangeText={descripcion => {
@@ -298,3 +369,12 @@ export class RegistrarProveedor extends Component {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    servServ: servicioService,
+    prov: proveedor,
+    localidades: commonService.getStore().localidades,
+    usuario: sessionService.usuarioLogueado()
+  };
+};
+export default connect(mapStateToProps)(RegistrarProveedor);
